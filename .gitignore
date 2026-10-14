@@ -1,0 +1,14 @@
+# Claude Code local state
+.claude/state/
+.claude/settings.local.json
+# OutSystems binaries (the platform is the source of truth for these)
+*.oml
+*.oap
+*.osp
+# Secrets
+.env
+.env.*
+# OS / tooling
+node_modules/
+Thumbs.db
+.DS_Store

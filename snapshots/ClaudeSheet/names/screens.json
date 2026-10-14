@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "InvalidPermissions",
+    "Description": "Screen where users will be redirected when they have invalid permissions.",
+    "UIFlow": "Common",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Login",
+    "Description": "Screen where users login.",
+    "UIFlow": "Common",
+    "IsReferenced": false
+  }
+]
