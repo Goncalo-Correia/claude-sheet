@@ -41,7 +41,7 @@
   },
   {
     "Name": "GetMonthSummary",
-    "Description": "Month totals and KPI counts for the current user, derived from GetMonthCalendar. ElapsedDays = Confirmed or Pending days up to today; ExpectedMinutes = ElapsedDays * Site.DailyExpectedMinutes.",
+    "Description": "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).",
     "IsReferenced": false
   },
   {

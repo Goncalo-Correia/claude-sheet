@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-14, targeted mode, after the manual publish of story US-000
+- **Last refresh:** 2026-10-14, targeted mode, after the manual publish of story US1
 
 ## Own elements (references excluded)
 
@@ -15,7 +15,7 @@
 | Client actions | 2 | FormatMinutes, GetWeekStart |
 | Service actions | 0 | |
 | Screens | 2 | Common/InvalidPermissions, Common/Login |
-| Blocks | 9 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo |
+| Blocks | 10 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth |
 | Roles | 3 | Anonymous, Registered, SheetUser |
 | Themes | 1 | ClaudeSheet |
 | Resources | 1 | favicon.png |
@@ -25,7 +25,7 @@
 
 ## Notes on this refresh
 
-- Re-read for US-000: `data-model.cs`, `structures.cs`, `settings.cs`, `timers.cs`, `names/server-actions.json`, `names/client-actions.json`, `names/roles.json`, `names/themes.json`, and per-element files in `server-actions/`, `client-actions/`, `roles/`, `themes/`.
-- Not re-read (unchanged by US-000, still from the initial snapshot): `integrations.cs`, `user-exceptions.cs`, `client-variables.cs`, `session-variables.cs`, `names/service-actions.json`, `names/screens.json`, `names/web-blocks.json`, `names/resources.json`, `names/scripts.json`.
-- `structures.cs` was written by hand from the saved tool result, because the result was too large for the transcript and the extract script stored the truncation notice instead.
+- Re-read for US1: `names/server-actions.json`, `names/client-actions.json`, `names/web-blocks.json`, `names/themes.json`, `server-actions/GetMonthSummary.cs`, `web-blocks/TotalHoursMonth.cs` (new), `themes/ClaudeSheet.cs`.
+- Not re-read (unchanged by US1, still from the US-000 refresh or the initial snapshot): `data-model.cs`, `structures.cs`, `settings.cs`, `timers.cs`, `integrations.cs`, `user-exceptions.cs`, `client-variables.cs`, `session-variables.cs`, `names/service-actions.json`, `names/roles.json`, `names/screens.json`, `names/resources.json`, `names/scripts.json`.
+- `structures.cs` was written by hand in the US-000 refresh from the saved tool result, because the result was too large for the transcript.
 - `getDataModel` does not output entity indexes. The unique indexes are listed in `stories/US-000-mysheet-foundation.md`.

@@ -3,7 +3,7 @@
     /*** creating IServerAction 'GetMonthSummary' ***/
     var getMonthSummary = eSpace.CreateServerAction("GetMonthSummary");
     getMonthSummary.CacheInMinutes = null; // default value
-    getMonthSummary.Description = "Month totals and KPI counts for the current user, derived from GetMonthCalendar. ElapsedDays = Confirmed or Pending days up to today; ExpectedMinutes = ElapsedDays * Site.DailyExpectedMinutes.";
+    getMonthSummary.Description = "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).";
     getMonthSummary.Folder = null; // default value
     getMonthSummary.Function = false; // default value
     getMonthSummary.Icon = null; // default value
@@ -24,6 +24,11 @@
     today.DataType = eSpace.DateType;
     today.SetDefaultValue(null); // default value
     today.Description = null; // default value
+    
+    var expectedDays = getMonthSummary.CreateLocalVariable("ExpectedDays");
+    expectedDays.DataType = eSpace.IntegerType;
+    expectedDays.SetDefaultValue(null); // default value
+    expectedDays.Description = null; // default value
     
     var startNode = getMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode.HorizontalPosition = 3200;
@@ -78,7 +83,7 @@
     assignNode2.Label = null; // default value
     assignNode2.Target = forEachNode;
     
-    var assignment4 = assignNode2.CreateAssignment("Summary.TotalMinutes", "Summary.TotalMinutes + GetMonthCalendar.Days.Current.TotalMinutes");
+    var assignment4 = assignNode2.CreateAssignment("Summary.TotalMinutes", "Summary.TotalMinutes + If(GetMonthCalendar.Days.Current.DayStatusId = Entities.DayStatus.DayOff, 0, GetMonthCalendar.Days.Current.TotalMinutes)");
     
     var assignment5 = assignNode2.CreateAssignment("Summary.ConfirmedCount", "Summary.ConfirmedCount + If(GetMonthCalendar.Days.Current.DayTypeId = Entities.CalendarDayType.Confirmed, 1, 0)");
     
@@ -88,16 +93,18 @@
     
     var assignment8 = assignNode2.CreateAssignment("Summary.PendingCount", "Summary.PendingCount + If(GetMonthCalendar.Days.Current.DayTypeId = Entities.CalendarDayType.Pending, 1, 0)");
     
-    var assignment9 = assignNode2.CreateAssignment("Summary.ElapsedDays", "Summary.ElapsedDays + If(GetMonthCalendar.Days.Current.Date <= Today and (GetMonthCalendar.Days.Current.DayTypeId = Entities.CalendarDayType.Confirmed or GetMonthCalendar.Days.Current.DayTypeId = Entities.CalendarDayType.Pending), 1, 0)");
+    var assignment9 = assignNode2.CreateAssignment("ExpectedDays", "ExpectedDays + If(not GetMonthCalendar.Days.Current.IsWeekend and GetMonthCalendar.Days.Current.DayTypeId <> Entities.CalendarDayType.Holiday and GetMonthCalendar.Days.Current.DayTypeId <> Entities.CalendarDayType.DayOff, 1, 0)");
     forEachNode.CycleTarget = assignNode2;
     
     var assignNode3 = getMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(forEachNode, 1371);
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = null; // default value
     
-    var assignment10 = assignNode3.CreateAssignment("Summary.ExpectedMinutes", "Summary.ElapsedDays * Site.DailyExpectedMinutes");
+    var assignment10 = assignNode3.CreateAssignment("Summary.ElapsedDays", "If(Year * 100 + Month < Year(Today) * 100 + Month(Today), GetMonthCalendar.Days.Length, If(Year = Year(Today) and Month = Month(Today), Day(Today), 0))");
     
-    var assignment11 = assignNode3.CreateAssignment("Summary.ProgressPercent", "If(Summary.ExpectedMinutes > 0, Summary.TotalMinutes * 100 / Summary.ExpectedMinutes, 0)");
+    var assignment11 = assignNode3.CreateAssignment("Summary.ExpectedMinutes", "ExpectedDays * Site.DailyExpectedMinutes");
+    
+    var assignment12 = assignNode3.CreateAssignment("Summary.ProgressPercent", "If(Summary.ExpectedMinutes > 0, Min(100, Summary.TotalMinutes * 100 / Summary.ExpectedMinutes), 0)");
     forEachNode.Target = assignNode3;
     
     var endNode = getMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode3, 1371);

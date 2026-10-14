@@ -684,6 +684,12 @@
     "IsReferenced": true
   },
   {
+    "Name": "TotalHoursMonth",
+    "Description": "Total hours the current user logged in the selected month vs the hours expected, as a progress circle. Reloads when Year, Month or RefreshKey change.",
+    "UIFlow": "SheetBlocks",
+    "IsReferenced": false
+  },
+  {
     "Name": "TouchEvents",
     "Description": "Enables touch events on a specific widget.",
     "UIFlow": "Utilities",
