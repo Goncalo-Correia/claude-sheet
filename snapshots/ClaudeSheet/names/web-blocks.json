@@ -252,6 +252,12 @@
     "IsReferenced": true
   },
   {
+    "Name": "DayStatusKPIs",
+    "Description": "Monthly KPI cards (Confirmed, Days off, Holidays, Pending) for the current user, built from CalendarDayType where ShowInKPI = True ordered by Order. The coloured squares double as the calendar legend. Reloads when Year, Month or RefreshKey change.",
+    "UIFlow": "SheetBlocks",
+    "IsReferenced": false
+  },
+  {
     "Name": "DisplayOnDevice",
     "Description": "Display content depending on which device is being used. There are placeholders for Phone, Tablet and Desktop.",
     "UIFlow": "Adaptive",

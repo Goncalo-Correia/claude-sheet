@@ -149,7 +149,7 @@
     var staticEntityRecord = calendarDayType.CreateRecord();
     staticEntityRecord.Icon = null; // default value
     staticEntityRecord.Identifier = "Pending";
-    staticEntityRecord.SetAttributeValue(pluralLabel, "\"Pending days\"");
+    staticEntityRecord.SetAttributeValue(pluralLabel, "\"Pending\"");
     staticEntityRecord.SetAttributeValue(id, "4");
     staticEntityRecord.SetAttributeValue(label, "\"Pending\"");
     staticEntityRecord.SetAttributeValue(cssClass, "\"day-pending\"");
@@ -195,7 +195,7 @@
     staticEntityRecord5.Identifier = "Confirmed";
     staticEntityRecord5.SetAttributeValue(label, "\"Confirmed\"");
     staticEntityRecord5.SetAttributeValue(showInKPI, "True");
-    staticEntityRecord5.SetAttributeValue(pluralLabel, "\"Confirmed days\"");
+    staticEntityRecord5.SetAttributeValue(pluralLabel, "\"Confirmed\"");
     staticEntityRecord5.SetAttributeValue(cssClass, "\"day-confirmed\"");
     staticEntityRecord5.SetAttributeValue(id, "1");
     staticEntityRecord5.SetAttributeValue(order, "1");
@@ -465,99 +465,19 @@
     // IStructureSignature OutSystemsUI/DatePickerRangeOptionalConfigs
     var datePickerRangeOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*grM32LlBXU+cqCKpKb0jsw"));
     
-    /*** creating IStructure 'DaySheetDetail' ***/
-    var daySheetDetail = eSpace.CreateStructure("DaySheetDetail");
-    daySheetDetail.Description = "A day sheet with its project lines, as shown in the day editor.";
-    daySheetDetail.Folder = null; // default value
-    daySheetDetail.Public = false; // default value
-    daySheetDetail.Shareable = false; // default value
+    /*** creating IStructure 'DayEditorLine' ***/
+    var dayEditorLine = eSpace.CreateStructure("DayEditorLine");
+    dayEditorLine.Description = "One project line of the HoursCalendar day editor, with the time split into Hours and Mins for the dropdowns.";
+    dayEditorLine.Folder = null; // default value
+    dayEditorLine.Public = false; // default value
+    dayEditorLine.Shareable = false; // default value
     
-    var daySheetId2 = daySheetDetail.CreateAttribute("DaySheetId");
-    daySheetId2.DataType = daySheet.IdentifierType;
-    daySheetId2.SetDefaultValue(null); // default value
-    daySheetId2.Description = null; // default value
-    daySheetId2.IsMandatory = false; // default value
-    daySheetId2.Label = "Day Sheet";
-    daySheetId2.NameInJSON = null; // default value
-    
-    var sheetDate2 = daySheetDetail.CreateAttribute("SheetDate");
-    sheetDate2.DataType = eSpace.DateType;
-    sheetDate2.SetDefaultValue(null); // default value
-    sheetDate2.Description = null; // default value
-    sheetDate2.IsMandatory = false; // default value
-    sheetDate2.Label = "Sheet Date";
-    sheetDate2.NameInJSON = null; // default value
-    
-    var dayStatusId3 = daySheetDetail.CreateAttribute("DayStatusId");
-    dayStatusId3.DataType = dayStatus.IdentifierType;
-    dayStatusId3.SetDefaultValue(null); // default value
-    dayStatusId3.Description = null; // default value
-    dayStatusId3.IsMandatory = false; // default value
-    dayStatusId3.Label = "Day Status";
-    dayStatusId3.NameInJSON = null; // default value
-    
-    var dayTypeId2 = daySheetDetail.CreateAttribute("DayTypeId");
-    dayTypeId2.DataType = calendarDayType.IdentifierType;
-    dayTypeId2.SetDefaultValue(null); // default value
-    dayTypeId2.Description = null; // default value
-    dayTypeId2.IsMandatory = false; // default value
-    dayTypeId2.Label = "Day Type";
-    dayTypeId2.NameInJSON = null; // default value
-    
-    var notes2 = daySheetDetail.CreateAttribute("Notes");
-    notes2.DataType = eSpace.TextType;
-    notes2.SetDefaultValue(null); // default value
-    notes2.Description = null; // default value
-    notes2.IsMandatory = false; // default value
-    notes2.Label = "Notes";
-    notes2.Length = 500;
-    notes2.NameInJSON = null; // default value
-    
-    var holidayName2 = daySheetDetail.CreateAttribute("HolidayName");
-    holidayName2.DataType = eSpace.TextType;
-    holidayName2.SetDefaultValue(null); // default value
-    holidayName2.Description = null; // default value
-    holidayName2.IsMandatory = false; // default value
-    holidayName2.Label = "Holiday Name";
-    holidayName2.Length = 100;
-    holidayName2.NameInJSON = null; // default value
-    
-    var isEditable2 = daySheetDetail.CreateAttribute("IsEditable");
-    isEditable2.DataType = eSpace.BooleanType;
-    isEditable2.SetDefaultValue(null); // default value
-    isEditable2.Description = null; // default value
-    isEditable2.IsMandatory = false; // default value
-    isEditable2.Label = "Is Editable";
-    isEditable2.NameInJSON = null; // default value
-    
-    var totalMinutes2 = daySheetDetail.CreateAttribute("TotalMinutes");
-    totalMinutes2.DataType = eSpace.IntegerType;
-    totalMinutes2.SetDefaultValue(null); // default value
-    totalMinutes2.Description = null; // default value
-    totalMinutes2.IsMandatory = false; // default value
-    totalMinutes2.Label = "Total Minutes";
-    totalMinutes2.NameInJSON = null; // default value
-    
-    var lines = daySheetDetail.CreateAttribute("Lines");
-    lines.Description = null; // default value
-    lines.IsMandatory = false; // default value
-    lines.Label = "Lines";
-    lines.NameInJSON = null; // default value
-    
-    /*** creating IStructure 'DaySheetProjectLine' ***/
-    var daySheetProjectLine = eSpace.CreateStructure("DaySheetProjectLine");
-    daySheetProjectLine.Description = "One project row in the day sheet editor.";
-    daySheetProjectLine.Folder = null; // default value
-    daySheetProjectLine.Public = false; // default value
-    daySheetProjectLine.Shareable = false; // default value
-    
-    var projectId = daySheetProjectLine.CreateAttribute("ProjectId");
+    var projectId = dayEditorLine.CreateAttribute("ProjectId");
     projectId.SetDefaultValue(null); // default value
     projectId.Description = null; // default value
     projectId.IsMandatory = false; // default value
     projectId.Label = "Project";
     projectId.NameInJSON = null; // default value
-    lines.DataType = eSpace.GetOrCreateListType(daySheetProjectLine);
     
     /*** creating IServerEntity 'Project' ***/
     var project = eSpace.CreateServerEntity("Project");
@@ -681,34 +601,181 @@
     client.IdentifierAttribute = id5;
     client.LabelAttribute = name2;
     
-    var clientName = daySheetProjectLine.CreateAttribute("ClientName");
+    var clientName = dayEditorLine.CreateAttribute("ClientName");
     clientName.DataType = eSpace.TextType;
     clientName.SetDefaultValue(null); // default value
     clientName.Description = null; // default value
     clientName.IsMandatory = false; // default value
     clientName.Label = "Client Name";
-    clientName.Length = 100;
+    clientName.Length = null; // default value
     clientName.NameInJSON = null; // default value
     projectId.DataType = project.IdentifierType;
     clientId.DataType = client.IdentifierType;
     
-    var projectName = daySheetProjectLine.CreateAttribute("ProjectName");
+    var projectName = dayEditorLine.CreateAttribute("ProjectName");
     projectName.DataType = eSpace.TextType;
     projectName.SetDefaultValue(null); // default value
     projectName.Description = null; // default value
     projectName.IsMandatory = false; // default value
     projectName.Label = "Project Name";
-    projectName.Length = 100;
+    projectName.Length = null; // default value
     projectName.NameInJSON = null; // default value
     
-    var projectCode = daySheetProjectLine.CreateAttribute("ProjectCode");
+    var projectCode = dayEditorLine.CreateAttribute("ProjectCode");
     projectCode.DataType = eSpace.TextType;
     projectCode.SetDefaultValue(null); // default value
     projectCode.Description = null; // default value
     projectCode.IsMandatory = false; // default value
     projectCode.Label = "Project Code";
-    projectCode.Length = 30;
+    projectCode.Length = null; // default value
     projectCode.NameInJSON = null; // default value
+    
+    var hours = dayEditorLine.CreateAttribute("Hours");
+    hours.DataType = eSpace.IntegerType;
+    hours.SetDefaultValue(null); // default value
+    hours.Description = null; // default value
+    hours.IsMandatory = false; // default value
+    hours.Label = "Hours";
+    hours.NameInJSON = null; // default value
+    
+    var mins = dayEditorLine.CreateAttribute("Mins");
+    mins.DataType = eSpace.IntegerType;
+    mins.SetDefaultValue(null); // default value
+    mins.Description = null; // default value
+    mins.IsMandatory = false; // default value
+    mins.Label = "Mins";
+    mins.NameInJSON = null; // default value
+    
+    var description = dayEditorLine.CreateAttribute("Description");
+    description.DataType = eSpace.TextType;
+    description.SetDefaultValue(null); // default value
+    description.Description = null; // default value
+    description.IsMandatory = false; // default value
+    description.Label = "Description";
+    description.Length = null; // default value
+    description.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'DaySheetDetail' ***/
+    var daySheetDetail = eSpace.CreateStructure("DaySheetDetail");
+    daySheetDetail.Description = "A day sheet with its project lines, as shown in the day editor.";
+    daySheetDetail.Folder = null; // default value
+    daySheetDetail.Public = false; // default value
+    daySheetDetail.Shareable = false; // default value
+    
+    var daySheetId2 = daySheetDetail.CreateAttribute("DaySheetId");
+    daySheetId2.DataType = daySheet.IdentifierType;
+    daySheetId2.SetDefaultValue(null); // default value
+    daySheetId2.Description = null; // default value
+    daySheetId2.IsMandatory = false; // default value
+    daySheetId2.Label = "Day Sheet";
+    daySheetId2.NameInJSON = null; // default value
+    
+    var sheetDate2 = daySheetDetail.CreateAttribute("SheetDate");
+    sheetDate2.DataType = eSpace.DateType;
+    sheetDate2.SetDefaultValue(null); // default value
+    sheetDate2.Description = null; // default value
+    sheetDate2.IsMandatory = false; // default value
+    sheetDate2.Label = "Sheet Date";
+    sheetDate2.NameInJSON = null; // default value
+    
+    var dayStatusId3 = daySheetDetail.CreateAttribute("DayStatusId");
+    dayStatusId3.DataType = dayStatus.IdentifierType;
+    dayStatusId3.SetDefaultValue(null); // default value
+    dayStatusId3.Description = null; // default value
+    dayStatusId3.IsMandatory = false; // default value
+    dayStatusId3.Label = "Day Status";
+    dayStatusId3.NameInJSON = null; // default value
+    
+    var dayTypeId2 = daySheetDetail.CreateAttribute("DayTypeId");
+    dayTypeId2.DataType = calendarDayType.IdentifierType;
+    dayTypeId2.SetDefaultValue(null); // default value
+    dayTypeId2.Description = null; // default value
+    dayTypeId2.IsMandatory = false; // default value
+    dayTypeId2.Label = "Day Type";
+    dayTypeId2.NameInJSON = null; // default value
+    
+    var notes2 = daySheetDetail.CreateAttribute("Notes");
+    notes2.DataType = eSpace.TextType;
+    notes2.SetDefaultValue(null); // default value
+    notes2.Description = null; // default value
+    notes2.IsMandatory = false; // default value
+    notes2.Label = "Notes";
+    notes2.Length = 500;
+    notes2.NameInJSON = null; // default value
+    
+    var holidayName2 = daySheetDetail.CreateAttribute("HolidayName");
+    holidayName2.DataType = eSpace.TextType;
+    holidayName2.SetDefaultValue(null); // default value
+    holidayName2.Description = null; // default value
+    holidayName2.IsMandatory = false; // default value
+    holidayName2.Label = "Holiday Name";
+    holidayName2.Length = 100;
+    holidayName2.NameInJSON = null; // default value
+    
+    var isEditable2 = daySheetDetail.CreateAttribute("IsEditable");
+    isEditable2.DataType = eSpace.BooleanType;
+    isEditable2.SetDefaultValue(null); // default value
+    isEditable2.Description = null; // default value
+    isEditable2.IsMandatory = false; // default value
+    isEditable2.Label = "Is Editable";
+    isEditable2.NameInJSON = null; // default value
+    
+    var totalMinutes2 = daySheetDetail.CreateAttribute("TotalMinutes");
+    totalMinutes2.DataType = eSpace.IntegerType;
+    totalMinutes2.SetDefaultValue(null); // default value
+    totalMinutes2.Description = null; // default value
+    totalMinutes2.IsMandatory = false; // default value
+    totalMinutes2.Label = "Total Minutes";
+    totalMinutes2.NameInJSON = null; // default value
+    
+    var lines = daySheetDetail.CreateAttribute("Lines");
+    lines.Description = null; // default value
+    lines.IsMandatory = false; // default value
+    lines.Label = "Lines";
+    lines.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'DaySheetProjectLine' ***/
+    var daySheetProjectLine = eSpace.CreateStructure("DaySheetProjectLine");
+    daySheetProjectLine.Description = "One project row in the day sheet editor.";
+    daySheetProjectLine.Folder = null; // default value
+    daySheetProjectLine.Public = false; // default value
+    daySheetProjectLine.Shareable = false; // default value
+    
+    var projectId2 = daySheetProjectLine.CreateAttribute("ProjectId");
+    projectId2.DataType = project.IdentifierType;
+    projectId2.SetDefaultValue(null); // default value
+    projectId2.Description = null; // default value
+    projectId2.IsMandatory = false; // default value
+    projectId2.Label = "Project";
+    projectId2.NameInJSON = null; // default value
+    lines.DataType = eSpace.GetOrCreateListType(daySheetProjectLine);
+    
+    var clientName2 = daySheetProjectLine.CreateAttribute("ClientName");
+    clientName2.DataType = eSpace.TextType;
+    clientName2.SetDefaultValue(null); // default value
+    clientName2.Description = null; // default value
+    clientName2.IsMandatory = false; // default value
+    clientName2.Label = "Client Name";
+    clientName2.Length = 100;
+    clientName2.NameInJSON = null; // default value
+    
+    var projectName2 = daySheetProjectLine.CreateAttribute("ProjectName");
+    projectName2.DataType = eSpace.TextType;
+    projectName2.SetDefaultValue(null); // default value
+    projectName2.Description = null; // default value
+    projectName2.IsMandatory = false; // default value
+    projectName2.Label = "Project Name";
+    projectName2.Length = 100;
+    projectName2.NameInJSON = null; // default value
+    
+    var projectCode2 = daySheetProjectLine.CreateAttribute("ProjectCode");
+    projectCode2.DataType = eSpace.TextType;
+    projectCode2.SetDefaultValue(null); // default value
+    projectCode2.Description = null; // default value
+    projectCode2.IsMandatory = false; // default value
+    projectCode2.Label = "Project Code";
+    projectCode2.Length = 30;
+    projectCode2.NameInJSON = null; // default value
     
     var timeEntryId = daySheetProjectLine.CreateAttribute("TimeEntryId");
     timeEntryId.SetDefaultValue(null); // default value
@@ -756,15 +823,15 @@
     daySheetId3.OriginalName = null; // default value
     daySheetId3.OriginalType = null; // default value
     
-    var projectId2 = timeEntry.CreateAttribute("ProjectId");
-    projectId2.DataType = project.IdentifierType;
-    projectId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
-    projectId2.Description = null; // default value
-    projectId2.IsMandatory = true;
-    projectId2.IsSearchable = false; // default value
-    projectId2.Label = "Project";
-    projectId2.OriginalName = null; // default value
-    projectId2.OriginalType = null; // default value
+    var projectId3 = timeEntry.CreateAttribute("ProjectId");
+    projectId3.DataType = project.IdentifierType;
+    projectId3.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    projectId3.Description = null; // default value
+    projectId3.IsMandatory = true;
+    projectId3.IsSearchable = false; // default value
+    projectId3.Label = "Project";
+    projectId3.OriginalName = null; // default value
+    projectId3.OriginalType = null; // default value
     
     var minutes = timeEntry.CreateAttribute("Minutes");
     minutes.DataType = eSpace.IntegerType;
@@ -777,16 +844,16 @@
     minutes.OriginalName = null; // default value
     minutes.OriginalType = null; // default value
     
-    var description = timeEntry.CreateAttribute("Description");
-    description.DataType = eSpace.TextType;
-    description.SetDefaultValue(null); // default value
-    description.Description = null; // default value
-    description.IsMandatory = false; // default value
-    description.IsSearchable = false; // default value
-    description.Label = "Description";
-    description.Length = 250;
-    description.OriginalName = null; // default value
-    description.OriginalType = null; // default value
+    var description2 = timeEntry.CreateAttribute("Description");
+    description2.DataType = eSpace.TextType;
+    description2.SetDefaultValue(null); // default value
+    description2.Description = null; // default value
+    description2.IsMandatory = false; // default value
+    description2.IsSearchable = false; // default value
+    description2.Label = "Description";
+    description2.Length = 250;
+    description2.OriginalName = null; // default value
+    description2.OriginalType = null; // default value
     
     var createdOn2 = timeEntry.CreateAttribute("CreatedOn");
     createdOn2.DataType = eSpace.DateTimeType;
@@ -818,14 +885,55 @@
     minutes2.NameInJSON = null; // default value
     timeEntryId.DataType = timeEntry.IdentifierType;
     
-    var description2 = daySheetProjectLine.CreateAttribute("Description");
-    description2.DataType = eSpace.TextType;
-    description2.SetDefaultValue(null); // default value
-    description2.Description = null; // default value
-    description2.IsMandatory = false; // default value
-    description2.Label = "Description";
-    description2.Length = 250;
-    description2.NameInJSON = null; // default value
+    var description3 = daySheetProjectLine.CreateAttribute("Description");
+    description3.DataType = eSpace.TextType;
+    description3.SetDefaultValue(null); // default value
+    description3.Description = null; // default value
+    description3.IsMandatory = false; // default value
+    description3.Label = "Description";
+    description3.Length = 250;
+    description3.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'DayStatusKPI' ***/
+    var dayStatusKPI = eSpace.CreateStructure("DayStatusKPI");
+    dayStatusKPI.Description = "One KPI card of the DayStatusKPIs block: a CalendarDayType with its count in the selected month and the label already in singular/plural.";
+    dayStatusKPI.Folder = null; // default value
+    dayStatusKPI.Public = false; // default value
+    dayStatusKPI.Shareable = false; // default value
+    
+    var calendarDayTypeId = dayStatusKPI.CreateAttribute("CalendarDayTypeId");
+    calendarDayTypeId.DataType = calendarDayType.IdentifierType;
+    calendarDayTypeId.SetDefaultValue(null); // default value
+    calendarDayTypeId.Description = null; // default value
+    calendarDayTypeId.IsMandatory = false; // default value
+    calendarDayTypeId.Label = "Calendar Day Type";
+    calendarDayTypeId.NameInJSON = null; // default value
+    
+    var label3 = dayStatusKPI.CreateAttribute("Label");
+    label3.DataType = eSpace.TextType;
+    label3.SetDefaultValue(null); // default value
+    label3.Description = null; // default value
+    label3.IsMandatory = false; // default value
+    label3.Label = "Label";
+    label3.Length = 50;
+    label3.NameInJSON = null; // default value
+    
+    var cssClass3 = dayStatusKPI.CreateAttribute("CssClass");
+    cssClass3.DataType = eSpace.TextType;
+    cssClass3.SetDefaultValue(null); // default value
+    cssClass3.Description = null; // default value
+    cssClass3.IsMandatory = false; // default value
+    cssClass3.Label = "Css Class";
+    cssClass3.Length = 50;
+    cssClass3.NameInJSON = null; // default value
+    
+    var count = dayStatusKPI.CreateAttribute("Count");
+    count.DataType = eSpace.IntegerType;
+    count.SetDefaultValue(null); // default value
+    count.Description = null; // default value
+    count.IsMandatory = false; // default value
+    count.Label = "Count";
+    count.NameInJSON = null; // default value
     // IStructureSignature OutSystemsUI/DeviceConfiguration
     var deviceConfiguration = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*uUnElVRZ7EeykU8Op0Iq9A"));
     // IStructureSignature OutSystemsUI/DropdownItem
@@ -953,6 +1061,30 @@
     var noUiSliderConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*OHFQpHsvwky+_PPPj80ixA"));
     // IStructureSignature OutSystemsUI/NoUiSliderConfigs_Range
     var noUiSliderConfigs_Range = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*2cQY0DjpYU6CzF+YJYSuBw"));
+    
+    /*** creating IStructure 'NumberOption' ***/
+    var numberOption = eSpace.CreateStructure("NumberOption");
+    numberOption.Description = "Value/label pair for number dropdowns (hours 0-12, minutes 00/15/30/45).";
+    numberOption.Folder = null; // default value
+    numberOption.Public = false; // default value
+    numberOption.Shareable = false; // default value
+    
+    var value = numberOption.CreateAttribute("Value");
+    value.DataType = eSpace.IntegerType;
+    value.SetDefaultValue(null); // default value
+    value.Description = null; // default value
+    value.IsMandatory = false; // default value
+    value.Label = "Value";
+    value.NameInJSON = null; // default value
+    
+    var label4 = numberOption.CreateAttribute("Label");
+    label4.DataType = eSpace.TextType;
+    label4.SetDefaultValue(null); // default value
+    label4.Description = null; // default value
+    label4.IsMandatory = false; // default value
+    label4.Label = "Label";
+    label4.Length = null; // default value
+    label4.NameInJSON = null; // default value
     // IStructureSignature OutSystemsMaps/Offset
     var offset = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("0TG7lXnw1k+rLlyDJoVaqg*Vvpmd9jHNUqpUNrgJ9MmAw"));
     // IStructureSignature OutSystemsCharts/OptionalConfigs
@@ -995,13 +1127,13 @@
     timeEntryInput.Public = false; // default value
     timeEntryInput.Shareable = false; // default value
     
-    var projectId3 = timeEntryInput.CreateAttribute("ProjectId");
-    projectId3.DataType = project.IdentifierType;
-    projectId3.SetDefaultValue(null); // default value
-    projectId3.Description = null; // default value
-    projectId3.IsMandatory = false; // default value
-    projectId3.Label = "Project";
-    projectId3.NameInJSON = null; // default value
+    var projectId4 = timeEntryInput.CreateAttribute("ProjectId");
+    projectId4.DataType = project.IdentifierType;
+    projectId4.SetDefaultValue(null); // default value
+    projectId4.Description = null; // default value
+    projectId4.IsMandatory = false; // default value
+    projectId4.Label = "Project";
+    projectId4.NameInJSON = null; // default value
     
     var minutes3 = timeEntryInput.CreateAttribute("Minutes");
     minutes3.DataType = eSpace.IntegerType;
@@ -1011,14 +1143,14 @@
     minutes3.Label = "Minutes";
     minutes3.NameInJSON = null; // default value
     
-    var description3 = timeEntryInput.CreateAttribute("Description");
-    description3.DataType = eSpace.TextType;
-    description3.SetDefaultValue(null); // default value
-    description3.Description = null; // default value
-    description3.IsMandatory = false; // default value
-    description3.Label = "Description";
-    description3.Length = 250;
-    description3.NameInJSON = null; // default value
+    var description4 = timeEntryInput.CreateAttribute("Description");
+    description4.DataType = eSpace.TextType;
+    description4.SetDefaultValue(null); // default value
+    description4.Description = null; // default value
+    description4.IsMandatory = false; // default value
+    description4.Label = "Description";
+    description4.Length = 250;
+    description4.NameInJSON = null; // default value
     // IStructureSignature OutSystemsUI/TimePickerOptionalConfigs
     var timePickerOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*S86ifK4baUy+ZoPeWdAqqQ"));
     // IStructureSignature OutSystemsUI/VideoCaptions
@@ -1076,14 +1208,14 @@
     dayTypeId3.Label = "Day Type";
     dayTypeId3.NameInJSON = null; // default value
     
-    var cssClass3 = weekDayHeader.CreateAttribute("CssClass");
-    cssClass3.DataType = eSpace.TextType;
-    cssClass3.SetDefaultValue(null); // default value
-    cssClass3.Description = null; // default value
-    cssClass3.IsMandatory = false; // default value
-    cssClass3.Label = "Css Class";
-    cssClass3.Length = 50;
-    cssClass3.NameInJSON = null; // default value
+    var cssClass4 = weekDayHeader.CreateAttribute("CssClass");
+    cssClass4.DataType = eSpace.TextType;
+    cssClass4.SetDefaultValue(null); // default value
+    cssClass4.Description = null; // default value
+    cssClass4.IsMandatory = false; // default value
+    cssClass4.Label = "Css Class";
+    cssClass4.Length = 50;
+    cssClass4.NameInJSON = null; // default value
     
     var isEditable3 = weekDayHeader.CreateAttribute("IsEditable");
     isEditable3.DataType = eSpace.BooleanType;
@@ -1191,41 +1323,41 @@
     weeklyProjectRow.Public = false; // default value
     weeklyProjectRow.Shareable = false; // default value
     
-    var projectId4 = weeklyProjectRow.CreateAttribute("ProjectId");
-    projectId4.DataType = project.IdentifierType;
-    projectId4.SetDefaultValue(null); // default value
-    projectId4.Description = null; // default value
-    projectId4.IsMandatory = false; // default value
-    projectId4.Label = "Project";
-    projectId4.NameInJSON = null; // default value
+    var projectId5 = weeklyProjectRow.CreateAttribute("ProjectId");
+    projectId5.DataType = project.IdentifierType;
+    projectId5.SetDefaultValue(null); // default value
+    projectId5.Description = null; // default value
+    projectId5.IsMandatory = false; // default value
+    projectId5.Label = "Project";
+    projectId5.NameInJSON = null; // default value
     rows.DataType = eSpace.GetOrCreateListType(weeklyProjectRow);
     
-    var clientName2 = weeklyProjectRow.CreateAttribute("ClientName");
-    clientName2.DataType = eSpace.TextType;
-    clientName2.SetDefaultValue(null); // default value
-    clientName2.Description = null; // default value
-    clientName2.IsMandatory = false; // default value
-    clientName2.Label = "Client Name";
-    clientName2.Length = 100;
-    clientName2.NameInJSON = null; // default value
+    var clientName3 = weeklyProjectRow.CreateAttribute("ClientName");
+    clientName3.DataType = eSpace.TextType;
+    clientName3.SetDefaultValue(null); // default value
+    clientName3.Description = null; // default value
+    clientName3.IsMandatory = false; // default value
+    clientName3.Label = "Client Name";
+    clientName3.Length = 100;
+    clientName3.NameInJSON = null; // default value
     
-    var projectName2 = weeklyProjectRow.CreateAttribute("ProjectName");
-    projectName2.DataType = eSpace.TextType;
-    projectName2.SetDefaultValue(null); // default value
-    projectName2.Description = null; // default value
-    projectName2.IsMandatory = false; // default value
-    projectName2.Label = "Project Name";
-    projectName2.Length = 100;
-    projectName2.NameInJSON = null; // default value
+    var projectName3 = weeklyProjectRow.CreateAttribute("ProjectName");
+    projectName3.DataType = eSpace.TextType;
+    projectName3.SetDefaultValue(null); // default value
+    projectName3.Description = null; // default value
+    projectName3.IsMandatory = false; // default value
+    projectName3.Label = "Project Name";
+    projectName3.Length = 100;
+    projectName3.NameInJSON = null; // default value
     
-    var projectCode2 = weeklyProjectRow.CreateAttribute("ProjectCode");
-    projectCode2.DataType = eSpace.TextType;
-    projectCode2.SetDefaultValue(null); // default value
-    projectCode2.Description = null; // default value
-    projectCode2.IsMandatory = false; // default value
-    projectCode2.Label = "Project Code";
-    projectCode2.Length = 30;
-    projectCode2.NameInJSON = null; // default value
+    var projectCode3 = weeklyProjectRow.CreateAttribute("ProjectCode");
+    projectCode3.DataType = eSpace.TextType;
+    projectCode3.SetDefaultValue(null); // default value
+    projectCode3.Description = null; // default value
+    projectCode3.IsMandatory = false; // default value
+    projectCode3.Label = "Project Code";
+    projectCode3.Length = 30;
+    projectCode3.NameInJSON = null; // default value
     
     var cells = weeklyProjectRow.CreateAttribute("Cells");
     cells.DataType = eSpace.GetOrCreateListType(weeklyCell);

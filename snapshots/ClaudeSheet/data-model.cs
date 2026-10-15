@@ -113,7 +113,7 @@
     var staticEntityRecord = calendarDayType.CreateRecord();
     staticEntityRecord.Icon = null; // default value
     staticEntityRecord.Identifier = "Pending";
-    staticEntityRecord.SetAttributeValue(pluralLabel, "\"Pending days\"");
+    staticEntityRecord.SetAttributeValue(pluralLabel, "\"Pending\"");
     staticEntityRecord.SetAttributeValue(id, "4");
     staticEntityRecord.SetAttributeValue(label, "\"Pending\"");
     staticEntityRecord.SetAttributeValue(cssClass, "\"day-pending\"");
@@ -159,7 +159,7 @@
     staticEntityRecord5.Identifier = "Confirmed";
     staticEntityRecord5.SetAttributeValue(label, "\"Confirmed\"");
     staticEntityRecord5.SetAttributeValue(showInKPI, "True");
-    staticEntityRecord5.SetAttributeValue(pluralLabel, "\"Confirmed days\"");
+    staticEntityRecord5.SetAttributeValue(pluralLabel, "\"Confirmed\"");
     staticEntityRecord5.SetAttributeValue(cssClass, "\"day-confirmed\"");
     staticEntityRecord5.SetAttributeValue(id, "1");
     staticEntityRecord5.SetAttributeValue(order, "1");

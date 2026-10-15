@@ -10,3 +10,4 @@
 | 2026-10-14 17:35 | ClaudeSheet | blocked | US2 | Publishing requires a write permission the user has not granted. Ask the user to publish from Service Studio, or to allow automatic merge and publish in the MCP Server dialog. |
 | 2026-10-14 17:35 | ClaudeSheet | blocked | US2 | Publishing requires a write permission the user has not granted. Ask the user to publish from Service Studio, or to allow automatic merge and publish in the MCP Server dialog. |
 | 2026-10-14 17:36 | ClaudeSheet | success (manual) | US2 | 1-Click Publish by the user from Service Studio after two `blocked` MCP attempts. Lambdas not auto-logged to changes/ (the hook only fires on an MCP publish); see the story trail. |
+| 2026-10-15 14:34 | ClaudeSheet | success (manual) | US3 | 1-Click Publish by the user from Service Studio (MCP tools reached over raw HTTP this session, so the hook did not fire). The 3 US3 lambdas were written to changes/2026-10-15/ by Claude from the applied code. |
