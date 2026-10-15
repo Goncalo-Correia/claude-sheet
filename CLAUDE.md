@@ -12,11 +12,14 @@ Platform: OutSystems 11. The app is built through the **Service Studio MCP** (`m
 
 ## Modules
 
-| Module | App | Type | Layer | Version |
-|---|---|---|---|---|
-| ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 |
+| Module | App | Type | Layer | Version | Holds |
+|---|---|---|---|---|---|
+| ClaudeSheet_CS | ClaudeSheet | Reactive | Core | 0 | Backend: database, timers, processes, server actions, structures, roles, user exceptions, site properties |
+| ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 | Front end: screens, blocks, data actions, screen/client actions, theme |
 
-Architecture, references and layer rules: [docs/architecture.md](docs/architecture.md).
+ClaudeSheet references ClaudeSheet_CS, never the other way round. Put every new element in its module from the start (`docs/conventions.md` › Module placement). Until TT4 finishes the migration, the backend elements still live in ClaudeSheet.
+
+Architecture, references, layer rules and what goes where: [docs/architecture.md](docs/architecture.md), [ADR 0004](docs/decisions/0004-split-end-user-and-core.md).
 
 ## Repository map
 
@@ -42,11 +45,25 @@ Architecture, references and layer rules: [docs/architecture.md](docs/architectu
 7. **Snapshot.** After a successful publish, the `outsystems-mcp-publish` skill refreshes the published module's snapshots. To refresh them without publishing, ask for it ("refresh the snapshot"); the same skill handles it.
 8. **Close out.** Update the story's status and implementation notes. If a design choice was made, add a decision in `docs/decisions/`. Offer to commit; don't commit without asking.
 
+## Multi-module stories
+
+When a story's plan has steps in more than one module (`## Implementation plan` grouped per module):
+
+1. **Producer first.** ClaudeSheet_CS before ClaudeSheet. ClaudeSheet can only use what ClaudeSheet_CS has **published**.
+2. **One subagent per module.** For each module, in order, the main session starts a subagent (Agent tool) with the module name, that module's plan steps, `docs/conventions.md`, the relevant `snapshots/<Module>/` files and the session token. The subagent implements and checks its module with `applyModelApiCode` (read calls one at a time), runs the conventions gate, and **returns** its lambdas (code and the save results), its last `mutatedOmlPath` and its implementation notes. It doesn't merge, publish, show forms or write to the repo.
+3. **The main session owns the rest,** once per module: the plan check form + `omlMerge`, the review (`reviews/<Module>/<story>.md`), the publish, `changes/` and the snapshots. Lambdas applied by a subagent aren't in the main transcript, so the publish hook can't log them: the main session writes them to `changes/<date>/<HHmmss>-<Module>-<story>.cs` from what the subagent returned. Snapshot reads are made by the main session.
+4. **Hand-off between modules** (the Model API can't add dependencies, so the user does that one step):
+   1. Publish ClaudeSheet_CS.
+   2. **Dependency checklist.** From the consumer's plan steps, list every producer element the consumer will use, grouped by type (Entities, Static Entities, Structures, Server Actions, Roles, Exceptions). Show it as a blocking question: *"In **ClaudeSheet** → Manage Dependencies → **ClaudeSheet_CS**, tick: …"* with the answers **Done** / **Not yet**. Also write the list into the story's plan (`Dependencies to add`).
+   3. On **Done**: run `omlRefreshReferences` on ClaudeSheet (before the ClaudeSheet chain starts: it drops the session pointer), then a throw-probe on ClaudeSheet that looks up each listed element in `eSpace.References.Named("ClaudeSheet_CS")`. Any missing → show the question again with only the missing ones. All found → start the ClaudeSheet subagent.
+   4. On **Not yet**: wait; don't start the consumer.
+5. Modules whose steps don't depend on each other (e.g. only CSS in ClaudeSheet) may run their subagents at the same time. Two subagents never work on the same module.
+
 ## Rules
 
 - Never write session tokens, passwords or LifeTime credentials to any file in this repo.
 - Call `createSessionToken` once per session and reuse the token.
 - Make Service Studio read calls one at a time. Parallel reads fail with "OML not found".
-- A module must be open in Service Studio to be read or changed. `listApps` shows only the open module and its references.
+- Every module a story touches must be open in Service Studio to be read or changed; `listApps` shows the open modules and their references. Pass the right `eSpaceName` on every call: each module has its own session pointer.
 - `omlPublish` publishes the live module in Service Studio, not an unmerged chain, so merge first.
 - `docs/conventions.md` is the naming and design standard. If the user asks for something that contradicts it, point that out before doing it.

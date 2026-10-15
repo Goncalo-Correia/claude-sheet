@@ -1,12 +1,34 @@
 # Architecture
 
-Last reviewed: 2026-10-14
+Last reviewed: 2026-10-15 (split into End-user + Core, [ADR 0004](decisions/0004-split-end-user-and-core.md))
 
 ## Modules
 
-| Module | App | Type | Layer | Version |
-|---|---|---|---|---|
-| ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 |
+| Module | App | Type | Layer | Version | Role |
+|---|---|---|---|---|---|
+| ClaudeSheet_CS | ClaudeSheet | Reactive | Core | 0 | Backend: database, timers, processes, server actions, structures |
+| ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 | Front end: screens, blocks, data actions, screen and client actions, theme |
+
+Status: ClaudeSheet_CS was created on 2026-10-15 and is still **empty**. Everything listed below as "ClaudeSheet_CS" still lives in ClaudeSheet until the migration task **TT4** moves it.
+
+## What goes where
+
+| Element | Module | Notes |
+|---|---|---|
+| Entities and static entities (database) | ClaudeSheet_CS | Public, **Read Only = Yes**. Writes go through public CS server actions. |
+| Timers | ClaudeSheet_CS | With the server action they run (e.g. `Bootstrap`). |
+| Processes (BPT) | ClaudeSheet_CS | None yet. |
+| Server actions | ClaudeSheet_CS | Public when ClaudeSheet calls them; each starts with the role check. |
+| Structures | ClaudeSheet_CS | Public when ClaudeSheet uses them, including the structures that only feed blocks. |
+| Roles | ClaudeSheet_CS | `SheetUser` is checked by the CS server actions, so it lives there (public); screens in ClaudeSheet reference it. |
+| User exceptions | ClaudeSheet_CS | Raised by CS server actions (e.g. `DaySheetValidation`), public so ClaudeSheet can catch them. |
+| Site properties | ClaudeSheet_CS | Read by CS server actions. Site properties can't be shared across modules: ClaudeSheet reads them through a public CS server action (e.g. `Settings_GetDailyExpectedMinutes`). |
+| Screens, blocks, UI flows | ClaudeSheet | |
+| Data actions, screen and block actions | ClaudeSheet | Data actions call CS server actions. |
+| Client actions | ClaudeSheet | Run in the browser; e.g. `Minutes_Format`, `Date_GetWeekStart` (their server versions live in CS). |
+| Theme, CSS, images, scripts | ClaudeSheet | |
+| Client variables | ClaudeSheet | |
+| Login template (`DoLogin`, `DoLogout`, Common flow) | ClaudeSheet | OutSystems template login flow, kept with the screens that use it. |
 
 ## Layers
 
@@ -23,30 +45,40 @@ flowchart TD
   subgraph EndUser[End-user]
     EU[ClaudeSheet]
   end
+  subgraph Core
+    CS[ClaudeSheet_CS]
+  end
   subgraph Platform[Platform / Forge]
     UI[OutSystemsUI]
     CH[OutSystemsCharts]
     MP[OutSystemsMaps]
     SYS["(System)"]
   end
+  EU --> CS
   EU --> UI
   EU --> CH
   EU --> MP
   EU --> SYS
+  CS --> SYS
 ```
+
+ClaudeSheet_CS must never reference ClaudeSheet.
+
+## Working across modules
+
+- **Producer first.** ClaudeSheet only sees what ClaudeSheet_CS has **published**. A story that touches both is a pipeline: CS change → review → publish CS → add new dependencies in ClaudeSheet → refresh references → ClaudeSheet change → review → publish ClaudeSheet.
+- **Refreshing references can be automated, adding them can't.** `omlRefreshReferences` refreshes the existing references of ClaudeSheet to the latest published CS. A new CS element (a new public action, entity or structure) has to be ticked once by hand in Service Studio › Manage Dependencies: the Model API can't add a dependency.
+- **Public contract.** Renaming or removing a public CS element breaks ClaudeSheet. Do it in the same story as the consumer change, and publish CS and ClaudeSheet together.
+- **One subagent per module** for multi-module stories; see `CLAUDE.md` › Multi-module stories.
 
 ## External references
 
-Platform modules used by ClaudeSheet, taken from the dependencies in `snapshots/ClaudeSheet/data-model.cs` and `structures.cs`. `listApps` didn't load any of them as references.
-
-| Module | Used for |
-|---|---|
-| OutSystemsUI | Theme, UI patterns, static entities and structures |
-| OutSystemsCharts | Chart blocks and structures |
-| OutSystemsMaps | Map blocks and structures |
-| (System) | User, Group, Role, Tenant and other system entities; Login/Logout |
-
-There are no Core or Foundation modules yet.
+| Module | Used by | For |
+|---|---|---|
+| OutSystemsUI | ClaudeSheet | Theme, UI patterns (e.g. `ScrollableArea`), static entities and structures |
+| OutSystemsCharts | ClaudeSheet | Chart blocks and structures |
+| OutSystemsMaps | ClaudeSheet | Map blocks and structures |
+| (System) | both | User, Group, Role, Tenant and other system entities; Login/Logout; `ListAppend` and other system actions |
 
 ## Integrations
 
@@ -54,4 +86,4 @@ TODO: external systems (REST, SOAP, SAP, databases), the module that owns each o
 
 ## Open questions
 
-- TODO
+- Should the UI-only structures (`NumberOption`, `DayEditorLine`, `DayStatusKPI`) stay in ClaudeSheet instead? The rule today is "all structures in CS".

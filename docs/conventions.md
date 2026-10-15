@@ -42,6 +42,17 @@ These are common OutSystems 11 defaults. Adjust them to the team's standard; Cla
 
 Screen and block actions that are not bound to an event (helpers called from other actions) use verb + noun: `OpenDayEditor`, `RecalcEditorTotal`. If an action is both bound to an event and called from other actions, name it for the event and move the shared logic into a helper.
 
+## Module placement
+
+Which module each element belongs in. The full table and the reasons are in [`architecture.md`](architecture.md#what-goes-where) and [ADR 0004](decisions/0004-split-end-user-and-core.md).
+
+- **ClaudeSheet_CS (Core, backend):** entities and static entities, timers, processes, server actions, structures, roles, user exceptions, site properties.
+- **ClaudeSheet (End-user, front end):** screens, blocks, UI flows, data actions, screen/block actions, client actions, theme and CSS, images, client variables, and the OutSystems login template (`DoLogin`, `DoLogout`).
+- A new element goes in its module from the start. Never create backend elements in ClaudeSheet "for now".
+- ClaudeSheet_CS never references ClaudeSheet.
+- Mark a CS element **Public** only when ClaudeSheet uses it. A public element is a contract: renaming or removing it breaks ClaudeSheet, so change the consumer in the same story and publish both.
+- Site properties can't be shared across modules. When ClaudeSheet needs one, CS exposes it through a public server action (`Settings_Get<Property>`).
+
 ## Data
 
 - Entities that other modules read are **public with Read Only = Yes**. Writes go through public server actions in the Core module (`Customer_Create`, `Customer_Update`, …).
