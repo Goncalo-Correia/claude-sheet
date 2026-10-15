@@ -1175,14 +1175,14 @@
     date2.Label = "Date";
     date2.NameInJSON = null; // default value
     
-    var dayLabel = weekDayHeader.CreateAttribute("DayLabel");
-    dayLabel.DataType = eSpace.TextType;
-    dayLabel.SetDefaultValue(null); // default value
-    dayLabel.Description = null; // default value
-    dayLabel.IsMandatory = false; // default value
-    dayLabel.Label = "Day Label";
-    dayLabel.Length = 20;
-    dayLabel.NameInJSON = null; // default value
+    var dayName = weekDayHeader.CreateAttribute("DayName");
+    dayName.DataType = eSpace.TextType;
+    dayName.SetDefaultValue(null); // default value
+    dayName.Description = null; // default value
+    dayName.IsMandatory = false; // default value
+    dayName.Label = "Day Name";
+    dayName.Length = 20;
+    dayName.NameInJSON = null; // default value
     
     var isWeekend2 = weekDayHeader.CreateAttribute("IsWeekend");
     isWeekend2.DataType = eSpace.BooleanType;
@@ -1233,6 +1233,15 @@
     totalMinutes4.Label = "Total Minutes";
     totalMinutes4.NameInJSON = null; // default value
     
+    var dateLabel = weekDayHeader.CreateAttribute("DateLabel");
+    dateLabel.DataType = eSpace.TextType;
+    dateLabel.SetDefaultValue(null); // default value
+    dateLabel.Description = null; // default value
+    dateLabel.IsMandatory = false; // default value
+    dateLabel.Label = "Date Label";
+    dateLabel.Length = 10;
+    dateLabel.NameInJSON = null; // default value
+    
     /*** creating IStructure 'WeeklyCell' ***/
     var weeklyCell = eSpace.CreateStructure("WeeklyCell");
     weeklyCell.Description = "Minutes for one project on one day of the weekly grid.";
@@ -1272,6 +1281,14 @@
     isEditable4.Label = "Is Editable";
     isEditable4.NameInJSON = null; // default value
     
+    var showDash = weeklyCell.CreateAttribute("ShowDash");
+    showDash.DataType = eSpace.BooleanType;
+    showDash.SetDefaultValue(null); // default value
+    showDash.Description = "True when the cell shows \"-\": no entry AND the day is in the future, a weekend, a holiday or a day off.";
+    showDash.IsMandatory = false; // default value
+    showDash.Label = "Show Dash";
+    showDash.NameInJSON = null; // default value
+    
     /*** creating IStructure 'WeeklyHours' ***/
     var weeklyHours = eSpace.CreateStructure("WeeklyHours");
     weeklyHours.Description = "The weekly grid: day headers, project rows and totals.";
@@ -1308,13 +1325,20 @@
     rows.Label = "Rows";
     rows.NameInJSON = null; // default value
     
-    var totalMinutes5 = weeklyHours.CreateAttribute("TotalMinutes");
-    totalMinutes5.DataType = eSpace.IntegerType;
-    totalMinutes5.SetDefaultValue(null); // default value
-    totalMinutes5.Description = null; // default value
-    totalMinutes5.IsMandatory = false; // default value
-    totalMinutes5.Label = "Total Minutes";
-    totalMinutes5.NameInJSON = null; // default value
+    var grandTotalMinutes = weeklyHours.CreateAttribute("GrandTotalMinutes");
+    grandTotalMinutes.DataType = eSpace.IntegerType;
+    grandTotalMinutes.SetDefaultValue(null); // default value
+    grandTotalMinutes.Description = null; // default value
+    grandTotalMinutes.IsMandatory = false; // default value
+    grandTotalMinutes.Label = "Grand Total Minutes";
+    grandTotalMinutes.NameInJSON = null; // default value
+    
+    var dayTotals = weeklyHours.CreateAttribute("DayTotals");
+    dayTotals.DataType = eSpace.GetOrCreateListType(weeklyCell);
+    dayTotals.Description = "Total per day (7 cells); ShowDash when every row is \"-\" that day.";
+    dayTotals.IsMandatory = false; // default value
+    dayTotals.Label = "Day Totals";
+    dayTotals.NameInJSON = null; // default value
     
     /*** creating IStructure 'WeeklyProjectRow' ***/
     var weeklyProjectRow = eSpace.CreateStructure("WeeklyProjectRow");
@@ -1366,13 +1390,13 @@
     cells.Label = "Cells";
     cells.NameInJSON = null; // default value
     
-    var totalMinutes6 = weeklyProjectRow.CreateAttribute("TotalMinutes");
-    totalMinutes6.DataType = eSpace.IntegerType;
-    totalMinutes6.SetDefaultValue(null); // default value
-    totalMinutes6.Description = null; // default value
-    totalMinutes6.IsMandatory = false; // default value
-    totalMinutes6.Label = "Total Minutes";
-    totalMinutes6.NameInJSON = null; // default value
+    var totalMinutes5 = weeklyProjectRow.CreateAttribute("TotalMinutes");
+    totalMinutes5.DataType = eSpace.IntegerType;
+    totalMinutes5.SetDefaultValue(null); // default value
+    totalMinutes5.Description = null; // default value
+    totalMinutes5.IsMandatory = false; // default value
+    totalMinutes5.Label = "Total Minutes";
+    totalMinutes5.NameInJSON = null; // default value
     // IStructureSignature OutSystemsCharts/XAxisGridLinesStyling
     var xAxisGridLinesStyling = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Iw63OPxQEEeAzzaCqdyZig*2ecbARfP0EuxBFu1lcvJYQ"));
     // IStructureSignature OutSystemsCharts/XAxisOptionalConfigs

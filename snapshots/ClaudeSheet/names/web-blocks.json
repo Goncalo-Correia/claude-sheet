@@ -726,6 +726,12 @@
     "IsReferenced": true
   },
   {
+    "Name": "WeeklyProjectHours",
+    "Description": "Weekly grid of the current user's hours per project and per day (Monday-Sunday week containing ReferenceDate), with totals per day, per week and a grand total. Previous/next arrows move one week and raise OnWeekChanged. Reloads when ReferenceDate or RefreshKey change.",
+    "UIFlow": "SheetBlocks",
+    "IsReferenced": false
+  },
+  {
     "Name": "Wizard",
     "Description": "Used to split larger tasks into more manageable steps. Usually supported by explicit button navigation to move forward and backward.\n\nDrag as many WizardItems in the Content placeholder as you need. ",
     "UIFlow": "Navigation",

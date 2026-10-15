@@ -150,6 +150,11 @@
     "IsReferenced": false
   },
   {
+    "Name": "ProjectHours_GetWeekly",
+    "Description": "Weekly grid for the current user: the Monday-Sunday week containing ReferenceDate, day headers classified like the calendar (Calendar_GetMonth), one row per project assigned during the week or with entries in it (sorted by client, project), 7 cells per row with the \"-\" rule, totals per row, per day and for the week.",
+    "IsReferenced": false
+  },
+  {
     "Name": "SetCurrentLocale",
     "Description": "Sets the language locale of the user session to change the application presentation language.",
     "IsReferenced": true
