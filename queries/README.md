@@ -12,8 +12,9 @@ All server actions:
 Root { ServerActions { Name } }
 ```
 
-## Model API probes
+## Model API lambdas
 
-Some checks can't be written in ModelQL because they need node positions. These are `applyModelApiCode` lambdas that end in `throw new Exception("PROBE:…")`, so they save nothing and return their result in `exceptionMessage`. Strip the leading `//` comment lines before sending the code.
+Some checks and fixes can't be written in ModelQL because they need node positions. These are `applyModelApiCode` lambdas. Strip the leading `//` comment lines before sending the code. A **report** ends in `throw new Exception("PROBE:…")`, so it saves nothing and returns its result in `exceptionMessage`. A **fix** saves like any other change, so merge and review it.
 
-- [`overlapping-nodes.cs`](overlapping-nodes.cs): overlapping nodes in every action flow (rule in `docs/conventions.md`).
+- [`flow-layout.cs`](flow-layout.cs): **report** (saves nothing). Per flow: vertical/horizontal connectors, allowed diagonals (For Each loop-backs, merges into a non-End node), other diagonals, crossings and overlapping nodes. Checks `docs/conventions.md` › Flow layout.
+- [`layout-flow.cs`](layout-flow.cs): **lays out** the flows listed in its `targets` and **saves** (not a probe). Positions plus new End nodes only. Run `flow-layout.cs` afterwards.

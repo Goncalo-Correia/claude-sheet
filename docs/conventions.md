@@ -66,6 +66,34 @@ Screen and block actions that are not bound to an event (helpers called from oth
 
 - One story per change set. Don't mix unrelated changes in a single review.
 - Read before you write. Confirm an element's current state with the live read tools, not only with `snapshots/`.
-- Lay out action flows before merging (see the `servicestudio-mcp-oml` skill).
-- **No overlapping nodes** in any server, client, screen, block or data action flow. Two nodes overlap when their positions are less than 900 units apart both horizontally and vertically. The standard spacing is 1371 vertically and 1828 horizontally (`ConnectedBelow(node, 1371)`, `ToTheRightOf(node, 1828)`). Check every new or edited flow before merging; the query is in [`queries/overlapping-nodes.cs`](../queries/overlapping-nodes.cs) (run it as a throw-probe with `applyModelApiCode`, nothing is saved).
+- Every new or edited action flow follows [Flow layout](#flow-layout) before merging.
 - Name every new action following [Action names](#action-names). A rename of an existing action is its own technical task, not part of an unrelated story.
+
+## Flow layout
+
+Applies to every server, client, screen, block and data action flow. Connectors are straight lines in Service Studio, so the layout decides how readable a flow is.
+
+**Priority: vertical, then horizontal, then diagonal.**
+
+1. **Main path vertical.** Start at the top, the main path straight down one column, End at the bottom. Spacing: 1371 vertically, 1828 horizontally (one column), origin x 3200 / y 800 (`ConnectedBelow(node, 1371)`, `ToTheRightOf(node, 1828)`).
+2. **Branches leave horizontally.** An If's False branch (and each Switch condition, Raise Exception or error path) leaves the node sideways on the **same row**, into a new column to the right of everything below it, then runs down that column. The True branch (and Switch Otherwise) continues down the main column.
+3. **Each branch ends on its own End node.** Don't draw a branch back to a shared End: add another End node. That's a layout change, not a logic change.
+4. **For Each:** the loop body goes to the right on the same row and down its own column. The flow after the loop continues in the main column **below the lowest node of the body**.
+5. **Exception handlers** each get their own column to the right of the main flow, laid out vertically.
+6. **Comments and unconnected nodes** go in a column of their own and never cover a node.
+
+**Diagonals are exceptions.** Only two kinds are allowed:
+
+- the **loop-back** from the last node of a For Each body to the For Each, which can't be drawn straight;
+- a **merge** back into a non-End node of the main path, when the branches must rejoin before more logic runs. Prefer laying it out so the merge connector is horizontal. A diagonal merge is noted in the story's implementation notes.
+
+**Not allowed:**
+
+- **Overlapping nodes**: two nodes less than 900 units apart both horizontally and vertically.
+- **Crossing connectors.** A crossing that can't be avoided is a very exceptional case, and the story's implementation notes say why.
+- Any other diagonal, including a diagonal into a shared End node (rule 3).
+
+**Tools** (in `queries/`, see its README):
+
+- [`flow-layout.cs`](../queries/flow-layout.cs) reports, per flow, the connector directions, allowed diagonals, other diagonals, crossings and overlaps. It's a throw-probe, so it saves nothing. A flow follows the rules when it shows 0 other diagonals, 0 crossings and 0 overlaps.
+- [`layout-flow.cs`](../queries/layout-flow.cs) lays out the named flows by these rules and saves: positions and new End nodes only. Run `flow-layout.cs` afterwards and fix any leftover merge or crossing by hand.
