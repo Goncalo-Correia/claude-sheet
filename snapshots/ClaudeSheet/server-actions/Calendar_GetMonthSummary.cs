@@ -40,13 +40,11 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
-    raiseExceptionNode.HorizontalPosition = 5028;
     raiseExceptionNode.IsDisabled = false; // default value
-    raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
     var calendar_GetMonth = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonth").Below(ifNode, 1371);

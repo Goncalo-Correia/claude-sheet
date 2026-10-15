@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-15, targeted mode, after the manual publish of TT1
+- **Last refresh:** 2026-10-15, targeted mode, after the manual publish of TT2
 
 ## Own elements (references excluded)
 
@@ -26,8 +26,8 @@
 
 ## Notes on this refresh
 
-- TT1 renamed 9 server actions, 2 client actions and 13 block actions (see `stories/TT1-apply-conventions.md`). The per-object files of the old names were deleted and the new ones written: `server-actions/` (9), `client-actions/` (2), `web-blocks/TotalHoursMonth.cs`, `HoursCalendar.cs`, `DayStatusKPIs.cs`.
-- Light mode was re-read too. `data-model.cs`, `structures.cs`, the other module-wide files and `themes/ClaudeSheet.cs` are unchanged, as TT1 changed no data, structure or CSS. `names/server-actions.json` and `names/client-actions.json` show the new names.
-- Old names still appear in 8 Description texts (a rename doesn't rewrite free text). This was accepted in the TT1 review (A06).
-- Reads made over raw HTTP and written by an equivalent of `extract-snapshot.mjs` (same cleaning and sort order), as for US3.
+- TT2 re-laid out 15 action flows (positions, plus 7 new End nodes). Re-read: `server-actions/` DaySheet_Save, Bootstrap, DaySheet_FillPending, DaySheet_Clear, Calendar_GetMonth, Holiday_CreateIfMissing, DaySheet_GetDetail, Calendar_GetMonthSummary and Project_GetAssignedToUser; `server-actions/DoLogout.cs` (new: the template action had no snapshot before); and `web-blocks/HoursCalendar.cs`, `TotalHoursMonth.cs` and `DayStatusKPIs.cs`.
+- Light mode was re-read too. The module-wide files and names lists are unchanged, as TT2 changed no data, names or CSS.
+- The diffs are node positions (`HorizontalPosition` / `VerticalPosition` and layout helper calls), connector notation, and the added End nodes.
+- Reads made over raw HTTP and written by an equivalent of `extract-snapshot.mjs`, as for US3 and TT1.
 - `getDataModel` does not output entity indexes. The unique indexes are listed in `stories/US-000-mysheet-foundation.md`.

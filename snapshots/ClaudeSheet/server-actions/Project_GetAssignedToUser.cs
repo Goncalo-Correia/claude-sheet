@@ -30,13 +30,11 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
-    raiseExceptionNode.HorizontalPosition = 5028;
     raiseExceptionNode.IsDisabled = false; // default value
-    raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
     var getAssignedProjects = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetAssignedProjects").Below(ifNode, 1371);
@@ -99,7 +97,7 @@
     var assignment7 = assignNode.CreateAssignment("Line.Description", "\"\"");
     forEachNode.CycleTarget = assignNode;
     
-    var endNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    var endNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 2742);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     

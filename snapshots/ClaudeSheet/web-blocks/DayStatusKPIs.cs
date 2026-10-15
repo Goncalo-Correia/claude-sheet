@@ -126,18 +126,20 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Failed?";
     
-    var messageNode = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
+    var endNode3 = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode, 1828);
+    endNode3.IsDisabled = false; // default value
+    
+    var messageNode = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
     messageNode.Label = null; // default value
     messageNode.SetMessage("GetKPIs.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
-    var endNode3 = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
-    endNode3.IsDisabled = false; // default value
+    var endNode4 = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(messageNode, 1371);
+    endNode4.IsDisabled = false; // default value
     getKPIs.OnAfterFetch.Destination = onAfterFetch_GetKPIs;
     ifNode.FalseTarget = endNode3;
     ifNode.TrueTarget = messageNode;
-    messageNode.Target = endNode3;
     
     var errorMessage = getKPIs.CreateOutputParameter("ErrorMessage");
     errorMessage.DataType = eSpace.TextType;
@@ -179,8 +181,8 @@
     refreshDataNode.SetMaxRecords(null); // default value
     refreshDataNode.SetStartIndex(null); // default value
     
-    var endNode4 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(refreshDataNode, 1371);
-    endNode4.IsDisabled = false; // default value
+    var endNode5 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(refreshDataNode, 1371);
+    endNode5.IsDisabled = false; // default value
     
     var kPICards = dayStatusKPIs.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("KPICards");
     kPICards.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value

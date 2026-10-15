@@ -1,6 +1,8 @@
 // Lays out the named action flows following docs/conventions.md › Flow layout, and SAVES the result (run it with applyModelApiCode).
-// Main path vertical from Start; If False and Switch conditions leave horizontally into a new column right of everything below;
-// For Each body to the right, loop continuation below the body; a branch that would draw back to a shared End gets its own End node;
+// Main path vertical from Start: at an If the taller branch goes down and the shorter one (e.g. an error) leaves horizontally to the
+// first free column in the rows it uses; an optional step that rejoins goes right; loops (For Each, or an If branch that leads back to
+// its If) put the body to the right, far enough for the loop-back to clear it, with the continuation below the body; a branch that
+// would draw back to a shared End gets its own End node;
 // exception handlers in their own columns; unconnected nodes (comments, orphans) stacked in a last column. Only positions change,
 // plus new End nodes (not a logic change). Merges into a non-End node stay diagonal: review them by hand.
 // Set targets to the flow names as printed by queries/flow-layout.cs, e.g. "Server DaySheet_Save", "SheetBlocks/HoursCalendar OnInitialize".
@@ -42,7 +44,19 @@ eSpace => {
         var col = new Dictionary<OutSystems.Model.Logic.Nodes.IActionNode, int>();
         var row = new Dictionary<OutSystems.Model.Logic.Nodes.IActionNode, int>();
         var added = 0;
-        Func<int, int> freeCol = r0 => { var m = -1; foreach (var k in row.Keys) if (row[k] >= r0 && col[k] > m) m = col[k]; return m + 1; };
+        Func<int, int, int> freeColIn = (r0, r1) => { var m = -1; foreach (var k in row.Keys) if (row[k] >= r0 && row[k] <= r1 && col[k] > m) m = col[k]; return m + 1; };
+        Func<OutSystems.Model.Logic.Nodes.IActionNode, HashSet<OutSystems.Model.Logic.Nodes.IActionNode>, int> height = null;
+        height = (n, seen) => {
+            if (n == null || row.ContainsKey(n) || seen.Contains(n)) return 0;
+            seen.Add(n);
+            var fe0 = n as OutSystems.Model.Logic.Nodes.IForEachNode;
+            if (fe0 != null) return Math.Max(1, height(fe0.CycleTarget, seen)) + height(fe0.Target, seen);
+            var ss0 = succ(n);
+            var hd = 0; var hs = 0;
+            foreach (var x in ss0) { var hx = height(x.Item1(), seen); if (x.Item3) hs = Math.Max(hs, hx); else hd = Math.Max(hd, hx); }
+            return Math.Max(1 + hd, hs);
+        };
+        Func<OutSystems.Model.Logic.Nodes.IActionNode, int, int> freeCol = (t, r0) => freeColIn(r0, r0 + Math.Max(1, height(t, new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>())) - 1);
         Action<OutSystems.Model.Logic.Nodes.IActionNode, int, int> setPos = (n, c, r) => { col[n] = c; row[n] = r; };
         Action<OutSystems.Model.Logic.Nodes.IActionNode, int, int> place = null;
         Func<Action<OutSystems.Model.Logic.Nodes.IActionNode>, int, int, OutSystems.Model.Logic.Nodes.IActionNode> newEnd = (set, c, r) => {
@@ -53,20 +67,56 @@ eSpace => {
             setPos(n, c, r);
             var fe = n as OutSystems.Model.Logic.Nodes.IForEachNode;
             var ss = succ(n);
-            if (fe != null) {
-                // body first (to the right, same row), then the continuation below the body's lowest node
+            // a loop: For Each (body = CycleTarget) or an If whose branch leads back to the If itself
+            Tuple<Func<OutSystems.Model.Logic.Nodes.IActionNode>, Action<OutSystems.Model.Logic.Nodes.IActionNode>, bool> loopBody = null, loopNext = null;
+            if (fe != null) { loopBody = ss[1]; loopNext = ss[0]; }
+            var iffL = n as OutSystems.Model.Logic.Nodes.IIfNode;
+            if (iffL != null && ss.Count == 2) {
+                Func<OutSystems.Model.Logic.Nodes.IActionNode, bool> backToMe = from => {
+                    if (from == null || from == n) return false;
+                    var seen = new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>(); var st = new Stack<OutSystems.Model.Logic.Nodes.IActionNode>(); st.Push(from);
+                    while (st.Count > 0) { var x = st.Pop(); if (x == n) return true; if (!seen.Add(x) || row.ContainsKey(x)) continue; foreach (var cc in x.Connectors) if (cc.Target != null) st.Push(cc.Target); }
+                    return false;
+                };
+                if (backToMe(ss[0].Item1()) && !backToMe(ss[1].Item1())) { loopBody = ss[0]; loopNext = ss[1]; }
+                else if (backToMe(ss[1].Item1()) && !backToMe(ss[0].Item1())) { loopBody = ss[1]; loopNext = ss[0]; }
+            }
+            if (loopBody != null) {
+                // body to the right on the same row, far enough that the loop-back diagonal clears the body nodes;
+                // the continuation goes below the body's lowest node
                 var before = new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>(row.Keys);
-                var body = ss[1];
-                var bt = body.Item1();
-                if (bt != null && !row.ContainsKey(bt)) place(bt, freeCol(r), r);
+                var bt = loopBody.Item1();
+                if (bt != null && !row.ContainsKey(bt)) {
+                    var bh = Math.Max(1, height(bt, new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>()));
+                    var bc = Math.Max(freeCol(bt, r), c + (int)Math.Ceiling(bh / 4.0));
+                    place(bt, bc, r);
+                }
                 var bottom = r;
                 foreach (var k in row.Keys) if (!before.Contains(k) && row[k] > bottom) bottom = row[k];
-                var dt = ss[0].Item1();
+                var dt = loopNext.Item1();
                 if (dt != null) {
                     if (!row.ContainsKey(dt)) place(dt, c, bottom + 1);
-                    else if (dt is OutSystems.Model.Logic.Nodes.IEndNode) newEnd(ss[0].Item2, c, bottom + 1);
+                    else if (dt is OutSystems.Model.Logic.Nodes.IEndNode) newEnd(loopNext.Item2, c, bottom + 1);
                 }
                 return;
+            }
+            var iff2 = n as OutSystems.Model.Logic.Nodes.IIfNode;
+            if (iff2 != null && ss.Count == 2) {
+                var hT = height(ss[0].Item1(), new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>());
+                var hF = height(ss[1].Item1(), new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>());
+                Func<OutSystems.Model.Logic.Nodes.IActionNode, OutSystems.Model.Logic.Nodes.IActionNode, bool> reaches = (from, to) => {
+                    if (from == null || to == null || to is OutSystems.Model.Logic.Nodes.IForEachNode) return false;
+                    var seen = new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>(); var st = new Stack<OutSystems.Model.Logic.Nodes.IActionNode>(); st.Push(from);
+                    while (st.Count > 0) { var x = st.Pop(); if (x == to) return true; if (!seen.Add(x) || x == n || x is OutSystems.Model.Logic.Nodes.IForEachNode) continue; foreach (var c in x.Connectors) if (c.Target != null) st.Push(c.Target); }
+                    return false;
+                };
+                var tT = ss[0].Item1(); var tF = ss[1].Item1();
+                bool swap;
+                if (reaches(tF, tT) && tF != tT) swap = false;       // False is an optional step rejoining True's target: True goes down
+                else if (reaches(tT, tF) && tF != tT) swap = true;   // True is the optional step: False goes down
+                else swap = hF > hT;                                 // otherwise the taller branch goes down
+                if (swap) ss = new List<Tuple<Func<OutSystems.Model.Logic.Nodes.IActionNode>, Action<OutSystems.Model.Logic.Nodes.IActionNode>, bool>> {
+                    Tuple.Create(ss[1].Item1, ss[1].Item2, false), Tuple.Create(ss[0].Item1, ss[0].Item2, true) };
             }
             foreach (var s in ss.Where(x => !x.Item3)) {
                 var t = s.Item1();
@@ -77,8 +127,8 @@ eSpace => {
             foreach (var s in ss.Where(x => x.Item3)) {
                 var t = s.Item1();
                 if (t == null) continue;
-                if (!row.ContainsKey(t)) place(t, freeCol(r), r);
-                else if (t is OutSystems.Model.Logic.Nodes.IEndNode) newEnd(s.Item2, freeCol(r), r);
+                if (!row.ContainsKey(t)) place(t, freeCol(t, r), r);
+                else if (t is OutSystems.Model.Logic.Nodes.IEndNode) newEnd(s.Item2, freeColIn(r, r), r);
             }
         };
         var start = nodes.OfType<OutSystems.Model.Logic.Nodes.IStartNode>().FirstOrDefault();
@@ -104,7 +154,11 @@ eSpace => {
                 else if (Math.Abs(y1 - y2) < 50) h++;
                 else {
                     var fe = t as OutSystems.Model.Logic.Nodes.IForEachNode;
-                    if (fe != null && fe.NodesWithinCycle.Contains(n)) dLoop++;
+                    // back-edge: the target can reach the source again (For Each body or a loop built with an If)
+                    var back = false;
+                    { var seen = new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>(); var st = new Stack<OutSystems.Model.Logic.Nodes.IActionNode>(); st.Push(t);
+                      while (st.Count > 0 && !back) { var xq = st.Pop(); if (xq == n) { back = true; break; } if (!seen.Add(xq)) continue; foreach (var cc in xq.Connectors) if (cc.Target != null) st.Push(cc.Target); } }
+                    if ((fe != null && fe.NodesWithinCycle.Contains(n)) || back) dLoop++;
                     else if (t.IncomingConnectors.Count() > 1 && !(t is OutSystems.Model.Logic.Nodes.IEndNode)) dMerge++;
                     else dOther++;
                 }
@@ -118,6 +172,18 @@ eSpace => {
                 var d1 = cr(b[0], b[1], b[2], b[3], a[0], a[1]); var d2 = cr(b[0], b[1], b[2], b[3], a[2], a[3]);
                 var d3 = cr(a[0], a[1], a[2], a[3], b[0], b[1]); var d4 = cr(a[0], a[1], a[2], a[3], b[2], b[3]);
                 if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) x++;
+            }
+        foreach (var sg in segs)
+            foreach (var nd in nodes) {
+                if (nd.GetType().Name.StartsWith("Comment")) continue;
+                double px = nd.HorizontalPosition, py = nd.VerticalPosition;
+                if ((px == sg[0] && py == sg[1]) || (px == sg[2] && py == sg[3])) continue;
+                double dx = sg[2] - sg[0], dy = sg[3] - sg[1], len2 = dx * dx + dy * dy;
+                if (len2 == 0) continue;
+                var tt = ((px - sg[0]) * dx + (py - sg[1]) * dy) / len2;
+                if (tt <= 0 || tt >= 1) continue;
+                double qx = sg[0] + tt * dx - px, qy = sg[1] + tt * dy - py;
+                if (qx * qx + qy * qy < 400 * 400) ov++;
             }
         for (var i = 0; i < nodes.Count; i++)
             for (var j = i + 1; j < nodes.Count; j++)

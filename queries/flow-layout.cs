@@ -1,6 +1,7 @@
 // Flow layout report for every action flow of the open module (server, client, screen/block and data actions).
 // Rules in docs/conventions.md › Flow layout. Per flow: vertical / horizontal connectors, loop-back diagonals (allowed),
-// merge diagonals (allowed exception, must be justified), other diagonals, crossings and overlapping nodes (both not allowed).
+// merge diagonals (allowed exception, must be justified), other diagonals, crossings, and overlaps (two nodes too close, or a
+// connector passing through a node; not allowed). A loop-back is any back-edge: For Each body or a loop built with an If.
 // Run it as a throw-probe: send it as the code of applyModelApiCode with these // header lines removed. It always throws,
 // so nothing is saved; the report is in exceptionMessage. Set onlyFlows to limit the report (names as printed, e.g. "Server DaySheet_Save").
 eSpace => {
@@ -18,7 +19,11 @@ eSpace => {
                 else if (Math.Abs(y1 - y2) < 50) h++;
                 else {
                     var fe = t as OutSystems.Model.Logic.Nodes.IForEachNode;
-                    if (fe != null && fe.NodesWithinCycle.Contains(n)) dLoop++;
+                    // back-edge: the target can reach the source again (For Each body or a loop built with an If)
+                    var back = false;
+                    { var seen = new HashSet<OutSystems.Model.Logic.Nodes.IActionNode>(); var st = new Stack<OutSystems.Model.Logic.Nodes.IActionNode>(); st.Push(t);
+                      while (st.Count > 0 && !back) { var xq = st.Pop(); if (xq == n) { back = true; break; } if (!seen.Add(xq)) continue; foreach (var cc in xq.Connectors) if (cc.Target != null) st.Push(cc.Target); } }
+                    if ((fe != null && fe.NodesWithinCycle.Contains(n)) || back) dLoop++;
                     else if (t.IncomingConnectors.Count() > 1 && !(t is OutSystems.Model.Logic.Nodes.IEndNode)) dMerge++;
                     else dOther++;
                 }
@@ -32,6 +37,18 @@ eSpace => {
                 var d1 = cr(b[0], b[1], b[2], b[3], a[0], a[1]); var d2 = cr(b[0], b[1], b[2], b[3], a[2], a[3]);
                 var d3 = cr(a[0], a[1], a[2], a[3], b[0], b[1]); var d4 = cr(a[0], a[1], a[2], a[3], b[2], b[3]);
                 if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) x++;
+            }
+        foreach (var sg in segs)
+            foreach (var nd in nodes) {
+                if (nd.GetType().Name.StartsWith("Comment")) continue;
+                double px = nd.HorizontalPosition, py = nd.VerticalPosition;
+                if ((px == sg[0] && py == sg[1]) || (px == sg[2] && py == sg[3])) continue;
+                double dx = sg[2] - sg[0], dy = sg[3] - sg[1], len2 = dx * dx + dy * dy;
+                if (len2 == 0) continue;
+                var tt = ((px - sg[0]) * dx + (py - sg[1]) * dy) / len2;
+                if (tt <= 0 || tt >= 1) continue;
+                double qx = sg[0] + tt * dx - px, qy = sg[1] + tt * dy - py;
+                if (qx * qx + qy * qy < 400 * 400) ov++;
             }
         for (var i = 0; i < nodes.Count; i++)
             for (var j = i + 1; j < nodes.Count; j++)

@@ -76,20 +76,20 @@ Applies to every server, client, screen, block and data action flow. Connectors 
 **Priority: vertical, then horizontal, then diagonal.**
 
 1. **Main path vertical.** Start at the top, the main path straight down one column, End at the bottom. Spacing: 1371 vertically, 1828 horizontally (one column), origin x 3200 / y 800 (`ConnectedBelow(node, 1371)`, `ToTheRightOf(node, 1828)`).
-2. **Branches leave horizontally.** An If's False branch (and each Switch condition, Raise Exception or error path) leaves the node sideways on the **same row**, into a new column to the right of everything below it, then runs down that column. The True branch (and Switch Otherwise) continues down the main column.
+2. **Branches leave horizontally.** At an If, the branch that carries the rest of the flow continues down the main column, and the shorter branch (typically an error or Raise Exception, or an optional step that rejoins) leaves sideways on the **same row**, into the first column that is free in the rows it uses, then runs down that column. Switch: Otherwise down, conditions sideways.
 3. **Each branch ends on its own End node.** Don't draw a branch back to a shared End: add another End node. That's a layout change, not a logic change.
-4. **For Each:** the loop body goes to the right on the same row and down its own column. The flow after the loop continues in the main column **below the lowest node of the body**.
+4. **Loops** (For Each, or an If whose branch leads back to that If): the loop body goes to the right on the same row and down its own column, far enough right that the loop-back clears the body's nodes (about one extra column per 4 rows of body). The flow after the loop continues in the main column **below the lowest node of the body**.
 5. **Exception handlers** each get their own column to the right of the main flow, laid out vertically.
 6. **Comments and unconnected nodes** go in a column of their own and never cover a node.
 
 **Diagonals are exceptions.** Only two kinds are allowed:
 
-- the **loop-back** from the last node of a For Each body to the For Each, which can't be drawn straight;
+- the **loop-back** from a loop body back to its For Each (or loop If), which can't be drawn straight;
 - a **merge** back into a non-End node of the main path, when the branches must rejoin before more logic runs. Prefer laying it out so the merge connector is horizontal. A diagonal merge is noted in the story's implementation notes.
 
 **Not allowed:**
 
-- **Overlapping nodes**: two nodes less than 900 units apart both horizontally and vertically.
+- **Overlapping nodes**: two nodes less than 900 units apart both horizontally and vertically, or a connector passing within 400 units of a node it doesn't connect.
 - **Crossing connectors.** A crossing that can't be avoided is a very exceptional case, and the story's implementation notes say why.
 - Any other diagonal, including a diagonal into a shared End node (rule 3).
 

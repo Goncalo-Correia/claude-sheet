@@ -25,22 +25,20 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "!Is SheetUser?";
     
-    var raiseExceptionNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode, 1371);
+    var raiseExceptionNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
     raiseExceptionNode.IsDisabled = false; // default value
     ifNode.FalseTarget = raiseExceptionNode;
     
-    var getDayRecord = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord");
+    var getDayRecord = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord").Below(ifNode, 1371);
     getDayRecord.CacheInMinutes = null; // default value
     getDayRecord.Description = null; // default value
-    getDayRecord.HorizontalPosition = 5028;
     getDayRecord.IsDisabled = false; // default value
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    getDayRecord.VerticalPosition = 3542;
     var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
     var daySheet = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
@@ -125,7 +123,7 @@
     forEachNode2.Target = forEachNode;
     forEachNode.CycleTarget = forEachNode2;
     
-    var endNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    var endNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 2742);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
@@ -136,12 +134,10 @@
     ifNode2.Label = "!Same project?";
     forEachNode2.CycleTarget = ifNode2;
     
-    var assignNode2 = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode2.HorizontalPosition = 10512;
+    var assignNode2 = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = null; // default value
     assignNode2.Target = forEachNode2;
-    assignNode2.VerticalPosition = 11768;
     
     var assignment9 = assignNode2.CreateAssignment("Detail.Lines.Current.TimeEntryId", "GetDayEntries.List.Current.TimeEntry.Id");
     

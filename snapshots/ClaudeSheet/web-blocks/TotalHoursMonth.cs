@@ -81,18 +81,20 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Failed?";
     
-    var messageNode = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
+    var endNode3 = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode, 1828);
+    endNode3.IsDisabled = false; // default value
+    
+    var messageNode = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
     messageNode.Label = null; // default value
     messageNode.SetMessage("GetSummary.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
-    var endNode3 = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
-    endNode3.IsDisabled = false; // default value
+    var endNode4 = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(messageNode, 1371);
+    endNode4.IsDisabled = false; // default value
     getSummary.OnAfterFetch.Destination = onAfterFetch_GetSummary;
     ifNode.FalseTarget = endNode3;
     ifNode.TrueTarget = messageNode;
-    messageNode.Target = endNode3;
     
     var errorMessage = getSummary.CreateOutputParameter("ErrorMessage");
     errorMessage.DataType = eSpace.TextType;
@@ -134,8 +136,8 @@
     refreshDataNode.SetMaxRecords(null); // default value
     refreshDataNode.SetStartIndex(null); // default value
     
-    var endNode4 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(refreshDataNode, 1371);
-    endNode4.IsDisabled = false; // default value
+    var endNode5 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(refreshDataNode, 1371);
+    endNode5.IsDisabled = false; // default value
     
     var totalHours = totalHoursMonth.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("TotalHours");
     totalHours.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value

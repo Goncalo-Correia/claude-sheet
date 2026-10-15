@@ -46,10 +46,8 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Missing?";
     
-    var endNode = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode.HorizontalPosition = 5028;
+    var endNode = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode, 1828);
     endNode.IsDisabled = false; // default value
-    endNode.VerticalPosition = 4913;
     ifNode.FalseTarget = endNode;
     
     var assignNode = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
@@ -68,8 +66,10 @@
     createHoliday.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createHoliday.IsDisabled = false; // default value
     createHoliday.ServerRequestTimeout = null; // default value
-    createHoliday.Target = endNode;
     var createHoliday2 = holiday.CreateAction;
     var source = createHoliday2.InputParameters.Named("Source");
     createHoliday.SetArgumentValue(source, "NewHoliday");
+    
+    var endNode2 = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(createHoliday, 1371);
+    endNode2.IsDisabled = false; // default value
 }

@@ -293,21 +293,13 @@
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "!More hours?";
     
-    var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
+    var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode2, 1828);
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = null; // default value
     
     var assignment5 = assignNode3.CreateAssignment("Option.Value", "I");
     
     var assignment6 = assignNode3.CreateAssignment("Option.Label", "I");
-    
-    var assignNode4 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode4.HorizontalPosition = 5028;
-    assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
-    assignNode4.VerticalPosition = 4913;
-    
-    var assignment7 = assignNode4.CreateAssignment("I", "0");
     
     var listAppend3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode3, 1371);
     var listAppend4 = _System_.ClientActions.Named("ListAppend");
@@ -318,30 +310,31 @@
     var list3 = listAppend4.InputParameters.Named("List");
     listAppend3.SetArgumentValue(list3, "HourOptions");
     
-    var ifNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode4, 1371);
+    var assignNode4 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
+    assignNode4.IsDisabled = false; // default value
+    assignNode4.Label = null; // default value
+    assignNode4.Target = ifNode2;
+    
+    var assignment7 = assignNode4.CreateAssignment("I", "I + 1");
+    
+    var assignNode5 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 4113);
+    assignNode5.IsDisabled = false; // default value
+    assignNode5.Label = null; // default value
+    
+    var assignment8 = assignNode5.CreateAssignment("I", "0");
+    
+    var ifNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode5, 1371);
     ifNode3.SetCondition("I <= 45");
     ifNode3.IsDisabled = false; // default value
     ifNode3.Label = "!More minutes?";
     
-    var assignNode5 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
-    assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
-    assignNode5.Target = ifNode2;
-    
-    var assignment8 = assignNode5.CreateAssignment("I", "I + 1");
-    
-    var assignNode6 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode3, 1371);
+    var assignNode6 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode3, 1828);
     assignNode6.IsDisabled = false; // default value
     assignNode6.Label = null; // default value
     
     var assignment9 = assignNode6.CreateAssignment("Option.Value", "I");
     
     var assignment10 = assignNode6.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
-    
-    var endNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode2.HorizontalPosition = 6856;
-    endNode2.IsDisabled = false; // default value
-    endNode2.VerticalPosition = 7655;
     
     var listAppend22 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend2").ConnectedBelow(assignNode6, 1371);
     listAppend22.Action = listAppend4;
@@ -355,6 +348,9 @@
     assignNode7.Target = ifNode3;
     
     var assignment11 = assignNode7.CreateAssignment("I", "I + 15");
+    
+    var endNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode3, 4113);
+    endNode2.IsDisabled = false; // default value
     hoursCalendar.OnInitialize.Destination = onInitialize;
     
     var onParametersChanged = hoursCalendar.CreateScreenAction("OnParametersChanged");
@@ -391,7 +387,7 @@
     var endNode4 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(escapeClosesPopup, 1371);
     endNode4.IsDisabled = false; // default value
     hoursCalendar.OnReady.Destination = onReady;
-    ifNode2.FalseTarget = assignNode4;
+    ifNode2.FalseTarget = assignNode5;
     ifNode2.TrueTarget = assignNode3;
     ifNode3.FalseTarget = endNode2;
     ifNode3.TrueTarget = assignNode6;
@@ -575,11 +571,9 @@
     daySheet_FillPending.SetArgumentValue(projectId, "FillProjectId");
     ifNode4.FalseTarget = daySheet_FillPending;
     
-    var assignNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode14.HorizontalPosition = 5028;
+    var assignNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode4, 1828);
     assignNode14.IsDisabled = false; // default value
     assignNode14.Label = null; // default value
-    assignNode14.VerticalPosition = 3542;
     
     var assignment18 = assignNode14.CreateAssignment("FillError", "\"Choose a project.\"");
     ifNode4.TrueTarget = assignNode14;
@@ -617,7 +611,7 @@
     var allExceptions2 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
     allExceptions2.AbortTransaction = false;
     allExceptions2.Exception = eSpace.AllExceptions;
-    allExceptions2.HorizontalPosition = 8684;
+    allExceptions2.HorizontalPosition = 6856;
     allExceptions2.IsDisabled = false; // default value
     allExceptions2.LogError = false;
     allExceptions2.VerticalPosition = 800;
@@ -655,13 +649,12 @@
     ifNode5.IsDisabled = false; // default value
     ifNode5.Label = "Editable?";
     
-    var endNode15 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode5, 1371);
+    var endNode15 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode5, 1828);
     endNode15.IsDisabled = false; // default value
     ifNode5.FalseTarget = endNode15;
     
-    var openDayEditor = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("OpenDayEditor").ToTheRightOf(ifNode5, 1828);
+    var openDayEditor = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("OpenDayEditor").Below(ifNode5, 1371);
     openDayEditor.IsDisabled = false; // default value
-    openDayEditor.Target = endNode15;
     ifNode5.TrueTarget = openDayEditor;
     
     var openDayEditor2 = hoursCalendar.CreateScreenAction("OpenDayEditor");
@@ -760,6 +753,9 @@
     var endNode16 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode19, 1371);
     endNode16.IsDisabled = false; // default value
     openDayEditor.Action = openDayEditor2;
+    
+    var endNode17 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(openDayEditor, 1371);
+    endNode17.IsDisabled = false; // default value
     openDayEditor.SetArgumentValue(day2, "Day");
     forEachNode2.CycleTarget = assignNode18;
     forEachNode2.Target = recalcEditorTotal3;
@@ -795,8 +791,8 @@
     
     var assignment41 = assignNode20.CreateAssignment("ShowFillPopup", "True");
     
-    var endNode17 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode20, 1371);
-    endNode17.IsDisabled = false; // default value
+    var endNode18 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode20, 1371);
+    endNode18.IsDisabled = false; // default value
     
     var onClick_NextMonth = hoursCalendar.CreateScreenAction("OnClick_NextMonth");
     onClick_NextMonth.Description = "Raises OnMonthChanged with the next month (December rolls over to January of the next year).";
@@ -813,8 +809,8 @@
     onMonthChanged2.SetArgumentValue(year3, "If(Month = 12, Year + 1, Year)");
     onMonthChanged2.SetArgumentValue(month3, "If(Month = 12, 1, Month + 1)");
     
-    var endNode18 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged2, 1371);
-    endNode18.IsDisabled = false; // default value
+    var endNode19 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged2, 1371);
+    endNode19.IsDisabled = false; // default value
     
     var onClick_PreviousMonth = hoursCalendar.CreateScreenAction("OnClick_PreviousMonth");
     onClick_PreviousMonth.Description = "Raises OnMonthChanged with the previous month (January rolls back to December of the previous year).";
@@ -831,8 +827,8 @@
     onMonthChanged3.SetArgumentValue(month3, "If(Month = 1, 12, Month - 1)");
     onMonthChanged3.SetArgumentValue(year3, "If(Month = 1, Year - 1, Year)");
     
-    var endNode19 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged3, 1371);
-    endNode19.IsDisabled = false; // default value
+    var endNode20 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged3, 1371);
+    endNode20.IsDisabled = false; // default value
     
     var onClick_SaveDay = hoursCalendar.CreateScreenAction("OnClick_SaveDay");
     onClick_SaveDay.Description = "Builds the entries from EditorLines and calls SaveDaySheet. Validation errors stay in the popup (EditorError).";
@@ -910,8 +906,8 @@
     finishDaySave3.IsDisabled = false; // default value
     finishDaySave3.SetArgumentValue(successMessage, "If(IsDayOff, \"Day off saved.\", If(Confirm, \"Day confirmed.\", \"Draft saved.\"))");
     
-    var endNode20 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(finishDaySave3, 1371);
-    endNode20.IsDisabled = false; // default value
+    var endNode21 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(finishDaySave3, 1371);
+    endNode21.IsDisabled = false; // default value
     
     var allExceptions3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
     allExceptions3.AbortTransaction = false;
@@ -927,8 +923,8 @@
     
     var assignment46 = assignNode23.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
-    var endNode21 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode23, 1371);
-    endNode21.IsDisabled = false; // default value
+    var endNode22 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode23, 1371);
+    endNode22.IsDisabled = false; // default value
     
     var calendar = hoursCalendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("Calendar");
     calendar.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value

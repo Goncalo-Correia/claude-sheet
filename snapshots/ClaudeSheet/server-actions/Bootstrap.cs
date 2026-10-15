@@ -61,11 +61,9 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Client missing?";
     
-    var assignNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode.HorizontalPosition = 5028;
+    var assignNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode, 1828);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
-    assignNode.VerticalPosition = 4913;
     
     var assignment = assignNode.CreateAssignment("ClientId", "GetSeedClient.List.Current.Client.Id");
     ifNode.FalseTarget = assignNode;
@@ -79,17 +77,20 @@
     var assignment3 = assignNode2.CreateAssignment("NewClient.IsActive", "True");
     ifNode.TrueTarget = assignNode2;
     
-    var getSeedProject = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetSeedProject").ConnectedBelow(assignNode, 1371);
+    var getSeedProject = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetSeedProject");
     getSeedProject.CacheInMinutes = null; // default value
     getSeedProject.Description = null; // default value
+    getSeedProject.HorizontalPosition = 3200;
     getSeedProject.IsDisabled = false; // default value
     getSeedProject.SetMaxRecords(null); // default value
     getSeedProject.SetStartIndex(null); // default value
     getSeedProject.Timeout = null; // default value
+    getSeedProject.VerticalPosition = 9026;
     var project2 = getSeedProject.AsDatabaseAggregate.CreateSource(project);
     getSeedProject.AsDatabaseAggregate.CreateFilter("Project.ClientId = ClientId");
     getSeedProject.AsDatabaseAggregate.CreateFilter("Project.Code = \"RUBUS\"");
     
+    assignNode.Target = getSeedProject;
     
     var createClient = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateClient").ConnectedBelow(assignNode2, 1371);
     createClient.Action = client.CreateAction;
@@ -112,11 +113,9 @@
     
     var assignment4 = assignNode3.CreateAssignment("ClientId", "CreateClient.Id");
     
-    var assignNode4 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode4.HorizontalPosition = 6856;
+    var assignNode4 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode2, 1828);
     assignNode4.IsDisabled = false; // default value
     assignNode4.Label = null; // default value
-    assignNode4.VerticalPosition = 9026;
     
     var assignment5 = assignNode4.CreateAssignment("ProjectId", "GetSeedProject.List.Current.Project.Id");
     ifNode2.FalseTarget = assignNode4;
@@ -134,16 +133,19 @@
     var assignment9 = assignNode5.CreateAssignment("NewProject.IsActive", "True");
     ifNode2.TrueTarget = assignNode5;
     
-    var holiday_CreateIfMissing = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Holiday_CreateIfMissing").ConnectedBelow(assignNode4, 1371);
+    var holiday_CreateIfMissing = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Holiday_CreateIfMissing");
     var holiday_CreateIfMissing2 = eSpace.ServerActions.Named("Holiday_CreateIfMissing");
     holiday_CreateIfMissing.Action = holiday_CreateIfMissing2;
     holiday_CreateIfMissing.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    holiday_CreateIfMissing.HorizontalPosition = 3200;
     holiday_CreateIfMissing.IsDisabled = false; // default value
     holiday_CreateIfMissing.ServerRequestTimeout = null; // default value
+    holiday_CreateIfMissing.VerticalPosition = 15881;
     var holidayDate = holiday_CreateIfMissing2.InputParameters.Named("HolidayDate");
     holiday_CreateIfMissing.SetArgumentValue(holidayDate, "NewDate(2026, 1, 1)");
     var name = holiday_CreateIfMissing2.InputParameters.Named("Name");
     holiday_CreateIfMissing.SetArgumentValue(name, "\"Ano Novo\"");
+    assignNode4.Target = holiday_CreateIfMissing;
     
     var createProject = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateProject").ConnectedBelow(assignNode5, 1371);
     createProject.Action = project.CreateAction;
@@ -284,30 +286,28 @@
     forEachNode.SetRecordList("GetSeedUsers.List");
     forEachNode.SetStartIndex(null); // default value
     
-    var ifNode3 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 1828);
+    var ifNode3 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 3656);
     ifNode3.SetCondition("CheckSheetUserRole(GetSeedUsers.List.Current.User.Id)");
     ifNode3.IsDisabled = false; // default value
     ifNode3.Label = "Has SheetUser?";
     forEachNode.CycleTarget = ifNode3;
     
-    var endNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    var endNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 6855);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
-    var grantSheetUserRole = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GrantSheetUserRole");
+    var grantSheetUserRole = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GrantSheetUserRole").ToTheRightOf(ifNode3, 1828);
     var sheetUser = eSpace.Roles.Named("SheetUser");
     var grantSheetUserRole2 = sheetUser.RoleActions.Named("GrantSheetUserRole");
     grantSheetUserRole.Action = grantSheetUserRole2;
     grantSheetUserRole.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    grantSheetUserRole.HorizontalPosition = 10512;
     grantSheetUserRole.IsDisabled = false; // default value
     grantSheetUserRole.ServerRequestTimeout = null; // default value
-    grantSheetUserRole.VerticalPosition = 32333;
     var userId = grantSheetUserRole2.InputParameters.Named("UserId");
     grantSheetUserRole.SetArgumentValue(userId, "GetSeedUsers.List.Current.User.Id");
     ifNode3.FalseTarget = grantSheetUserRole;
     
-    var getSeedAssignment = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetSeedAssignment").ConnectedToTheLeftOf(grantSheetUserRole, 1828);
+    var getSeedAssignment = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetSeedAssignment").Below(ifNode3, 1371);
     getSeedAssignment.CacheInMinutes = null; // default value
     getSeedAssignment.Description = null; // default value
     getSeedAssignment.IsDisabled = false; // default value
@@ -319,6 +319,7 @@
     getSeedAssignment.AsDatabaseAggregate.CreateFilter("ProjectAssignment.ProjectId = ProjectId");
     
     ifNode3.TrueTarget = getSeedAssignment;
+    grantSheetUserRole.Target = getSeedAssignment;
     
     var ifNode4 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(getSeedAssignment, 1371);
     ifNode4.SetCondition("GetSeedAssignment.List.Empty");

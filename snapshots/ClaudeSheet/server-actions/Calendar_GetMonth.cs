@@ -55,13 +55,11 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
-    raiseExceptionNode.HorizontalPosition = 5028;
     raiseExceptionNode.IsDisabled = false; // default value
-    raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
     var assignNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
@@ -82,15 +80,13 @@
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "More days?";
     
-    var getMonthHolidays = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthHolidays");
+    var getMonthHolidays = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthHolidays").Below(ifNode2, 4113);
     getMonthHolidays.CacheInMinutes = null; // default value
     getMonthHolidays.Description = null; // default value
-    getMonthHolidays.HorizontalPosition = 5028;
     getMonthHolidays.IsDisabled = false; // default value
     getMonthHolidays.SetMaxRecords(null); // default value
     getMonthHolidays.SetStartIndex(null); // default value
     getMonthHolidays.Timeout = null; // default value
-    getMonthHolidays.VerticalPosition = 6284;
     var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
     var holiday = getMonthHolidays.AsDatabaseAggregate.CreateSource(holiday2);
     getMonthHolidays.AsDatabaseAggregate.CreateFilter("Holiday.IsActive");
@@ -98,7 +94,7 @@
     
     ifNode2.FalseTarget = getMonthHolidays;
     
-    var assignNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
+    var assignNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode2, 1828);
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = null; // default value
     

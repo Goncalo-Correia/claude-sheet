@@ -72,13 +72,11 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
-    raiseExceptionNode.HorizontalPosition = 5028;
     raiseExceptionNode.IsDisabled = false; // default value
-    raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
     var ifNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(ifNode, 1371);
@@ -87,15 +85,13 @@
     ifNode2.Label = "!Weekend?";
     ifNode.TrueTarget = ifNode2;
     
-    var getDayHoliday = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayHoliday");
+    var getDayHoliday = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayHoliday").Below(ifNode2, 1371);
     getDayHoliday.CacheInMinutes = null; // default value
     getDayHoliday.Description = null; // default value
-    getDayHoliday.HorizontalPosition = 5028;
     getDayHoliday.IsDisabled = false; // default value
     getDayHoliday.SetMaxRecords(null); // default value
     getDayHoliday.SetStartIndex(null); // default value
     getDayHoliday.Timeout = null; // default value
-    getDayHoliday.VerticalPosition = 4913;
     var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
     var holiday = getDayHoliday.AsDatabaseAggregate.CreateSource(holiday2);
     getDayHoliday.AsDatabaseAggregate.CreateFilter("Holiday.IsActive");
@@ -103,7 +99,7 @@
     
     ifNode2.FalseTarget = getDayHoliday;
     
-    var raiseExceptionNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode2, 1371);
+    var raiseExceptionNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode2, 1828);
     var daySheetValidation = eSpace.UserExceptions.Named("DaySheetValidation");
     raiseExceptionNode2.Exception = daySheetValidation;
     raiseExceptionNode2.SetExceptionMessage("\"Nothing can be saved on a weekend.\"");
@@ -115,19 +111,17 @@
     ifNode3.IsDisabled = false; // default value
     ifNode3.Label = "!Holiday?";
     
-    var project_GetAssignedToUser = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Project_GetAssignedToUser");
+    var project_GetAssignedToUser = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Project_GetAssignedToUser").Below(ifNode3, 1371);
     var project_GetAssignedToUser2 = eSpace.ServerActions.Named("Project_GetAssignedToUser");
     project_GetAssignedToUser.Action = project_GetAssignedToUser2;
     project_GetAssignedToUser.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    project_GetAssignedToUser.HorizontalPosition = 6856;
     project_GetAssignedToUser.IsDisabled = false; // default value
     project_GetAssignedToUser.ServerRequestTimeout = null; // default value
-    project_GetAssignedToUser.VerticalPosition = 7655;
     var forDate = project_GetAssignedToUser2.InputParameters.Named("ForDate");
     project_GetAssignedToUser.SetArgumentValue(forDate, "Date");
     ifNode3.FalseTarget = project_GetAssignedToUser;
     
-    var raiseExceptionNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode3, 1371);
+    var raiseExceptionNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode3, 1828);
     raiseExceptionNode3.Exception = daySheetValidation;
     raiseExceptionNode3.SetExceptionMessage("GetDayHoliday.List.Current.Holiday.Name + \" is a holiday: nothing can be saved on this day.\"");
     raiseExceptionNode3.IsDisabled = false; // default value
@@ -140,44 +134,40 @@
     forEachNode.SetRecordList("Entries");
     forEachNode.SetStartIndex(null); // default value
     
-    var ifNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 1828);
+    var ifNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 3656);
     ifNode4.SetCondition("Entries.Current.Minutes < 0 or Mod(Entries.Current.Minutes, 15) <> 0");
     ifNode4.IsDisabled = false; // default value
     ifNode4.Label = "!Invalid minutes?";
     forEachNode.CycleTarget = ifNode4;
     
-    var ifNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode, 1371);
+    var ifNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode, 9597);
     ifNode5.SetCondition("not IsDayOff and Total > 0 and Date > CurrDate()");
     ifNode5.IsDisabled = false; // default value
     ifNode5.Label = "!Hours in the future?";
     forEachNode.Target = ifNode5;
     
-    var assignNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode.HorizontalPosition = 10512;
+    var assignNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
-    assignNode.VerticalPosition = 10397;
     
     var assignment = assignNode.CreateAssignment("Total", "Total + Entries.Current.Minutes");
     
     var assignment2 = assignNode.CreateAssignment("Found", "False");
     ifNode4.FalseTarget = assignNode;
     
-    var raiseExceptionNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode4, 1371);
+    var raiseExceptionNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode4, 1828);
     raiseExceptionNode4.Exception = daySheetValidation;
     raiseExceptionNode4.SetExceptionMessage("\"Minutes must be a multiple of 15.\"");
     raiseExceptionNode4.IsDisabled = false; // default value
     ifNode4.TrueTarget = raiseExceptionNode4;
     
-    var ifNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>();
+    var ifNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(ifNode5, 1371);
     ifNode6.SetCondition("not IsDayOff and Total > 1440");
-    ifNode6.HorizontalPosition = 8684;
     ifNode6.IsDisabled = false; // default value
     ifNode6.Label = "!Over 24:00?";
-    ifNode6.VerticalPosition = 11768;
     ifNode5.FalseTarget = ifNode6;
     
-    var raiseExceptionNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode5, 1371);
+    var raiseExceptionNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode5, 1828);
     raiseExceptionNode5.Exception = daySheetValidation;
     raiseExceptionNode5.SetExceptionMessage("\"Hours cannot be logged in the future.\"");
     raiseExceptionNode5.IsDisabled = false; // default value
@@ -189,46 +179,40 @@
     ifNode7.IsDisabled = false; // default value
     ifNode7.Label = "Has minutes?";
     
-    var ifNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>();
+    var ifNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(ifNode6, 1371);
     ifNode8.SetCondition("Confirm and not IsDayOff and Total = 0");
-    ifNode8.HorizontalPosition = 10512;
     ifNode8.IsDisabled = false; // default value
     ifNode8.Label = "!Confirm without hours?";
-    ifNode8.VerticalPosition = 13139;
     ifNode6.FalseTarget = ifNode8;
     
-    var raiseExceptionNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode6, 1371);
+    var raiseExceptionNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode6, 1828);
     raiseExceptionNode6.Exception = daySheetValidation;
     raiseExceptionNode6.SetExceptionMessage("\"A day cannot exceed 24:00\"");
     raiseExceptionNode6.IsDisabled = false; // default value
     ifNode6.TrueTarget = raiseExceptionNode6;
     
-    var forEachNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>();
-    forEachNode2.HorizontalPosition = 12340;
+    var forEachNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(ifNode7, 1371);
     forEachNode2.IsDisabled = false; // default value
     forEachNode2.Label = null; // default value
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("Project_GetAssignedToUser.Projects");
     forEachNode2.SetStartIndex(null); // default value
-    forEachNode2.VerticalPosition = 13139;
     ifNode7.TrueTarget = forEachNode2;
     
-    var getDayRecord = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord");
+    var getDayRecord = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord").Below(ifNode8, 1371);
     getDayRecord.CacheInMinutes = null; // default value
     getDayRecord.Description = null; // default value
-    getDayRecord.HorizontalPosition = 12340;
     getDayRecord.IsDisabled = false; // default value
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    getDayRecord.VerticalPosition = 14510;
     var daySheet2 = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
     
     ifNode8.FalseTarget = getDayRecord;
     
-    var raiseExceptionNode7 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode8, 1371);
+    var raiseExceptionNode7 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode8, 1828);
     raiseExceptionNode7.Exception = daySheetValidation;
     raiseExceptionNode7.SetExceptionMessage("\"Log at least 15 minutes to confirm the day\"");
     raiseExceptionNode7.IsDisabled = false; // default value
@@ -241,13 +225,11 @@
     ifNode9.Label = "!Same project?";
     forEachNode2.CycleTarget = ifNode9;
     
-    var ifNode10 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>();
+    var ifNode10 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode2, 2742);
     ifNode10.SetCondition("not Found");
     ifNode10.FalseTarget = forEachNode;
-    ifNode10.HorizontalPosition = 14168;
     ifNode10.IsDisabled = false; // default value
     ifNode10.Label = "!Not assigned?";
-    ifNode10.VerticalPosition = 14510;
     forEachNode2.Target = ifNode10;
     
     var ifNode11 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(getDayRecord, 1371);
@@ -255,29 +237,23 @@
     ifNode11.IsDisabled = false; // default value
     ifNode11.Label = "!New day sheet?";
     
-    var assignNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode2.HorizontalPosition = 15996;
+    var assignNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode9, 1371);
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = null; // default value
     assignNode2.Target = forEachNode2;
-    assignNode2.VerticalPosition = 14510;
     
     var assignment3 = assignNode2.CreateAssignment("Found", "True");
     ifNode9.TrueTarget = assignNode2;
     
-    var raiseExceptionNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode10, 1371);
     raiseExceptionNode8.Exception = daySheetValidation;
     raiseExceptionNode8.SetExceptionMessage("\"You are not assigned to one of these projects on this day.\"");
-    raiseExceptionNode8.HorizontalPosition = 10512;
     raiseExceptionNode8.IsDisabled = false; // default value
-    raiseExceptionNode8.VerticalPosition = 15881;
     ifNode10.TrueTarget = raiseExceptionNode8;
     
-    var assignNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode3.HorizontalPosition = 14168;
+    var assignNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode11, 1828);
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = null; // default value
-    assignNode3.VerticalPosition = 17252;
     
     var assignment4 = assignNode3.CreateAssignment("SheetRec", "GetDayRecord.List.Current.DaySheet");
     ifNode11.FalseTarget = assignNode3;
@@ -337,14 +313,14 @@
     forEachNode3.SetRecordList("GetSheetEntries.List");
     forEachNode3.SetStartIndex(null); // default value
     
-    var assignNode7 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
+    var assignNode7 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 3656);
     assignNode7.IsDisabled = false; // default value
     assignNode7.Label = null; // default value
     
     var assignment12 = assignNode7.CreateAssignment("Found", "False");
     forEachNode3.CycleTarget = assignNode7;
     
-    var ifNode12 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode3, 1371);
+    var ifNode12 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode3, 8226);
     ifNode12.SetCondition("not IsDayOff");
     ifNode12.IsDisabled = false; // default value
     ifNode12.Label = "Work day?";
@@ -357,10 +333,8 @@
     forEachNode4.SetRecordList("Entries");
     forEachNode4.SetStartIndex(null); // default value
     
-    var endNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode.HorizontalPosition = 14168;
+    var endNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode12, 1828);
     endNode.IsDisabled = false; // default value
-    endNode.VerticalPosition = 26849;
     ifNode12.FalseTarget = endNode;
     
     var forEachNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(ifNode12, 1371);
@@ -369,7 +343,6 @@
     forEachNode5.SetMaximumIterations(null); // default value
     forEachNode5.SetRecordList("Entries");
     forEachNode5.SetStartIndex(null); // default value
-    forEachNode5.Target = endNode;
     ifNode12.TrueTarget = forEachNode5;
     
     var ifNode13 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode4, 1828);
@@ -379,13 +352,11 @@
     ifNode13.Label = "!Still sent?";
     forEachNode4.CycleTarget = ifNode13;
     
-    var ifNode14 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>();
+    var ifNode14 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode4, 4113);
     ifNode14.SetCondition("not Found");
     ifNode14.FalseTarget = forEachNode3;
-    ifNode14.HorizontalPosition = 17824;
     ifNode14.IsDisabled = false; // default value
     ifNode14.Label = "!Not sent anymore?";
-    ifNode14.VerticalPosition = 26849;
     forEachNode4.Target = ifNode14;
     
     var ifNode15 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode5, 3656);
@@ -395,11 +366,13 @@
     ifNode15.Label = "!Has minutes?";
     forEachNode5.CycleTarget = ifNode15;
     
-    var assignNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode8.HorizontalPosition = 19652;
+    var endNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode5, 9597);
+    endNode2.IsDisabled = false; // default value
+    forEachNode5.Target = endNode2;
+    
+    var assignNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode13, 1371);
     assignNode8.IsDisabled = false; // default value
     assignNode8.Label = null; // default value
-    assignNode8.VerticalPosition = 26849;
     
     var assignment13 = assignNode8.CreateAssignment("EntryRec", "GetSheetEntries.List.Current.TimeEntry");
     
@@ -412,40 +385,33 @@
     var assignment17 = assignNode8.CreateAssignment("Found", "True");
     ifNode13.TrueTarget = assignNode8;
     
-    var deleteTimeEntry = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteTimeEntry");
+    var deleteTimeEntry = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteTimeEntry").Below(ifNode14, 1371);
     deleteTimeEntry.Action = timeEntry.DeleteAction;
     deleteTimeEntry.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    deleteTimeEntry.HorizontalPosition = 15996;
     deleteTimeEntry.IsDisabled = false; // default value
     deleteTimeEntry.ServerRequestTimeout = null; // default value
     deleteTimeEntry.Target = forEachNode3;
-    deleteTimeEntry.VerticalPosition = 28220;
     var deleteTimeEntry2 = timeEntry.DeleteAction;
     var id = deleteTimeEntry2.InputParameters.Named("Id");
     deleteTimeEntry.SetArgumentValue(id, "GetSheetEntries.List.Current.TimeEntry.Id");
     ifNode14.TrueTarget = deleteTimeEntry;
     
-    var assignNode9 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode9.HorizontalPosition = 14168;
+    var assignNode9 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode15, 1371);
     assignNode9.IsDisabled = false; // default value
     assignNode9.Label = null; // default value
-    assignNode9.VerticalPosition = 28220;
     
     var assignment18 = assignNode9.CreateAssignment("Found", "False");
     ifNode15.TrueTarget = assignNode9;
     
-    var updateTimeEntry = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateTimeEntry");
+    var updateTimeEntry = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateTimeEntry").ConnectedBelow(assignNode8, 1371);
     updateTimeEntry.Action = timeEntry.UpdateAction;
     updateTimeEntry.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    updateTimeEntry.HorizontalPosition = 17824;
     updateTimeEntry.IsDisabled = false; // default value
     updateTimeEntry.ServerRequestTimeout = null; // default value
     updateTimeEntry.Target = forEachNode4;
-    updateTimeEntry.VerticalPosition = 28220;
     var updateTimeEntry2 = timeEntry.UpdateAction;
     var source2 = updateTimeEntry2.InputParameters.Named("Source");
     updateTimeEntry.SetArgumentValue(source2, "EntryRec");
-    assignNode8.Target = updateTimeEntry;
     
     var forEachNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode9, 1371);
     forEachNode6.IsDisabled = false; // default value
@@ -461,7 +427,7 @@
     ifNode16.Label = "!Already saved?";
     forEachNode6.CycleTarget = ifNode16;
     
-    var ifNode17 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode6, 1371);
+    var ifNode17 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(forEachNode6, 2742);
     ifNode17.SetCondition("not Found");
     ifNode17.FalseTarget = forEachNode5;
     ifNode17.IsDisabled = false; // default value

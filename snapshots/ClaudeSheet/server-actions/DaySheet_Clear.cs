@@ -25,22 +25,20 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "!Is SheetUser?";
     
-    var raiseExceptionNode = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode, 1371);
+    var raiseExceptionNode = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
     raiseExceptionNode.IsDisabled = false; // default value
     ifNode.FalseTarget = raiseExceptionNode;
     
-    var getDayRecord = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord");
+    var getDayRecord = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord").Below(ifNode, 1371);
     getDayRecord.CacheInMinutes = null; // default value
     getDayRecord.Description = null; // default value
-    getDayRecord.HorizontalPosition = 5028;
     getDayRecord.IsDisabled = false; // default value
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    getDayRecord.VerticalPosition = 3542;
     var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
     var daySheet = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
@@ -53,20 +51,20 @@
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "!Has day sheet?";
     
-    var endNode = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode2, 1371);
+    var endNode = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ToTheRightOf(ifNode2, 1828);
     endNode.IsDisabled = false; // default value
     ifNode2.FalseTarget = endNode;
     
-    var deleteDaySheet = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteDaySheet");
+    var deleteDaySheet = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteDaySheet").Below(ifNode2, 1371);
     deleteDaySheet.Action = daySheet2.DeleteAction;
     deleteDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    deleteDaySheet.HorizontalPosition = 6856;
     deleteDaySheet.IsDisabled = false; // default value
     deleteDaySheet.ServerRequestTimeout = null; // default value
-    deleteDaySheet.Target = endNode;
-    deleteDaySheet.VerticalPosition = 6284;
     var deleteDaySheet2 = daySheet2.DeleteAction;
     var id = deleteDaySheet2.InputParameters.Named("Id");
     deleteDaySheet.SetArgumentValue(id, "GetDayRecord.List.Current.DaySheet.Id");
     ifNode2.TrueTarget = deleteDaySheet;
+    
+    var endNode2 = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(deleteDaySheet, 1371);
+    endNode2.IsDisabled = false; // default value
 }

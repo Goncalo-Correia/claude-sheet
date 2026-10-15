@@ -55,13 +55,11 @@
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().ToTheRightOf(ifNode, 1828);
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
-    raiseExceptionNode.HorizontalPosition = 5028;
     raiseExceptionNode.IsDisabled = false; // default value
-    raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
     var calendar_GetMonth = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonth").Below(ifNode, 1371);
@@ -105,33 +103,29 @@
     forEachNode.SetRecordList("Calendar_GetMonth.Days");
     forEachNode.SetStartIndex(null); // default value
     
-    var ifNode2 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 1828);
+    var ifNode2 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode, 3656);
     ifNode2.SetCondition("Calendar_GetMonth.Days.Current.DayTypeId = Entities.CalendarDayType.Pending");
     ifNode2.FalseTarget = forEachNode;
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "!Pending?";
     forEachNode.CycleTarget = ifNode2;
     
-    var endNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    var endNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 8226);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
-    var ifNode3 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>();
+    var ifNode3 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(ifNode2, 1371);
     ifNode3.SetCondition("Calendar_GetMonth.Days.Current.DaySheetId <> NullIdentifier() and Calendar_GetMonth.Days.Current.TotalMinutes > 0");
-    ifNode3.HorizontalPosition = 6856;
     ifNode3.IsDisabled = false; // default value
     ifNode3.Label = "Draft with hours?";
-    ifNode3.VerticalPosition = 9026;
     ifNode2.TrueTarget = ifNode3;
     
-    var daySheet_Save = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save");
+    var daySheet_Save = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").ToTheRightOf(ifNode3, 1828);
     var daySheet_Save2 = eSpace.ServerActions.Named("DaySheet_Save");
     daySheet_Save.Action = daySheet_Save2;
     daySheet_Save.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    daySheet_Save.HorizontalPosition = 8684;
     daySheet_Save.IsDisabled = false; // default value
     daySheet_Save.ServerRequestTimeout = null; // default value
-    daySheet_Save.VerticalPosition = 10397;
     var entries = daySheet_Save2.InputParameters.Named("Entries");
     daySheet_Save.SetArgumentValue(entries, "OneEntry");
     var isDayOff = daySheet_Save2.InputParameters.Named("IsDayOff");
