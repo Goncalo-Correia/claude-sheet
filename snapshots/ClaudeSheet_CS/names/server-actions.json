@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "AbortTransaction",
+    "Description": "Issues a database ROLLBACK command that undoes all changes performed on the database since the last commit.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "Bootstrap",
+    "Description": "Seeds reference data when missing: client ICNF, project RUBUS, Portuguese 2026 holidays, and SheetUser + RUBUS assignment for the users in Site.SeedTestUsernames. Safe to run more than once. Run by Timer_Bootstrap.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Calendar_GetMonth",
+    "Description": "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Calendar_GetMonthSummary",
+    "Description": "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).",
+    "IsReferenced": false
+  },
+  {
+    "Name": "CommitTransaction",
+    "Description": "Issues a database COMMIT command that makes effective all changes done on the database since the last commit.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "Date_GetWeekStart",
+    "Description": "Returns the Monday of the week that contains Date.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_Clear",
+    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_FillPending",
+    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_GetDetail",
+    "Description": "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_Save",
+    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Holiday_CreateIfMissing",
+    "Description": "Creates an active Holiday for HolidayDate unless one already exists for that date (active or not). Used by Bootstrap.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ListAll",
+    "Description": "Determines if all the elements in the list satisfy the given condition.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListAny",
+    "Description": "Determines if any of the elements in the list satisfies the given condition.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListAppend",
+    "Description": "Adds an element to the end of a list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListAppendAll",
+    "Description": "Adds the elements of the source list to the end of the destination list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListClear",
+    "Description": "Removes all elements from a list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListDuplicate",
+    "Description": "Duplicates the elements of a list into another list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListFilter",
+    "Description": "Returns a new list with the elements from the List parameter satisfying the given condition.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListIndexOf",
+    "Description": "Returns the position of the first element of the List parameter that satisfies the given condition, or -1 if no element satisfying the condition was found.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListInsert",
+    "Description": "Inserts an element in a specific position of a list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListRemove",
+    "Description": "Removes an element from a specific position of a list.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "ListSort",
+    "Description": "Sorts the elements of the List parameter by the given criteria.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "LogMessage",
+    "Description": "Registers information that can be presented in Service Center in the module general log.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "Minutes_Format",
+    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_GetAssignedToUser",
+    "Description": "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ProjectHours_GetWeekly",
+    "Description": "Weekly grid for the current user: the Monday-Sunday week containing ReferenceDate, day headers classified like the calendar (Calendar_GetMonth), one row per project assigned during the week or with entries in it (sorted by client, project), 7 cells per row with the \"-\" rule, totals per row, per day and for the week.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "SetCurrentLocale",
+    "Description": "Sets the language locale of the user session to change the application presentation language.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "Settings_GetDailyExpectedMinutes",
+    "Description": "Returns the DailyExpectedMinutes site property (minutes a user is expected to record per working day), for modules that can't read the site property directly.",
+    "IsReferenced": false
+  }
+]

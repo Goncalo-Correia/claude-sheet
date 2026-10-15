@@ -27,7 +27,8 @@
     
     var projectHours_GetWeekly = getWeek.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ProjectHours_GetWeekly").ConnectedBelow(startNode, 1371);
     var eSpace = sheetBlocks.GetESpace();
-    var projectHours_GetWeekly2 = eSpace.ServerActions.Named("ProjectHours_GetWeekly");
+    var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var projectHours_GetWeekly2 = claudeSheet_CS.ServerActions.Named("ProjectHours_GetWeekly");
     projectHours_GetWeekly.Action = projectHours_GetWeekly2;
     projectHours_GetWeekly.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     projectHours_GetWeekly.IsDisabled = false; // default value
@@ -62,7 +63,7 @@
     endNode2.IsDisabled = false; // default value
     
     var week = getWeek.CreateOutputParameter("Week");
-    var weeklyHours = eSpace.Structures.Named("WeeklyHours");
+    var weeklyHours = claudeSheet_CS.Structures.Named("WeeklyHours");
     week.DataType = weeklyHours;
     week.Description = null; // default value
     

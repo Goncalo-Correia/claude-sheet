@@ -10,8 +10,8 @@
     "IsReferenced": false
   },
   {
-    "Name": "SheetUser",
+    "Name": "SheetUser2",
     "Description": "Users who record their time in MySheet.",
-    "IsReferenced": false
+    "IsReferenced": true
   }
 ]

@@ -7,8 +7,8 @@
     daySheet_GetDetail.Folder = null; // default value
     daySheet_GetDetail.Function = false; // default value
     daySheet_GetDetail.Icon = null; // default value
-    daySheet_GetDetail.Public = false; // default value
-    daySheet_GetDetail.Shareable = false; // default value
+    daySheet_GetDetail.Public = true;
+    daySheet_GetDetail.Shareable = true;
     
     var date = daySheet_GetDetail.CreateInputParameter("Date");
     date.DataType = eSpace.DateType;

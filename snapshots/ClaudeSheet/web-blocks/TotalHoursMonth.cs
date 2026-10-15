@@ -27,7 +27,8 @@
     
     var calendar_GetMonthSummary = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(startNode, 1371);
     var eSpace = sheetBlocks.GetESpace();
-    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var calendar_GetMonthSummary2 = claudeSheet_CS.ServerActions.Named("Calendar_GetMonthSummary");
     calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
     calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     calendar_GetMonthSummary.IsDisabled = false; // default value
@@ -64,7 +65,7 @@
     endNode2.IsDisabled = false; // default value
     
     var summary = getSummary.CreateOutputParameter("Summary");
-    var monthSummary = eSpace.Structures.Named("MonthSummary");
+    var monthSummary = claudeSheet_CS.Structures.Named("MonthSummary");
     summary.DataType = monthSummary;
     summary.Description = null; // default value
     

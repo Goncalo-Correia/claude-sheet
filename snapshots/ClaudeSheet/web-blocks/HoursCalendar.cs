@@ -16,13 +16,14 @@
     var getCalendar = hoursCalendar.CreateDataAction("GetCalendar");
     /*** Deleting OutputParameters that are created by default when instantiating an IDataAction ***/
     getCalendar.OutputParameters.ToList().ForEach(x => x.Delete());
-    getCalendar.Description = "Calendar cells (leading blank cells with DayNumber = 0, then one CalendarDay per day), the month summary (PendingCount) and Site.DailyExpectedMinutes.";
+    getCalendar.Description = "Calendar cells (leading blank cells with DayNumber = 0, then one CalendarDay per day), the month summary (PendingCount) and the daily expected minutes (Settings_GetDailyExpectedMinutes).";
     getCalendar.Fetch = OutSystems.Model.Enumerations.DataSourceFetch.AtStart; // default value
     getCalendar.ServerRequestTimeout = null; // default value
     
     var blankDay = getCalendar.CreateLocalVariable("BlankDay");
     var eSpace = sheetBlocks.GetESpace();
-    var calendarDay = eSpace.Structures.Named("CalendarDay");
+    var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var calendarDay = claudeSheet_CS.Structures.Named("CalendarDay");
     blankDay.DataType = calendarDay;
     blankDay.Description = null; // default value
     
@@ -37,7 +38,7 @@
     startNode.VerticalPosition = 800;
     
     var calendar_GetMonth = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonth").ConnectedBelow(startNode, 1371);
-    var calendar_GetMonth2 = eSpace.ServerActions.Named("Calendar_GetMonth");
+    var calendar_GetMonth2 = claudeSheet_CS.ServerActions.Named("Calendar_GetMonth");
     calendar_GetMonth.Action = calendar_GetMonth2;
     calendar_GetMonth.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     calendar_GetMonth.IsDisabled = false; // default value
@@ -48,7 +49,7 @@
     calendar_GetMonth.SetArgumentValue(year, "Year");
     
     var calendar_GetMonthSummary = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(calendar_GetMonth, 1371);
-    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    var calendar_GetMonthSummary2 = claudeSheet_CS.ServerActions.Named("Calendar_GetMonthSummary");
     calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
     calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     calendar_GetMonthSummary.IsDisabled = false; // default value
@@ -58,13 +59,20 @@
     var month2 = calendar_GetMonthSummary2.InputParameters.Named("Month");
     calendar_GetMonthSummary.SetArgumentValue(month2, "Month");
     
-    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonthSummary, 1371);
+    var settings_GetDailyExpectedMinutes = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Settings_GetDailyExpectedMinutes").ConnectedBelow(calendar_GetMonthSummary, 1371);
+    var settings_GetDailyExpectedMinutes2 = claudeSheet_CS.ServerActions.Named("Settings_GetDailyExpectedMinutes");
+    settings_GetDailyExpectedMinutes.Action = settings_GetDailyExpectedMinutes2;
+    settings_GetDailyExpectedMinutes.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    settings_GetDailyExpectedMinutes.IsDisabled = false; // default value
+    settings_GetDailyExpectedMinutes.ServerRequestTimeout = null; // default value
+    
+    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(settings_GetDailyExpectedMinutes, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
     
     var assignment = assignNode.CreateAssignment("Summary", "Calendar_GetMonthSummary.Summary");
     
-    var assignment2 = assignNode.CreateAssignment("DailyExpectedMinutes", "Site.DailyExpectedMinutes");
+    var assignment2 = assignNode.CreateAssignment("DailyExpectedMinutes", "Settings_GetDailyExpectedMinutes.Minutes");
     
     var assignment3 = assignNode.CreateAssignment("LeadingBlanks", "DecimalToInteger(Mod(DayOfWeek(NewDate(Year, Month, 1)) + 6, 7))");
     
@@ -108,7 +116,7 @@
     cells.Description = null; // default value
     
     var summary = getCalendar.CreateOutputParameter("Summary");
-    var monthSummary = eSpace.Structures.Named("MonthSummary");
+    var monthSummary = claudeSheet_CS.Structures.Named("MonthSummary");
     summary.DataType = monthSummary;
     summary.Description = null; // default value
     
@@ -196,7 +204,7 @@
     savedMinutes.Description = null; // default value
     
     var editorLines = hoursCalendar.CreateLocalVariable("EditorLines");
-    var dayEditorLine = eSpace.Structures.Named("DayEditorLine");
+    var dayEditorLine = claudeSheet_CS.Structures.Named("DayEditorLine");
     editorLines.DataType = eSpace.GetOrCreateListType(dayEditorLine);
     editorLines.Description = null; // default value
     
@@ -216,7 +224,7 @@
     editorError.Description = null; // default value
     
     var hourOptions = hoursCalendar.CreateLocalVariable("HourOptions");
-    var numberOption = eSpace.Structures.Named("NumberOption");
+    var numberOption = claudeSheet_CS.Structures.Named("NumberOption");
     hourOptions.DataType = eSpace.GetOrCreateListType(numberOption);
     hourOptions.Description = null; // default value
     
@@ -230,12 +238,12 @@
     showFillPopup.Description = null; // default value
     
     var fillProjects = hoursCalendar.CreateLocalVariable("FillProjects");
-    var daySheetProjectLine = eSpace.Structures.Named("DaySheetProjectLine");
+    var daySheetProjectLine = claudeSheet_CS.Structures.Named("DaySheetProjectLine");
     fillProjects.DataType = eSpace.GetOrCreateListType(daySheetProjectLine);
     fillProjects.Description = null; // default value
     
     var fillProjectId = hoursCalendar.CreateLocalVariable("FillProjectId");
-    var project = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
+    var project = claudeSheet_CS.Entities.OfType<OutSystems.Model.Data.IServerEntitySignature>().Named("Project");
     fillProjectId.DataType = project.IdentifierType;
     fillProjectId.SetDefaultValue(null); // default value
     fillProjectId.Description = null; // default value
@@ -509,7 +517,7 @@
     startNode10.VerticalPosition = 800;
     
     var daySheet_Clear = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Clear").ConnectedBelow(startNode10, 1371);
-    var daySheet_Clear2 = eSpace.ServerActions.Named("DaySheet_Clear");
+    var daySheet_Clear2 = claudeSheet_CS.ServerActions.Named("DaySheet_Clear");
     daySheet_Clear.Action = daySheet_Clear2;
     daySheet_Clear.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     daySheet_Clear.IsDisabled = false; // default value
@@ -556,7 +564,7 @@
     ifNode4.Label = "!No project?";
     
     var daySheet_FillPending = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_FillPending").Below(ifNode4, 1371);
-    var daySheet_FillPending2 = eSpace.ServerActions.Named("DaySheet_FillPending");
+    var daySheet_FillPending2 = claudeSheet_CS.ServerActions.Named("DaySheet_FillPending");
     daySheet_FillPending.Action = daySheet_FillPending2;
     daySheet_FillPending.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     daySheet_FillPending.IsDisabled = false; // default value
@@ -675,7 +683,7 @@
     startNode13.VerticalPosition = 800;
     
     var daySheet_GetDetail = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_GetDetail").ConnectedBelow(startNode13, 1371);
-    var daySheet_GetDetail2 = eSpace.ServerActions.Named("DaySheet_GetDetail");
+    var daySheet_GetDetail2 = claudeSheet_CS.ServerActions.Named("DaySheet_GetDetail");
     daySheet_GetDetail.Action = daySheet_GetDetail2;
     daySheet_GetDetail.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     daySheet_GetDetail.IsDisabled = false; // default value
@@ -761,13 +769,13 @@
     forEachNode2.Target = recalcEditorTotal3;
     
     var onClick_FillPendingButton = hoursCalendar.CreateScreenAction("OnClick_FillPendingButton");
-    onClick_FillPendingButton.Description = "Loads the projects assigned today and opens FillPendingPopup with the time defaulting to Site.DailyExpectedMinutes.";
+    onClick_FillPendingButton.Description = "Loads the projects assigned today and opens FillPendingPopup with the time defaulting to the daily expected minutes (GetCalendar.DailyExpectedMinutes, from Settings_GetDailyExpectedMinutes).";
     
     var startNode14 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode14.IsDisabled = false; // default value
     
     var project_GetAssignedToUser = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Project_GetAssignedToUser").ConnectedBelow(startNode14, 1371);
-    var project_GetAssignedToUser2 = eSpace.ServerActions.Named("Project_GetAssignedToUser");
+    var project_GetAssignedToUser2 = claudeSheet_CS.ServerActions.Named("Project_GetAssignedToUser");
     project_GetAssignedToUser.Action = project_GetAssignedToUser2;
     project_GetAssignedToUser.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     project_GetAssignedToUser.IsDisabled = false; // default value
@@ -839,7 +847,7 @@
     confirm.IsMandatory = true; // default value
     
     var entries = onClick_SaveDay.CreateLocalVariable("Entries");
-    var timeEntryInput = eSpace.Structures.Named("TimeEntryInput");
+    var timeEntryInput = claudeSheet_CS.Structures.Named("TimeEntryInput");
     entries.DataType = eSpace.GetOrCreateListType(timeEntryInput);
     entries.Description = null; // default value
     
@@ -877,7 +885,7 @@
     forEachNode3.CycleTarget = assignNode22;
     
     var daySheet_Save = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").Below(forEachNode3, 1371);
-    var daySheet_Save2 = eSpace.ServerActions.Named("DaySheet_Save");
+    var daySheet_Save2 = claudeSheet_CS.ServerActions.Named("DaySheet_Save");
     daySheet_Save.Action = daySheet_Save2;
     daySheet_Save.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     daySheet_Save.IsDisabled = false; // default value

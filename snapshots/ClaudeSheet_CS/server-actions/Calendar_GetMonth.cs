@@ -7,8 +7,8 @@
     calendar_GetMonth.Folder = null; // default value
     calendar_GetMonth.Function = false; // default value
     calendar_GetMonth.Icon = null; // default value
-    calendar_GetMonth.Public = false; // default value
-    calendar_GetMonth.Shareable = false; // default value
+    calendar_GetMonth.Public = true;
+    calendar_GetMonth.Shareable = true;
     
     var year = calendar_GetMonth.CreateInputParameter("Year");
     year.DataType = eSpace.IntegerType;

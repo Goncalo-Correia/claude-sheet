@@ -17,7 +17,7 @@ Platform: OutSystems 11. The app is built through the **Service Studio MCP** (`m
 | ClaudeSheet_CS | ClaudeSheet | Reactive | Core | 0 | Backend: database, timers, processes, server actions, structures, roles, user exceptions, site properties |
 | ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 | Front end: screens, blocks, data actions, screen/client actions, theme |
 
-ClaudeSheet references ClaudeSheet_CS, never the other way round. Put every new element in its module from the start (`docs/conventions.md` › Module placement). Until TT4 finishes the migration, the backend elements still live in ClaudeSheet.
+ClaudeSheet references ClaudeSheet_CS, never the other way round. Put every new element in its module from the start (`docs/conventions.md` › Module placement). TT4 moved the backend to ClaudeSheet_CS (2026-10-15).
 
 Architecture, references, layer rules and what goes where: [docs/architecture.md](docs/architecture.md), [ADR 0004](docs/decisions/0004-split-end-user-and-core.md).
 
@@ -57,6 +57,7 @@ When a story's plan has steps in more than one module (`## Implementation plan` 
    2. **Dependency checklist.** From the consumer's plan steps, list every producer element the consumer will use, grouped by type (Entities, Static Entities, Structures, Server Actions, Roles, Exceptions). Show it as a blocking question: *"In **ClaudeSheet** → Manage Dependencies → **ClaudeSheet_CS**, tick: …"* with the answers **Done** / **Not yet**. Also write the list into the story's plan (`Dependencies to add`).
    3. On **Done**: run `omlRefreshReferences` on ClaudeSheet (before the ClaudeSheet chain starts: it drops the session pointer), then a throw-probe on ClaudeSheet that looks up each listed element in `eSpace.References.Named("ClaudeSheet_CS")`. Any missing → show the question again with only the missing ones. All found → start the ClaudeSheet subagent.
    4. On **Not yet**: wait; don't start the consumer.
+   5. Known behaviour (TT4): a reference lists the ticked elements **plus what they depend on**, not every public element. A producer element whose name clashes with an element still in the consumer comes in with a **"2" suffix** (e.g. `DaySheet_Save2`), and it keeps the suffix when the local copy is deleted in the same chain. Once the local copy is gone, drop the suffix with the Model API: renaming the reference element (`eSpace.References.Named("<Producer>").ServerActions/Structures/Entities` → `.Name = "<name>"`) renames the consumer's local name, and Execute nodes and expressions follow.
 5. Modules whose steps don't depend on each other (e.g. only CSS in ClaudeSheet) may run their subagents at the same time. Two subagents never work on the same module.
 
 ## Rules

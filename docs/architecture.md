@@ -9,7 +9,7 @@ Last reviewed: 2026-10-15 (split into End-user + Core, [ADR 0004](decisions/0004
 | ClaudeSheet_CS | ClaudeSheet | Reactive | Core | 0 | Backend: database, timers, processes, server actions, structures |
 | ClaudeSheet | ClaudeSheet | Reactive | End-user | 0 | Front end: screens, blocks, data actions, screen and client actions, theme |
 
-Status: ClaudeSheet_CS was created on 2026-10-15 and is still **empty**. Everything listed below as "ClaudeSheet_CS" still lives in ClaudeSheet until the migration task **TT4** moves it.
+Status: the split is done (TT4, published 2026-10-15). ClaudeSheet_CS holds the backend, and ClaudeSheet keeps only front-end elements plus the login template (`DoLogin`, `DoLogout`).
 
 ## What goes where
 
@@ -79,6 +79,7 @@ ClaudeSheet_CS must never reference ClaudeSheet.
 | OutSystemsCharts | ClaudeSheet | Chart blocks and structures |
 | OutSystemsMaps | ClaudeSheet | Map blocks and structures |
 | (System) | both | User, Group, Role, Tenant and other system entities; Login/Logout; `ListAppend` and other system actions |
+| ClaudeSheet_CS | ClaudeSheet | The 9 public server actions, the 12 structures and CalendarDayType, DayStatus and Project (with the entities they depend on); see `snapshots/ClaudeSheet_CS/` |
 
 ## Integrations
 

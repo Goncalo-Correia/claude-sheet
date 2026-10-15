@@ -7,8 +7,8 @@
     daySheet_Clear.Folder = null; // default value
     daySheet_Clear.Function = false; // default value
     daySheet_Clear.Icon = null; // default value
-    daySheet_Clear.Public = false; // default value
-    daySheet_Clear.Shareable = false; // default value
+    daySheet_Clear.Public = true;
+    daySheet_Clear.Shareable = true;
     
     var date = daySheet_Clear.CreateInputParameter("Date");
     date.DataType = eSpace.DateType;

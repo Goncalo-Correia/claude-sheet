@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Anonymous",
+    "Description": "Unknown guests",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Registered",
+    "Description": "Registered users",
+    "IsReferenced": false
+  },
+  {
+    "Name": "SheetUser",
+    "Description": "Users who record their time in MySheet.",
+    "IsReferenced": false
+  }
+]

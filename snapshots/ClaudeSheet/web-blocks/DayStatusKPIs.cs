@@ -22,7 +22,8 @@
     
     var kPI = getKPIs.CreateLocalVariable("KPI");
     var eSpace = sheetBlocks.GetESpace();
-    var dayStatusKPI = eSpace.Structures.Named("DayStatusKPI");
+    var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var dayStatusKPI = claudeSheet_CS.Structures.Named("DayStatusKPI");
     kPI.DataType = dayStatusKPI;
     kPI.Description = null; // default value
     
@@ -32,7 +33,7 @@
     startNode.VerticalPosition = 800;
     
     var calendar_GetMonthSummary = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(startNode, 1371);
-    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    var calendar_GetMonthSummary2 = claudeSheet_CS.ServerActions.Named("Calendar_GetMonthSummary");
     calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
     calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     calendar_GetMonthSummary.IsDisabled = false; // default value
@@ -49,7 +50,7 @@
     getKPIDayTypes.SetMaxRecords(null); // default value
     getKPIDayTypes.SetStartIndex(null); // default value
     getKPIDayTypes.Timeout = null; // default value
-    var calendarDayType2 = eSpace.Entities.OfType<OutSystems.Model.Data.IStaticEntity>().Named("CalendarDayType");
+    var calendarDayType2 = claudeSheet_CS.Entities.OfType<OutSystems.Model.Data.IStaticEntitySignature>().Named("CalendarDayType");
     var calendarDayType = getKPIDayTypes.AsDatabaseAggregate.CreateSource(calendarDayType2);
     getKPIDayTypes.AsDatabaseAggregate.CreateFilter("CalendarDayType.ShowInKPI = True");
     getKPIDayTypes.AsDatabaseAggregate.CreateSort().SetAttribute("CalendarDayType.Order");

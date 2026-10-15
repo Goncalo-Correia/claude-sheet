@@ -7,8 +7,8 @@
     calendar_GetMonthSummary.Folder = null; // default value
     calendar_GetMonthSummary.Function = false; // default value
     calendar_GetMonthSummary.Icon = null; // default value
-    calendar_GetMonthSummary.Public = false; // default value
-    calendar_GetMonthSummary.Shareable = false; // default value
+    calendar_GetMonthSummary.Public = true;
+    calendar_GetMonthSummary.Shareable = true;
     
     var year = calendar_GetMonthSummary.CreateInputParameter("Year");
     year.DataType = eSpace.IntegerType;
@@ -53,10 +53,10 @@
     calendar_GetMonth.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     calendar_GetMonth.IsDisabled = false; // default value
     calendar_GetMonth.ServerRequestTimeout = null; // default value
-    var month2 = calendar_GetMonth2.InputParameters.Named("Month");
-    calendar_GetMonth.SetArgumentValue(month2, "Month");
     var year2 = calendar_GetMonth2.InputParameters.Named("Year");
     calendar_GetMonth.SetArgumentValue(year2, "Year");
+    var month2 = calendar_GetMonth2.InputParameters.Named("Month");
+    calendar_GetMonth.SetArgumentValue(month2, "Month");
     ifNode.TrueTarget = calendar_GetMonth;
     
     var assignNode = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonth, 1371);

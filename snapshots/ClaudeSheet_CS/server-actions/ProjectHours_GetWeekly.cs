@@ -7,8 +7,8 @@
     projectHours_GetWeekly.Folder = null; // default value
     projectHours_GetWeekly.Function = false; // default value
     projectHours_GetWeekly.Icon = null; // default value
-    projectHours_GetWeekly.Public = false; // default value
-    projectHours_GetWeekly.Shareable = false; // default value
+    projectHours_GetWeekly.Public = true;
+    projectHours_GetWeekly.Shareable = true;
     
     var referenceDate = projectHours_GetWeekly.CreateInputParameter("ReferenceDate");
     referenceDate.DataType = eSpace.DateType;
@@ -77,8 +77,8 @@
     endMonth.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     endMonth.IsDisabled = false; // default value
     endMonth.ServerRequestTimeout = null; // default value
-    endMonth.SetArgumentValue(month, "Month(Week.WeekEnd)");
     endMonth.SetArgumentValue(year, "Year(Week.WeekEnd)");
+    endMonth.SetArgumentValue(month, "Month(Week.WeekEnd)");
     
     var assignNode2 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(endMonth, 1371);
     assignNode2.IsDisabled = false; // default value
@@ -183,10 +183,10 @@
     minutes.SetAttribute("TimeEntry.Minutes");
     minutes.AggregationType = AggregationType.Sum;
     
-    getWeekProjects.SetArgumentValue(weekStart, "Week.WeekStart");
-    getWeekProjects.SetArgumentValue(nullDate, "NullDate()");
-    getWeekProjects.SetArgumentValue(weekEnd, "Week.WeekEnd");
     getWeekProjects.SetArgumentValue(userId, "GetUserId()");
+    getWeekProjects.SetArgumentValue(nullDate, "NullDate()");
+    getWeekProjects.SetArgumentValue(weekStart, "Week.WeekStart");
+    getWeekProjects.SetArgumentValue(weekEnd, "Week.WeekEnd");
     
     var listAppend = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode3, 1371);
     var listAppend2 = _System_.ServerActions.Named("ListAppend");
@@ -211,8 +211,8 @@
     listAppend22.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     listAppend22.IsDisabled = false; // default value
     listAppend22.ServerRequestTimeout = null; // default value
-    listAppend22.SetArgumentValue(list, "Week.DayTotals");
     listAppend22.SetArgumentValue(element, "Cell");
+    listAppend22.SetArgumentValue(list, "Week.DayTotals");
     
     var assignNode4 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 5484);
     assignNode4.IsDisabled = false; // default value
@@ -262,8 +262,8 @@
     listAppend4.IsDisabled = false; // default value
     listAppend4.ServerRequestTimeout = null; // default value
     listAppend4.Target = forEachNode;
-    listAppend4.SetArgumentValue(list, "Week.Rows");
     listAppend4.SetArgumentValue(element, "Row");
+    listAppend4.SetArgumentValue(list, "Week.Rows");
     ifNode3.FalseTarget = listAppend4;
     
     var assignNode6 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode3, 3656);

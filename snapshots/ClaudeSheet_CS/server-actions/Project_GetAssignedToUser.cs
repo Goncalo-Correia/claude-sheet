@@ -7,8 +7,8 @@
     project_GetAssignedToUser.Folder = null; // default value
     project_GetAssignedToUser.Function = false; // default value
     project_GetAssignedToUser.Icon = null; // default value
-    project_GetAssignedToUser.Public = false; // default value
-    project_GetAssignedToUser.Shareable = false; // default value
+    project_GetAssignedToUser.Public = true;
+    project_GetAssignedToUser.Shareable = true;
     
     var forDate = project_GetAssignedToUser.CreateInputParameter("ForDate");
     forDate.DataType = eSpace.DateType;
@@ -109,10 +109,10 @@
     listAppend.IsDisabled = false; // default value
     listAppend.ServerRequestTimeout = null; // default value
     listAppend.Target = forEachNode;
-    var element = listAppend2.InputParameters.Named("Element");
-    listAppend.SetArgumentValue(element, "Line");
     var list = listAppend2.InputParameters.Named("List");
     listAppend.SetArgumentValue(list, "Projects");
+    var element = listAppend2.InputParameters.Named("Element");
+    listAppend.SetArgumentValue(element, "Line");
     
     var projects = project_GetAssignedToUser.CreateOutputParameter("Projects");
     projects.DataType = eSpace.GetOrCreateListType(daySheetProjectLine);
