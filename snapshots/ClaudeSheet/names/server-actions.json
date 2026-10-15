@@ -10,6 +10,11 @@
     "IsReferenced": false
   },
   {
+    "Name": "ClearDaySheet",
+    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.",
+    "IsReferenced": false
+  },
+  {
     "Name": "CommitTransaction",
     "Description": "Issues a database COMMIT command that makes effective all changes done on the database since the last commit.",
     "IsReferenced": true
@@ -25,8 +30,18 @@
     "IsReferenced": false
   },
   {
+    "Name": "FillPendingDays",
+    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.",
+    "IsReferenced": false
+  },
+  {
     "Name": "FormatMinutes",
     "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "GetDaySheetDetail",
+    "Description": "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.",
     "IsReferenced": false
   },
   {
@@ -128,6 +143,11 @@
     "Name": "Logout",
     "Description": "Logs out a specific user from the application.\nThe 'UserId' and 'Username' session variables are cleared.",
     "IsReferenced": true
+  },
+  {
+    "Name": "SaveDaySheet",
+    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message.",
+    "IsReferenced": false
   },
   {
     "Name": "SetCurrentLocale",

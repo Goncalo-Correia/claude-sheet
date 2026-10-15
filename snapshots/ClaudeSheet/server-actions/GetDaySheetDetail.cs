@@ -1,0 +1,159 @@
+(OutSystems.Model.IESpace eSpace) => {
+    
+    /*** creating IServerAction 'GetDaySheetDetail' ***/
+    var getDaySheetDetail = eSpace.CreateServerAction("GetDaySheetDetail");
+    getDaySheetDetail.CacheInMinutes = null; // default value
+    getDaySheetDetail.Description = "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.";
+    getDaySheetDetail.Folder = null; // default value
+    getDaySheetDetail.Function = false; // default value
+    getDaySheetDetail.Icon = null; // default value
+    getDaySheetDetail.Public = false; // default value
+    getDaySheetDetail.Shareable = false; // default value
+    
+    var date = getDaySheetDetail.CreateInputParameter("Date");
+    date.DataType = eSpace.DateType;
+    date.Description = null; // default value
+    date.IsMandatory = true; // default value
+    
+    var startNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode.HorizontalPosition = 3200;
+    startNode.IsDisabled = false; // default value
+    startNode.VerticalPosition = 800;
+    
+    var ifNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode, 1371);
+    ifNode.SetCondition("CheckSheetUserRole()");
+    ifNode.IsDisabled = false; // default value
+    ifNode.Label = "!Is SheetUser?";
+    
+    var raiseExceptionNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>().Below(ifNode, 1371);
+    var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
+    raiseExceptionNode.Exception = roleException;
+    raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
+    raiseExceptionNode.IsDisabled = false; // default value
+    ifNode.FalseTarget = raiseExceptionNode;
+    
+    var getDayRecord = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayRecord");
+    getDayRecord.CacheInMinutes = null; // default value
+    getDayRecord.Description = null; // default value
+    getDayRecord.HorizontalPosition = 5028;
+    getDayRecord.IsDisabled = false; // default value
+    getDayRecord.SetMaxRecords(null); // default value
+    getDayRecord.SetStartIndex(null); // default value
+    getDayRecord.Timeout = null; // default value
+    getDayRecord.VerticalPosition = 3542;
+    var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
+    var daySheet = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
+    getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
+    getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
+    
+    ifNode.TrueTarget = getDayRecord;
+    
+    var getDayEntries = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayEntries").ConnectedBelow(getDayRecord, 1371);
+    getDayEntries.CacheInMinutes = null; // default value
+    getDayEntries.Description = null; // default value
+    getDayEntries.IsDisabled = false; // default value
+    getDayEntries.SetMaxRecords(null); // default value
+    getDayEntries.SetStartIndex(null); // default value
+    getDayEntries.Timeout = null; // default value
+    var timeEntry2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("TimeEntry");
+    var timeEntry = getDayEntries.AsDatabaseAggregate.CreateSource(timeEntry2);
+    var daySheet3 = getDayEntries.AsDatabaseAggregate.CreateSource(daySheet2);
+    var join = getDayEntries.AsDatabaseAggregate.CreateJoin();
+    join.LeftSource = timeEntry;
+    join.RightSource = daySheet3;
+    join.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
+    join.SetCondition("TimeEntry.DaySheetId = DaySheet.Id");
+    getDayEntries.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
+    getDayEntries.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
+    
+    
+    var getDayHoliday = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetDayHoliday").ConnectedBelow(getDayEntries, 1371);
+    getDayHoliday.CacheInMinutes = null; // default value
+    getDayHoliday.Description = null; // default value
+    getDayHoliday.IsDisabled = false; // default value
+    getDayHoliday.SetMaxRecords(null); // default value
+    getDayHoliday.SetStartIndex(null); // default value
+    getDayHoliday.Timeout = null; // default value
+    var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
+    var holiday = getDayHoliday.AsDatabaseAggregate.CreateSource(holiday2);
+    getDayHoliday.AsDatabaseAggregate.CreateFilter("Holiday.IsActive");
+    getDayHoliday.AsDatabaseAggregate.CreateFilter("Holiday.HolidayDate = Date");
+    
+    
+    var getUserProjects = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetUserProjects").ConnectedBelow(getDayHoliday, 1371);
+    var getUserProjects2 = eSpace.ServerActions.Named("GetUserProjects");
+    getUserProjects.Action = getUserProjects2;
+    getUserProjects.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    getUserProjects.IsDisabled = false; // default value
+    getUserProjects.ServerRequestTimeout = null; // default value
+    var forDate = getUserProjects2.InputParameters.Named("ForDate");
+    getUserProjects.SetArgumentValue(forDate, "Date");
+    
+    var assignNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getUserProjects, 1371);
+    assignNode.IsDisabled = false; // default value
+    assignNode.Label = null; // default value
+    
+    var assignment = assignNode.CreateAssignment("Detail.SheetDate", "Date");
+    
+    var assignment2 = assignNode.CreateAssignment("Detail.DaySheetId", "GetDayRecord.List.Current.DaySheet.Id");
+    
+    var assignment3 = assignNode.CreateAssignment("Detail.DayStatusId", "GetDayRecord.List.Current.DaySheet.DayStatusId");
+    
+    var assignment4 = assignNode.CreateAssignment("Detail.Notes", "GetDayRecord.List.Current.DaySheet.Notes");
+    
+    var assignment5 = assignNode.CreateAssignment("Detail.HolidayName", "GetDayHoliday.List.Current.Holiday.Name");
+    
+    var assignment6 = assignNode.CreateAssignment("Detail.IsEditable", "Mod(DayOfWeek(Date) + 6, 7) < 5 and GetDayHoliday.List.Empty");
+    
+    var assignment7 = assignNode.CreateAssignment("Detail.DayTypeId", "If(not GetDayHoliday.List.Empty, Entities.CalendarDayType.Holiday, If(GetDayRecord.List.Current.DaySheet.DayStatusId = Entities.DayStatus.DayOff, Entities.CalendarDayType.DayOff, If(GetDayRecord.List.Current.DaySheet.DayStatusId = Entities.DayStatus.Confirmed, Entities.CalendarDayType.Confirmed, If(Mod(DayOfWeek(Date) + 6, 7) >= 5, Entities.CalendarDayType.Weekend, If(Date > CurrDate(), Entities.CalendarDayType.Future, Entities.CalendarDayType.Pending)))))");
+    
+    var assignment8 = assignNode.CreateAssignment("Detail.Lines", "GetUserProjects.Projects");
+    
+    var forEachNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode, 1371);
+    forEachNode.IsDisabled = false; // default value
+    forEachNode.Label = null; // default value
+    forEachNode.SetMaximumIterations(null); // default value
+    forEachNode.SetRecordList("Detail.Lines");
+    forEachNode.SetStartIndex(null); // default value
+    
+    var forEachNode2 = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ToTheRightOf(forEachNode, 1828);
+    forEachNode2.IsDisabled = false; // default value
+    forEachNode2.Label = null; // default value
+    forEachNode2.SetMaximumIterations(null); // default value
+    forEachNode2.SetRecordList("GetDayEntries.List");
+    forEachNode2.SetStartIndex(null); // default value
+    forEachNode2.Target = forEachNode;
+    forEachNode.CycleTarget = forEachNode2;
+    
+    var endNode = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    endNode.IsDisabled = false; // default value
+    forEachNode.Target = endNode;
+    
+    var ifNode2 = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode2, 1828);
+    ifNode2.SetCondition("GetDayEntries.List.Current.TimeEntry.ProjectId = Detail.Lines.Current.ProjectId");
+    ifNode2.FalseTarget = forEachNode2;
+    ifNode2.IsDisabled = false; // default value
+    ifNode2.Label = "!Same project?";
+    forEachNode2.CycleTarget = ifNode2;
+    
+    var assignNode2 = getDaySheetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
+    assignNode2.HorizontalPosition = 10512;
+    assignNode2.IsDisabled = false; // default value
+    assignNode2.Label = null; // default value
+    assignNode2.Target = forEachNode2;
+    assignNode2.VerticalPosition = 11768;
+    
+    var assignment9 = assignNode2.CreateAssignment("Detail.Lines.Current.TimeEntryId", "GetDayEntries.List.Current.TimeEntry.Id");
+    
+    var assignment10 = assignNode2.CreateAssignment("Detail.Lines.Current.Minutes", "GetDayEntries.List.Current.TimeEntry.Minutes");
+    
+    var assignment11 = assignNode2.CreateAssignment("Detail.Lines.Current.Description", "GetDayEntries.List.Current.TimeEntry.Description");
+    
+    var assignment12 = assignNode2.CreateAssignment("Detail.TotalMinutes", "Detail.TotalMinutes + GetDayEntries.List.Current.TimeEntry.Minutes");
+    ifNode2.TrueTarget = assignNode2;
+    
+    var detail = getDaySheetDetail.CreateOutputParameter("Detail");
+    var daySheetDetail = eSpace.Structures.Named("DaySheetDetail");
+    detail.DataType = daySheetDetail;
+    detail.Description = null; // default value
+}

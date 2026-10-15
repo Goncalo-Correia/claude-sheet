@@ -324,6 +324,12 @@
     "IsReferenced": true
   },
   {
+    "Name": "HoursCalendar",
+    "Description": "Monthly calendar of the current user's day sheets: coloured day squares, month navigation, a day editor popup to log hours per project / mark a day off / confirm, and Fill all pending days.",
+    "UIFlow": "SheetBlocks",
+    "IsReferenced": false
+  },
+  {
     "Name": "IconBadge",
     "Description": "Icon with a Badge stacked on top of it.\n\nDrag an Icon and Badge to their placeholders.\n\nUsed to display notifications with numbers.",
     "UIFlow": "Numbers",
