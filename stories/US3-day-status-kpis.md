@@ -7,6 +7,7 @@
 - **Created:** 2026-10-15
 - **Depends on:** TT0
 - **Trello:** https://trello.com/c/pRJ6eRV5
+- **Renamed in TT1 (2026-10-15):** GetMonthCalendar → Calendar_GetMonth, GetMonthSummary → Calendar_GetMonthSummary, GetKPIsOnAfterFetch → OnAfterFetch_GetKPIs. This file keeps the names as they were when the story was built.
 
 ## Story
 

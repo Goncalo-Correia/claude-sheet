@@ -6,6 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-14
 - **Depends on:** TT0 (GetMonthSummary, FormatMinutes)
+- **Renamed in TT1 (2026-10-15):** GetMonthSummary → Calendar_GetMonthSummary, FormatMinutes → Minutes_Format, GetSummaryOnAfterFetch → OnAfterFetch_GetSummary. This file keeps the names as they were when the story was built.
 
 ## Story
 

@@ -1,36 +1,36 @@
 (OutSystems.Model.IESpace eSpace) => {
     
-    /*** creating IServerAction 'GetUserProjects' ***/
-    var getUserProjects = eSpace.CreateServerAction("GetUserProjects");
-    getUserProjects.CacheInMinutes = null; // default value
-    getUserProjects.Description = "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.";
-    getUserProjects.Folder = null; // default value
-    getUserProjects.Function = false; // default value
-    getUserProjects.Icon = null; // default value
-    getUserProjects.Public = false; // default value
-    getUserProjects.Shareable = false; // default value
+    /*** creating IServerAction 'Project_GetAssignedToUser' ***/
+    var project_GetAssignedToUser = eSpace.CreateServerAction("Project_GetAssignedToUser");
+    project_GetAssignedToUser.CacheInMinutes = null; // default value
+    project_GetAssignedToUser.Description = "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.";
+    project_GetAssignedToUser.Folder = null; // default value
+    project_GetAssignedToUser.Function = false; // default value
+    project_GetAssignedToUser.Icon = null; // default value
+    project_GetAssignedToUser.Public = false; // default value
+    project_GetAssignedToUser.Shareable = false; // default value
     
-    var forDate = getUserProjects.CreateInputParameter("ForDate");
+    var forDate = project_GetAssignedToUser.CreateInputParameter("ForDate");
     forDate.DataType = eSpace.DateType;
     forDate.Description = null; // default value
     forDate.IsMandatory = true; // default value
     
-    var line = getUserProjects.CreateLocalVariable("Line");
+    var line = project_GetAssignedToUser.CreateLocalVariable("Line");
     var daySheetProjectLine = eSpace.Structures.Named("DaySheetProjectLine");
     line.DataType = daySheetProjectLine;
     line.Description = null; // default value
     
-    var startNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode.HorizontalPosition = 3200;
     startNode.IsDisabled = false; // default value
     startNode.VerticalPosition = 800;
     
-    var ifNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode, 1371);
+    var ifNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode, 1371);
     ifNode.SetCondition("CheckSheetUserRole()");
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
@@ -39,7 +39,7 @@
     raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
-    var getAssignedProjects = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetAssignedProjects").Below(ifNode, 1371);
+    var getAssignedProjects = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetAssignedProjects").Below(ifNode, 1371);
     getAssignedProjects.CacheInMinutes = null; // default value
     getAssignedProjects.Description = null; // default value
     getAssignedProjects.IsDisabled = false; // default value
@@ -73,14 +73,14 @@
     
     ifNode.TrueTarget = getAssignedProjects;
     
-    var forEachNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getAssignedProjects, 1371);
+    var forEachNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getAssignedProjects, 1371);
     forEachNode.IsDisabled = false; // default value
     forEachNode.Label = null; // default value
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetAssignedProjects.List");
     forEachNode.SetStartIndex(null); // default value
     
-    var assignNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
+    var assignNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
     
@@ -99,11 +99,11 @@
     var assignment7 = assignNode.CreateAssignment("Line.Description", "\"\"");
     forEachNode.CycleTarget = assignNode;
     
-    var endNode = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
+    var endNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
-    var listAppend = getUserProjects.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode, 1371);
+    var listAppend = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode, 1371);
     var _System_ = eSpace.References.Named("(System)");
     var listAppend2 = _System_.ServerActions.Named("ListAppend");
     listAppend.Action = listAppend2;
@@ -116,7 +116,7 @@
     var list = listAppend2.InputParameters.Named("List");
     listAppend.SetArgumentValue(list, "Projects");
     
-    var projects = getUserProjects.CreateOutputParameter("Projects");
+    var projects = project_GetAssignedToUser.CreateOutputParameter("Projects");
     projects.DataType = eSpace.GetOrCreateListType(daySheetProjectLine);
     projects.Description = null; // default value
 }

@@ -4,6 +4,7 @@
 - **Modules:** ClaudeSheet
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-14
+- **Renamed in TT1 (2026-10-15):** GetMonthCalendar → Calendar_GetMonth, GetMonthSummary → Calendar_GetMonthSummary, GetUserProjects → Project_GetAssignedToUser, FormatMinutes → Minutes_Format, GetWeekStart → Date_GetWeekStart. This file keeps the names as they were when the story was built.
 
 ## Story
 

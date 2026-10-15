@@ -1,61 +1,61 @@
 (OutSystems.Model.IESpace eSpace) => {
     
-    /*** creating IServerAction 'GetMonthCalendar' ***/
-    var getMonthCalendar = eSpace.CreateServerAction("GetMonthCalendar");
-    getMonthCalendar.CacheInMinutes = null; // default value
-    getMonthCalendar.Description = "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.";
-    getMonthCalendar.Folder = null; // default value
-    getMonthCalendar.Function = false; // default value
-    getMonthCalendar.Icon = null; // default value
-    getMonthCalendar.Public = false; // default value
-    getMonthCalendar.Shareable = false; // default value
+    /*** creating IServerAction 'Calendar_GetMonth' ***/
+    var calendar_GetMonth = eSpace.CreateServerAction("Calendar_GetMonth");
+    calendar_GetMonth.CacheInMinutes = null; // default value
+    calendar_GetMonth.Description = "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.";
+    calendar_GetMonth.Folder = null; // default value
+    calendar_GetMonth.Function = false; // default value
+    calendar_GetMonth.Icon = null; // default value
+    calendar_GetMonth.Public = false; // default value
+    calendar_GetMonth.Shareable = false; // default value
     
-    var year = getMonthCalendar.CreateInputParameter("Year");
+    var year = calendar_GetMonth.CreateInputParameter("Year");
     year.DataType = eSpace.IntegerType;
     year.Description = null; // default value
     year.IsMandatory = true; // default value
     
-    var month = getMonthCalendar.CreateInputParameter("Month");
+    var month = calendar_GetMonth.CreateInputParameter("Month");
     month.DataType = eSpace.IntegerType;
     month.Description = null; // default value
     month.IsMandatory = true; // default value
     
-    var firstDay = getMonthCalendar.CreateLocalVariable("FirstDay");
+    var firstDay = calendar_GetMonth.CreateLocalVariable("FirstDay");
     firstDay.DataType = eSpace.DateType;
     firstDay.SetDefaultValue(null); // default value
     firstDay.Description = null; // default value
     
-    var lastDay = getMonthCalendar.CreateLocalVariable("LastDay");
+    var lastDay = calendar_GetMonth.CreateLocalVariable("LastDay");
     lastDay.DataType = eSpace.DateType;
     lastDay.SetDefaultValue(null); // default value
     lastDay.Description = null; // default value
     
-    var today = getMonthCalendar.CreateLocalVariable("Today");
+    var today = calendar_GetMonth.CreateLocalVariable("Today");
     today.DataType = eSpace.DateType;
     today.SetDefaultValue(null); // default value
     today.Description = null; // default value
     
-    var dayIndex = getMonthCalendar.CreateLocalVariable("DayIndex");
+    var dayIndex = calendar_GetMonth.CreateLocalVariable("DayIndex");
     dayIndex.DataType = eSpace.IntegerType;
     dayIndex.SetDefaultValue(null); // default value
     dayIndex.Description = null; // default value
     
-    var calDay = getMonthCalendar.CreateLocalVariable("CalDay");
+    var calDay = calendar_GetMonth.CreateLocalVariable("CalDay");
     var calendarDay = eSpace.Structures.Named("CalendarDay");
     calDay.DataType = calendarDay;
     calDay.Description = null; // default value
     
-    var startNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode.HorizontalPosition = 3200;
     startNode.IsDisabled = false; // default value
     startNode.VerticalPosition = 800;
     
-    var ifNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode, 1371);
+    var ifNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode, 1371);
     ifNode.SetCondition("CheckSheetUserRole()");
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Is SheetUser?";
     
-    var raiseExceptionNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
+    var raiseExceptionNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IRaiseExceptionNode>();
     var roleException = eSpace.RoleExceptions.Single(e => e.Role.Name == "SheetUser");
     raiseExceptionNode.Exception = roleException;
     raiseExceptionNode.SetExceptionMessage("\"You are not allowed to use MySheet.\"");
@@ -64,7 +64,7 @@
     raiseExceptionNode.VerticalPosition = 3542;
     ifNode.FalseTarget = raiseExceptionNode;
     
-    var assignNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
+    var assignNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
     
@@ -77,12 +77,12 @@
     var assignment4 = assignNode.CreateAssignment("DayIndex", "1");
     ifNode.TrueTarget = assignNode;
     
-    var ifNode2 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode, 1371);
+    var ifNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode, 1371);
     ifNode2.SetCondition("DayIndex <= Day(LastDay)");
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "More days?";
     
-    var getMonthHolidays = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthHolidays");
+    var getMonthHolidays = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthHolidays");
     getMonthHolidays.CacheInMinutes = null; // default value
     getMonthHolidays.Description = null; // default value
     getMonthHolidays.HorizontalPosition = 5028;
@@ -98,7 +98,7 @@
     
     ifNode2.FalseTarget = getMonthHolidays;
     
-    var assignNode2 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
+    var assignNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = null; // default value
     
@@ -113,14 +113,14 @@
     var assignment9 = assignNode2.CreateAssignment("CalDay.IsToday", "CalDay.Date = Today");
     ifNode2.TrueTarget = assignNode2;
     
-    var forEachNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthHolidays, 1371);
+    var forEachNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthHolidays, 1371);
     forEachNode.IsDisabled = false; // default value
     forEachNode.Label = null; // default value
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetMonthHolidays.List");
     forEachNode.SetStartIndex(null); // default value
     
-    var listAppend = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode2, 1371);
+    var listAppend = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode2, 1371);
     var _System_ = eSpace.References.Named("(System)");
     var listAppend2 = _System_.ServerActions.Named("ListAppend");
     listAppend.Action = listAppend2;
@@ -132,7 +132,7 @@
     var element = listAppend2.InputParameters.Named("Element");
     listAppend.SetArgumentValue(element, "CalDay");
     
-    var assignNode3 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
+    var assignNode3 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = null; // default value
     assignNode3.Target = forEachNode;
@@ -140,7 +140,7 @@
     var assignment10 = assignNode3.CreateAssignment("Days[Day(GetMonthHolidays.List.Current.Holiday.HolidayDate) - 1].HolidayName", "GetMonthHolidays.List.Current.Holiday.Name");
     forEachNode.CycleTarget = assignNode3;
     
-    var getMonthDaySheets = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthDaySheets").Below(forEachNode, 1371);
+    var getMonthDaySheets = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthDaySheets").Below(forEachNode, 1371);
     getMonthDaySheets.CacheInMinutes = null; // default value
     getMonthDaySheets.Description = null; // default value
     getMonthDaySheets.IsDisabled = false; // default value
@@ -154,21 +154,21 @@
     
     forEachNode.Target = getMonthDaySheets;
     
-    var assignNode4 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend, 1371);
+    var assignNode4 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend, 1371);
     assignNode4.IsDisabled = false; // default value
     assignNode4.Label = null; // default value
     assignNode4.Target = ifNode2;
     
     var assignment11 = assignNode4.CreateAssignment("DayIndex", "DayIndex + 1");
     
-    var forEachNode2 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthDaySheets, 1371);
+    var forEachNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthDaySheets, 1371);
     forEachNode2.IsDisabled = false; // default value
     forEachNode2.Label = null; // default value
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("GetMonthDaySheets.List");
     forEachNode2.SetStartIndex(null); // default value
     
-    var assignNode5 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode2, 1828);
+    var assignNode5 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode2, 1828);
     assignNode5.IsDisabled = false; // default value
     assignNode5.Label = null; // default value
     assignNode5.Target = forEachNode2;
@@ -178,7 +178,7 @@
     var assignment13 = assignNode5.CreateAssignment("Days[Day(GetMonthDaySheets.List.Current.DaySheet.SheetDate) - 1].DayStatusId", "GetMonthDaySheets.List.Current.DaySheet.DayStatusId");
     forEachNode2.CycleTarget = assignNode5;
     
-    var getMonthMinutes = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthMinutes").Below(forEachNode2, 1371);
+    var getMonthMinutes = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthMinutes").Below(forEachNode2, 1371);
     getMonthMinutes.CacheInMinutes = null; // default value
     getMonthMinutes.Description = null; // default value
     getMonthMinutes.IsDisabled = false; // default value
@@ -202,14 +202,14 @@
     
     forEachNode2.Target = getMonthMinutes;
     
-    var forEachNode3 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthMinutes, 1371);
+    var forEachNode3 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthMinutes, 1371);
     forEachNode3.IsDisabled = false; // default value
     forEachNode3.Label = null; // default value
     forEachNode3.SetMaximumIterations(null); // default value
     forEachNode3.SetRecordList("GetMonthMinutes.List");
     forEachNode3.SetStartIndex(null); // default value
     
-    var assignNode6 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
+    var assignNode6 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
     assignNode6.IsDisabled = false; // default value
     assignNode6.Label = null; // default value
     assignNode6.Target = forEachNode3;
@@ -217,7 +217,7 @@
     var assignment14 = assignNode6.CreateAssignment("Days[Day(GetMonthMinutes.List.Current.SheetDate) - 1].TotalMinutes", "LongIntegerToInteger(GetMonthMinutes.List.Current.TotalMinutes)");
     forEachNode3.CycleTarget = assignNode6;
     
-    var forEachNode4 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(forEachNode3, 1371);
+    var forEachNode4 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(forEachNode3, 1371);
     forEachNode4.IsDisabled = false; // default value
     forEachNode4.Label = null; // default value
     forEachNode4.SetMaximumIterations(null); // default value
@@ -225,7 +225,7 @@
     forEachNode4.SetStartIndex(null); // default value
     forEachNode3.Target = forEachNode4;
     
-    var assignNode7 = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode4, 1828);
+    var assignNode7 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode4, 1828);
     assignNode7.IsDisabled = false; // default value
     assignNode7.Label = null; // default value
     assignNode7.Target = forEachNode4;
@@ -237,11 +237,11 @@
     var assignment17 = assignNode7.CreateAssignment("Days.Current.IsEditable", "not Days.Current.IsWeekend and Days.Current.HolidayName = \"\"");
     forEachNode4.CycleTarget = assignNode7;
     
-    var endNode = getMonthCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode4, 1371);
+    var endNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode4, 1371);
     endNode.IsDisabled = false; // default value
     forEachNode4.Target = endNode;
     
-    var days = getMonthCalendar.CreateOutputParameter("Days");
+    var days = calendar_GetMonth.CreateOutputParameter("Days");
     days.DataType = eSpace.GetOrCreateListType(calendarDay);
     days.Description = null; // default value
 }

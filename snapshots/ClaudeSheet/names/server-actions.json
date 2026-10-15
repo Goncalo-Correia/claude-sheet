@@ -10,14 +10,44 @@
     "IsReferenced": false
   },
   {
-    "Name": "ClearDaySheet",
-    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.",
+    "Name": "Calendar_GetMonth",
+    "Description": "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Calendar_GetMonthSummary",
+    "Description": "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).",
     "IsReferenced": false
   },
   {
     "Name": "CommitTransaction",
     "Description": "Issues a database COMMIT command that makes effective all changes done on the database since the last commit.",
     "IsReferenced": true
+  },
+  {
+    "Name": "Date_GetWeekStart",
+    "Description": "Returns the Monday of the week that contains Date.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_Clear",
+    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_FillPending",
+    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_GetDetail",
+    "Description": "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "DaySheet_Save",
+    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message.",
+    "IsReferenced": false
   },
   {
     "Name": "DoLogin",
@@ -30,44 +60,9 @@
     "IsReferenced": false
   },
   {
-    "Name": "FillPendingDays",
-    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.",
-    "IsReferenced": false
-  },
-  {
-    "Name": "FormatMinutes",
-    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
-    "IsReferenced": false
-  },
-  {
-    "Name": "GetDaySheetDetail",
-    "Description": "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.",
-    "IsReferenced": false
-  },
-  {
     "Name": "GetGoogleMapsServerKey",
     "Description": "Returns the Google Maps API key setup for this component.",
     "IsReferenced": true
-  },
-  {
-    "Name": "GetMonthCalendar",
-    "Description": "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.",
-    "IsReferenced": false
-  },
-  {
-    "Name": "GetMonthSummary",
-    "Description": "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).",
-    "IsReferenced": false
-  },
-  {
-    "Name": "GetUserProjects",
-    "Description": "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.",
-    "IsReferenced": false
-  },
-  {
-    "Name": "GetWeekStart",
-    "Description": "Returns the Monday of the week that contains Date.",
-    "IsReferenced": false
   },
   {
     "Name": "Holiday_CreateIfMissing",
@@ -145,8 +140,13 @@
     "IsReferenced": true
   },
   {
-    "Name": "SaveDaySheet",
-    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message.",
+    "Name": "Minutes_Format",
+    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_GetAssignedToUser",
+    "Description": "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.",
     "IsReferenced": false
   },
   {

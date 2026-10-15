@@ -6,6 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-14
 - **Depends on:** TT0
+- **Renamed in TT1 (2026-10-15):** ClearDaySheet → DaySheet_Clear, FillPendingDays → DaySheet_FillPending, GetDaySheetDetail → DaySheet_GetDetail, SaveDaySheet → DaySheet_Save, GetMonthCalendar → Calendar_GetMonth, GetMonthSummary → Calendar_GetMonthSummary, GetUserProjects → Project_GetAssignedToUser, FormatMinutes → Minutes_Format, DayOnClick → OnClick_DayCell, BuildTimeOptions → OnInitialize, BindEscapeKey → OnReady. This file keeps the names as they were when the story was built.
 
 ## Story
 

@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-15, targeted mode, after the manual publish of story US3
+- **Last refresh:** 2026-10-15, targeted mode, after the manual publish of TT1
 
 ## Own elements (references excluded)
 
@@ -11,8 +11,8 @@
 | Entities | 6 | Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry |
 | Static entities | 2 | DayStatus, CalendarDayType |
 | Structures | 12 | CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption (US2), DayEditorLine (US2), DayStatusKPI (US3) |
-| Server actions | 13 | Bootstrap, ClearDaySheet, DoLogin, DoLogout, FillPendingDays, FormatMinutes, GetDaySheetDetail, GetMonthCalendar, GetMonthSummary, GetUserProjects, GetWeekStart, Holiday_CreateIfMissing, SaveDaySheet |
-| Client actions | 2 | FormatMinutes, GetWeekStart |
+| Server actions | 13 | Bootstrap, Calendar_GetMonth, Calendar_GetMonthSummary, Date_GetWeekStart, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, DoLogin, DoLogout, Holiday_CreateIfMissing, Minutes_Format, Project_GetAssignedToUser |
+| Client actions | 2 | Date_GetWeekStart, Minutes_Format |
 | Service actions | 0 | |
 | Screens | 2 | Common/InvalidPermissions, Common/Login |
 | Blocks | 12 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs |
@@ -26,8 +26,8 @@
 
 ## Notes on this refresh
 
-- Light mode (all module-wide reads) plus `web-blocks/DayStatusKPIs.cs` (new) and `themes/ClaudeSheet.cs`.
-- The reads were made over raw HTTP (the Service Studio MCP tools didn't load into the Claude session), so `extract-snapshot.mjs` could not find them in the transcript. The files were written by an equivalent script with the same cleaning rules (no fences, LF, names sorted).
-- US3 changes visible here: `data-model.cs` (PluralLabel of CalendarDayType Confirmed and Pending), `structures.cs` (DayStatusKPI), `names/web-blocks.json` and `web-blocks/DayStatusKPIs.cs`, `themes/ClaudeSheet.cs` (US3 stylesheet section).
-- `structures.cs` is complete again: it now also contains the US2 structures `NumberOption` and `DayEditorLine`, which the previous refresh skipped. That explains most of its diff (structures are now in the read order).
+- TT1 renamed 9 server actions, 2 client actions and 13 block actions (see `stories/TT1-apply-conventions.md`). The per-object files of the old names were deleted and the new ones written: `server-actions/` (9), `client-actions/` (2), `web-blocks/TotalHoursMonth.cs`, `HoursCalendar.cs`, `DayStatusKPIs.cs`.
+- Light mode was re-read too. `data-model.cs`, `structures.cs`, the other module-wide files and `themes/ClaudeSheet.cs` are unchanged, as TT1 changed no data, structure or CSS. `names/server-actions.json` and `names/client-actions.json` show the new names.
+- Old names still appear in 8 Description texts (a rename doesn't rewrite free text). This was accepted in the TT1 review (A06).
+- Reads made over raw HTTP and written by an equivalent of `extract-snapshot.mjs` (same cleaning and sort order), as for US3.
 - `getDataModel` does not output entity indexes. The unique indexes are listed in `stories/US-000-mysheet-foundation.md`.

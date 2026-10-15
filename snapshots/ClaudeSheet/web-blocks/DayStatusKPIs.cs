@@ -31,18 +31,18 @@
     startNode.IsDisabled = false; // default value
     startNode.VerticalPosition = 800;
     
-    var getMonthSummary = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetMonthSummary").ConnectedBelow(startNode, 1371);
-    var getMonthSummary2 = eSpace.ServerActions.Named("GetMonthSummary");
-    getMonthSummary.Action = getMonthSummary2;
-    getMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getMonthSummary.IsDisabled = false; // default value
-    getMonthSummary.ServerRequestTimeout = null; // default value
-    var month = getMonthSummary2.InputParameters.Named("Month");
-    getMonthSummary.SetArgumentValue(month, "Month");
-    var year = getMonthSummary2.InputParameters.Named("Year");
-    getMonthSummary.SetArgumentValue(year, "Year");
+    var calendar_GetMonthSummary = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(startNode, 1371);
+    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
+    calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    calendar_GetMonthSummary.IsDisabled = false; // default value
+    calendar_GetMonthSummary.ServerRequestTimeout = null; // default value
+    var month = calendar_GetMonthSummary2.InputParameters.Named("Month");
+    calendar_GetMonthSummary.SetArgumentValue(month, "Month");
+    var year = calendar_GetMonthSummary2.InputParameters.Named("Year");
+    calendar_GetMonthSummary.SetArgumentValue(year, "Year");
     
-    var getKPIDayTypes = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetKPIDayTypes").ConnectedBelow(getMonthSummary, 1371);
+    var getKPIDayTypes = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetKPIDayTypes").ConnectedBelow(calendar_GetMonthSummary, 1371);
     getKPIDayTypes.CacheInMinutes = null; // default value
     getKPIDayTypes.Description = null; // default value
     getKPIDayTypes.IsDisabled = false; // default value
@@ -70,7 +70,7 @@
     
     var assignment2 = assignNode.CreateAssignment("KPI.CssClass", "GetKPIDayTypes.List.Current.CalendarDayType.CssClass");
     
-    var assignment3 = assignNode.CreateAssignment("KPI.Count", "If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Confirmed, GetMonthSummary.Summary.ConfirmedCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.DayOff, GetMonthSummary.Summary.DayOffCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Holiday, GetMonthSummary.Summary.HolidayCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Pending, GetMonthSummary.Summary.PendingCount, 0))))");
+    var assignment3 = assignNode.CreateAssignment("KPI.Count", "If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Confirmed, Calendar_GetMonthSummary.Summary.ConfirmedCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.DayOff, Calendar_GetMonthSummary.Summary.DayOffCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Holiday, Calendar_GetMonthSummary.Summary.HolidayCount, If(GetKPIDayTypes.List.Current.CalendarDayType.Id = Entities.CalendarDayType.Pending, Calendar_GetMonthSummary.Summary.PendingCount, 0))))");
     
     var assignment4 = assignNode.CreateAssignment("KPI.Label", "If(KPI.Count = 1, GetKPIDayTypes.List.Current.CalendarDayType.Label, GetKPIDayTypes.List.Current.CalendarDayType.PluralLabel)");
     forEachNode.CycleTarget = assignNode;
@@ -113,28 +113,28 @@
     kPIs.DataType = eSpace.GetOrCreateListType(dayStatusKPI);
     kPIs.Description = null; // default value
     
-    var getKPIsOnAfterFetch = dayStatusKPIs.CreateScreenAction("GetKPIsOnAfterFetch");
-    getKPIsOnAfterFetch.Description = "Shows an error feedback message when GetKPIs failed.";
+    var onAfterFetch_GetKPIs = dayStatusKPIs.CreateScreenAction("OnAfterFetch_GetKPIs");
+    onAfterFetch_GetKPIs.Description = "Shows an error feedback message when GetKPIs failed.";
     
-    var startNode2 = getKPIsOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode2 = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode2.HorizontalPosition = 3200;
     startNode2.IsDisabled = false; // default value
     startNode2.VerticalPosition = 800;
     
-    var ifNode = getKPIsOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode2, 1371);
+    var ifNode = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode2, 1371);
     ifNode.SetCondition("GetKPIs.ErrorMessage <> \"\"");
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Failed?";
     
-    var messageNode = getKPIsOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
+    var messageNode = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
     messageNode.IsDisabled = false; // default value
     messageNode.Label = null; // default value
     messageNode.SetMessage("GetKPIs.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
-    var endNode3 = getKPIsOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
+    var endNode3 = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
     endNode3.IsDisabled = false; // default value
-    getKPIs.OnAfterFetch.Destination = getKPIsOnAfterFetch;
+    getKPIs.OnAfterFetch.Destination = onAfterFetch_GetKPIs;
     ifNode.FalseTarget = endNode3;
     ifNode.TrueTarget = messageNode;
     messageNode.Target = endNode3;

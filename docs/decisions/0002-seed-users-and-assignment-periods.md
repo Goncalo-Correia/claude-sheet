@@ -18,5 +18,5 @@ The implementation guidelines also asked for a unique index on `ProjectAssignmen
 ## Consequences
 
 - No usernames are hard-coded, and other environments stay clean while the site property is empty. In each test environment, someone has to set the property in Service Center and run the timer again.
-- A user can hold several periods on the same project. The database doesn't prevent overlapping periods, so the future back-office action that saves assignments must reject overlaps. Otherwise `GetUserProjects` could return the same project twice for the overlapping dates.
+- A user can hold several periods on the same project. The database doesn't prevent overlapping periods, so the future back-office action that saves assignments must reject overlaps. Otherwise `Project_GetAssignedToUser` (called `GetUserProjects` before TT1) could return the same project twice for the overlapping dates.
 - `Bootstrap` creates the RUBUS assignment only when the user has none for RUBUS, so it never adds periods on later runs.

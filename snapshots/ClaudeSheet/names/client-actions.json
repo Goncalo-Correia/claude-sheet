@@ -70,6 +70,11 @@
     "IsReferenced": true
   },
   {
+    "Name": "Date_GetWeekStart",
+    "Description": "Returns the Monday of the week that contains Date.",
+    "IsReferenced": false
+  },
+  {
     "Name": "DatePickerClear",
     "Description": "Resets the selected dates (if any) and clears the input of a DatePicker with a given identifier.",
     "IsReferenced": true
@@ -250,11 +255,6 @@
     "IsReferenced": true
   },
   {
-    "Name": "FormatMinutes",
-    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
-    "IsReferenced": false
-  },
-  {
     "Name": "GetBrowser",
     "Description": "Identifies the browser being used.",
     "IsReferenced": true
@@ -288,11 +288,6 @@
     "Name": "GetOS",
     "Description": "Identifies the operating system being used.",
     "IsReferenced": true
-  },
-  {
-    "Name": "GetWeekStart",
-    "Description": "Returns the Monday of the week that contains Date.",
-    "IsReferenced": false
   },
   {
     "Name": "IsDesktop",
@@ -433,6 +428,11 @@
     "Name": "MenuShow",
     "Description": "Opens the extended menu content.",
     "IsReferenced": true
+  },
+  {
+    "Name": "Minutes_Format",
+    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
+    "IsReferenced": false
   },
   {
     "Name": "MonthPickerClear",

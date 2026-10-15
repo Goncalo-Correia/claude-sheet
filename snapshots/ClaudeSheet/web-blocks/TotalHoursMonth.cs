@@ -25,23 +25,23 @@
     startNode.IsDisabled = false; // default value
     startNode.VerticalPosition = 800;
     
-    var getMonthSummary = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetMonthSummary").ConnectedBelow(startNode, 1371);
+    var calendar_GetMonthSummary = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(startNode, 1371);
     var eSpace = sheetBlocks.GetESpace();
-    var getMonthSummary2 = eSpace.ServerActions.Named("GetMonthSummary");
-    getMonthSummary.Action = getMonthSummary2;
-    getMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getMonthSummary.IsDisabled = false; // default value
-    getMonthSummary.ServerRequestTimeout = null; // default value
-    var month = getMonthSummary2.InputParameters.Named("Month");
-    getMonthSummary.SetArgumentValue(month, "Month");
-    var year = getMonthSummary2.InputParameters.Named("Year");
-    getMonthSummary.SetArgumentValue(year, "Year");
+    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
+    calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    calendar_GetMonthSummary.IsDisabled = false; // default value
+    calendar_GetMonthSummary.ServerRequestTimeout = null; // default value
+    var month = calendar_GetMonthSummary2.InputParameters.Named("Month");
+    calendar_GetMonthSummary.SetArgumentValue(month, "Month");
+    var year = calendar_GetMonthSummary2.InputParameters.Named("Year");
+    calendar_GetMonthSummary.SetArgumentValue(year, "Year");
     
-    var assignNode = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getMonthSummary, 1371);
+    var assignNode = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonthSummary, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
     
-    var assignment = assignNode.CreateAssignment("Summary", "GetMonthSummary.Summary");
+    var assignment = assignNode.CreateAssignment("Summary", "Calendar_GetMonthSummary.Summary");
     
     var endNode = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode, 1371);
     endNode.IsDisabled = false; // default value
@@ -68,28 +68,28 @@
     summary.DataType = monthSummary;
     summary.Description = null; // default value
     
-    var getSummaryOnAfterFetch = totalHoursMonth.CreateScreenAction("GetSummaryOnAfterFetch");
-    getSummaryOnAfterFetch.Description = "Shows an error feedback message when GetSummary failed.";
+    var onAfterFetch_GetSummary = totalHoursMonth.CreateScreenAction("OnAfterFetch_GetSummary");
+    onAfterFetch_GetSummary.Description = "Shows an error feedback message when GetSummary failed.";
     
-    var startNode2 = getSummaryOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode2 = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode2.HorizontalPosition = 3200;
     startNode2.IsDisabled = false; // default value
     startNode2.VerticalPosition = 800;
     
-    var ifNode = getSummaryOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode2, 1371);
+    var ifNode = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode2, 1371);
     ifNode.SetCondition("GetSummary.ErrorMessage <> \"\"");
     ifNode.IsDisabled = false; // default value
     ifNode.Label = "Failed?";
     
-    var messageNode = getSummaryOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
+    var messageNode = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
     messageNode.IsDisabled = false; // default value
     messageNode.Label = null; // default value
     messageNode.SetMessage("GetSummary.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
-    var endNode3 = getSummaryOnAfterFetch.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
+    var endNode3 = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode, 1371);
     endNode3.IsDisabled = false; // default value
-    getSummary.OnAfterFetch.Destination = getSummaryOnAfterFetch;
+    getSummary.OnAfterFetch.Destination = onAfterFetch_GetSummary;
     ifNode.FalseTarget = endNode3;
     ifNode.TrueTarget = messageNode;
     messageNode.Target = endNode3;
@@ -305,7 +305,7 @@
     expression2.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
     expression2.RowSpan = null; // default value
     expression2.SetStyle(null); // default value
-    expression2.SetValue("If(GetSummary.IsDataFetched, FormatMinutes(GetSummary.Summary.TotalMinutes, \"h\"), \"--\")");
+    expression2.SetValue("If(GetSummary.IsDataFetched, Minutes_Format(GetSummary.Summary.TotalMinutes, \"h\"), \"--\")");
     expression2.Width = ""; // default value
     
     var container5 = totalHours.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();

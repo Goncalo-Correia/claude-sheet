@@ -36,33 +36,33 @@
     startNode.IsDisabled = false; // default value
     startNode.VerticalPosition = 800;
     
-    var getMonthCalendar = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetMonthCalendar").ConnectedBelow(startNode, 1371);
-    var getMonthCalendar2 = eSpace.ServerActions.Named("GetMonthCalendar");
-    getMonthCalendar.Action = getMonthCalendar2;
-    getMonthCalendar.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getMonthCalendar.IsDisabled = false; // default value
-    getMonthCalendar.ServerRequestTimeout = null; // default value
-    var month = getMonthCalendar2.InputParameters.Named("Month");
-    getMonthCalendar.SetArgumentValue(month, "Month");
-    var year = getMonthCalendar2.InputParameters.Named("Year");
-    getMonthCalendar.SetArgumentValue(year, "Year");
+    var calendar_GetMonth = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonth").ConnectedBelow(startNode, 1371);
+    var calendar_GetMonth2 = eSpace.ServerActions.Named("Calendar_GetMonth");
+    calendar_GetMonth.Action = calendar_GetMonth2;
+    calendar_GetMonth.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    calendar_GetMonth.IsDisabled = false; // default value
+    calendar_GetMonth.ServerRequestTimeout = null; // default value
+    var month = calendar_GetMonth2.InputParameters.Named("Month");
+    calendar_GetMonth.SetArgumentValue(month, "Month");
+    var year = calendar_GetMonth2.InputParameters.Named("Year");
+    calendar_GetMonth.SetArgumentValue(year, "Year");
     
-    var getMonthSummary = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetMonthSummary").ConnectedBelow(getMonthCalendar, 1371);
-    var getMonthSummary2 = eSpace.ServerActions.Named("GetMonthSummary");
-    getMonthSummary.Action = getMonthSummary2;
-    getMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getMonthSummary.IsDisabled = false; // default value
-    getMonthSummary.ServerRequestTimeout = null; // default value
-    var year2 = getMonthSummary2.InputParameters.Named("Year");
-    getMonthSummary.SetArgumentValue(year2, "Year");
-    var month2 = getMonthSummary2.InputParameters.Named("Month");
-    getMonthSummary.SetArgumentValue(month2, "Month");
+    var calendar_GetMonthSummary = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Calendar_GetMonthSummary").ConnectedBelow(calendar_GetMonth, 1371);
+    var calendar_GetMonthSummary2 = eSpace.ServerActions.Named("Calendar_GetMonthSummary");
+    calendar_GetMonthSummary.Action = calendar_GetMonthSummary2;
+    calendar_GetMonthSummary.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    calendar_GetMonthSummary.IsDisabled = false; // default value
+    calendar_GetMonthSummary.ServerRequestTimeout = null; // default value
+    var year2 = calendar_GetMonthSummary2.InputParameters.Named("Year");
+    calendar_GetMonthSummary.SetArgumentValue(year2, "Year");
+    var month2 = calendar_GetMonthSummary2.InputParameters.Named("Month");
+    calendar_GetMonthSummary.SetArgumentValue(month2, "Month");
     
-    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getMonthSummary, 1371);
+    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonthSummary, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = null; // default value
     
-    var assignment = assignNode.CreateAssignment("Summary", "GetMonthSummary.Summary");
+    var assignment = assignNode.CreateAssignment("Summary", "Calendar_GetMonthSummary.Summary");
     
     var assignment2 = assignNode.CreateAssignment("DailyExpectedMinutes", "Site.DailyExpectedMinutes");
     
@@ -81,7 +81,7 @@
     listAppendAll.IsDisabled = false; // default value
     listAppendAll.ServerRequestTimeout = null; // default value
     var sourceList = listAppendAll2.InputParameters.Named("SourceList");
-    listAppendAll.SetArgumentValue(sourceList, "GetMonthCalendar.Days");
+    listAppendAll.SetArgumentValue(sourceList, "Calendar_GetMonth.Days");
     var list = listAppendAll2.InputParameters.Named("List");
     listAppendAll.SetArgumentValue(list, "Cells");
     ifNode.FalseTarget = listAppendAll;
@@ -257,64 +257,59 @@
     hoursCalendar.OnDestroy.Destination = null; // default value
     hoursCalendar.OnRender.Destination = null; // default value
     
-    var bindEscapeKey = hoursCalendar.CreateScreenAction("BindEscapeKey");
-    bindEscapeKey.Description = "OnReady: Escape closes the open HoursCalendar popup (clicks its Cancel button). Bound once per page.";
+    var finishDaySave = hoursCalendar.CreateScreenAction("FinishDaySave");
+    finishDaySave.Description = "After a successful save/clear: closes the popup, refreshes GetCalendar, shows a success message and raises OnDaySaved(EditDate).";
     
-    var startNode2 = bindEscapeKey.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode2.HorizontalPosition = 3200;
-    startNode2.IsDisabled = false; // default value
-    startNode2.VerticalPosition = 800;
+    var successMessage = finishDaySave.CreateInputParameter("SuccessMessage");
+    successMessage.DataType = eSpace.TextType;
+    successMessage.Description = null; // default value
+    successMessage.IsMandatory = true; // default value
     
-    var buildTimeOptions = hoursCalendar.CreateScreenAction("BuildTimeOptions");
-    buildTimeOptions.Description = "Fills HourOptions (0-12) and MinuteOptions (00, 15, 30, 45) for the day editor dropdowns.";
+    var onInitialize = hoursCalendar.CreateScreenAction("OnInitialize");
+    onInitialize.Description = "Fills HourOptions (0-12) and MinuteOptions (00, 15, 30, 45) for the day editor dropdowns.";
     
-    var i = buildTimeOptions.CreateLocalVariable("I");
+    var i = onInitialize.CreateLocalVariable("I");
     i.DataType = eSpace.IntegerType;
     i.SetDefaultValue(null); // default value
     i.Description = null; // default value
     
-    var option = buildTimeOptions.CreateLocalVariable("Option");
+    var option = onInitialize.CreateLocalVariable("Option");
     option.DataType = numberOption;
     option.Description = null; // default value
     
-    var startNode3 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode3.HorizontalPosition = 3200;
-    startNode3.IsDisabled = false; // default value
-    startNode3.VerticalPosition = 800;
+    var startNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode2.HorizontalPosition = 3200;
+    startNode2.IsDisabled = false; // default value
+    startNode2.VerticalPosition = 800;
     
-    var assignNode2 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode3, 1371);
+    var assignNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode2, 1371);
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = null; // default value
     
     var assignment4 = assignNode2.CreateAssignment("I", "0");
     
-    var ifNode2 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode2, 1371);
+    var ifNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode2, 1371);
     ifNode2.SetCondition("I <= 12");
     ifNode2.IsDisabled = false; // default value
     ifNode2.Label = "!More hours?";
     
-    var assignNode3 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
+    var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = null; // default value
     
-    var assignment5 = assignNode3.CreateAssignment("I", "0");
+    var assignment5 = assignNode3.CreateAssignment("Option.Value", "I");
     
-    var assignNode4 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
+    var assignment6 = assignNode3.CreateAssignment("Option.Label", "I");
+    
+    var assignNode4 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
     assignNode4.HorizontalPosition = 5028;
     assignNode4.IsDisabled = false; // default value
     assignNode4.Label = null; // default value
     assignNode4.VerticalPosition = 4913;
     
-    var assignment6 = assignNode4.CreateAssignment("Option.Value", "I");
+    var assignment7 = assignNode4.CreateAssignment("I", "0");
     
-    var assignment7 = assignNode4.CreateAssignment("Option.Label", "I");
-    
-    var ifNode3 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode3, 1371);
-    ifNode3.SetCondition("I <= 45");
-    ifNode3.IsDisabled = false; // default value
-    ifNode3.Label = "!More minutes?";
-    
-    var listAppend3 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode4, 1371);
+    var listAppend3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode3, 1371);
     var listAppend4 = _System_.ClientActions.Named("ListAppend");
     listAppend3.Action = listAppend4;
     listAppend3.IsDisabled = false; // default value
@@ -323,49 +318,54 @@
     var list3 = listAppend4.InputParameters.Named("List");
     listAppend3.SetArgumentValue(list3, "HourOptions");
     
-    var endNode2 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode3, 1371);
-    endNode2.IsDisabled = false; // default value
+    var ifNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode4, 1371);
+    ifNode3.SetCondition("I <= 45");
+    ifNode3.IsDisabled = false; // default value
+    ifNode3.Label = "!More minutes?";
     
-    var assignNode5 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode5.HorizontalPosition = 5028;
+    var assignNode5 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
     assignNode5.IsDisabled = false; // default value
     assignNode5.Label = null; // default value
-    assignNode5.VerticalPosition = 7655;
+    assignNode5.Target = ifNode2;
     
-    var assignment8 = assignNode5.CreateAssignment("Option.Value", "I");
+    var assignment8 = assignNode5.CreateAssignment("I", "I + 1");
     
-    var assignment9 = assignNode5.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
-    
-    var assignNode6 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
+    var assignNode6 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode3, 1371);
     assignNode6.IsDisabled = false; // default value
     assignNode6.Label = null; // default value
-    assignNode6.Target = ifNode2;
     
-    var assignment10 = assignNode6.CreateAssignment("I", "I + 1");
+    var assignment9 = assignNode6.CreateAssignment("Option.Value", "I");
     
-    var listAppend22 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend2").ConnectedBelow(assignNode5, 1371);
+    var assignment10 = assignNode6.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
+    
+    var endNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
+    endNode2.HorizontalPosition = 6856;
+    endNode2.IsDisabled = false; // default value
+    endNode2.VerticalPosition = 7655;
+    
+    var listAppend22 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend2").ConnectedBelow(assignNode6, 1371);
     listAppend22.Action = listAppend4;
     listAppend22.IsDisabled = false; // default value
     listAppend22.SetArgumentValue(list3, "MinuteOptions");
     listAppend22.SetArgumentValue(element2, "Option");
     
-    var assignNode7 = buildTimeOptions.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend22, 1371);
+    var assignNode7 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend22, 1371);
     assignNode7.IsDisabled = false; // default value
     assignNode7.Label = null; // default value
     assignNode7.Target = ifNode3;
     
     var assignment11 = assignNode7.CreateAssignment("I", "I + 15");
-    hoursCalendar.OnInitialize.Destination = buildTimeOptions;
+    hoursCalendar.OnInitialize.Destination = onInitialize;
     
     var onParametersChanged = hoursCalendar.CreateScreenAction("OnParametersChanged");
     onParametersChanged.Description = "Reloads GetCalendar when Year, Month or RefreshKey change.";
     
-    var startNode4 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode4.HorizontalPosition = 3200;
-    startNode4.IsDisabled = false; // default value
-    startNode4.VerticalPosition = 800;
+    var startNode3 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode3.HorizontalPosition = 3200;
+    startNode3.IsDisabled = false; // default value
+    startNode3.VerticalPosition = 800;
     
-    var refreshDataNode = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(startNode4, 1371);
+    var refreshDataNode = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(startNode3, 1371);
     refreshDataNode.DataSource = getCalendar;
     refreshDataNode.IsDisabled = false; // default value
     refreshDataNode.SetMaxRecords(null); // default value
@@ -374,84 +374,162 @@
     var endNode3 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(refreshDataNode, 1371);
     endNode3.IsDisabled = false; // default value
     hoursCalendar.OnParametersChanged.Destination = onParametersChanged;
-    hoursCalendar.OnReady.Destination = bindEscapeKey;
     
-    var escapeClosesPopup = bindEscapeKey.CreateNode<OutSystems.Model.Logic.Nodes.IJavaScriptNode>("EscapeClosesPopup").ConnectedBelow(startNode2, 1371);
+    var onReady = hoursCalendar.CreateScreenAction("OnReady");
+    onReady.Description = "OnReady: Escape closes the open HoursCalendar popup (clicks its Cancel button). Bound once per page.";
+    
+    var startNode4 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode4.HorizontalPosition = 3200;
+    startNode4.IsDisabled = false; // default value
+    startNode4.VerticalPosition = 800;
+    
+    var escapeClosesPopup = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IJavaScriptNode>("EscapeClosesPopup").ConnectedBelow(startNode4, 1371);
     escapeClosesPopup.Description = null; // default value
     escapeClosesPopup.IsDisabled = false; // default value
     escapeClosesPopup.JavaScript = "if (!window.sheetCalEscapeBound) {\n    window.sheetCalEscapeBound = true;\n    document.addEventListener(\'keydown\', function (e) {\n        if (e.key === \'Escape\') {\n            var buttons = document.querySelectorAll(\'.sheet-popup .sheet-popup__cancel\');\n            if (buttons.length > 0) { buttons[buttons.length - 1].click(); }\n        }\n    });\n}";
-    ifNode2.FalseTarget = assignNode3;
-    ifNode2.TrueTarget = assignNode4;
-    ifNode3.FalseTarget = endNode2;
-    ifNode3.TrueTarget = assignNode5;
     
-    var endNode4 = bindEscapeKey.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(escapeClosesPopup, 1371);
+    var endNode4 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(escapeClosesPopup, 1371);
     endNode4.IsDisabled = false; // default value
+    hoursCalendar.OnReady.Destination = onReady;
+    ifNode2.FalseTarget = assignNode4;
+    ifNode2.TrueTarget = assignNode3;
+    ifNode3.FalseTarget = endNode2;
+    ifNode3.TrueTarget = assignNode6;
     
-    var clearDay = hoursCalendar.CreateScreenAction("ClearDay");
-    clearDay.Description = "Calls ClearDaySheet for EditDate (Clear day / Remove day off). Errors stay in the popup.";
-    
-    var startNode5 = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode5.HorizontalPosition = 3200;
+    var startNode5 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode5.IsDisabled = false; // default value
-    startNode5.VerticalPosition = 800;
     
-    var clearDaySheet = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ClearDaySheet").ConnectedBelow(startNode5, 1371);
-    var clearDaySheet2 = eSpace.ServerActions.Named("ClearDaySheet");
-    clearDaySheet.Action = clearDaySheet2;
-    clearDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    clearDaySheet.IsDisabled = false; // default value
-    clearDaySheet.ServerRequestTimeout = null; // default value
-    var date3 = clearDaySheet2.InputParameters.Named("Date");
-    clearDaySheet.SetArgumentValue(date3, "EditDate");
-    
-    var dayEditorSaved = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("DayEditorSaved").ConnectedBelow(clearDaySheet, 1371);
-    dayEditorSaved.IsDisabled = false; // default value
-    
-    var dayEditorSaved2 = hoursCalendar.CreateScreenAction("DayEditorSaved");
-    dayEditorSaved2.Description = "After a successful save/clear: closes the popup, refreshes GetCalendar, shows a success message and raises OnDaySaved(EditDate).";
-    
-    var successMessage = dayEditorSaved2.CreateInputParameter("SuccessMessage");
-    successMessage.DataType = eSpace.TextType;
-    successMessage.Description = null; // default value
-    successMessage.IsMandatory = true; // default value
-    
-    var startNode6 = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode6.IsDisabled = false; // default value
-    
-    var assignNode8 = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode6, 1371);
+    var assignNode8 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode5, 1371);
     assignNode8.IsDisabled = false; // default value
     assignNode8.Label = null; // default value
     
     var assignment12 = assignNode8.CreateAssignment("ShowDayEditor", "False");
     
-    var refreshDataNode2 = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(assignNode8, 1371);
+    var refreshDataNode2 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(assignNode8, 1371);
     refreshDataNode2.DataSource = getCalendar;
     refreshDataNode2.IsDisabled = false; // default value
     refreshDataNode2.SetMaxRecords(null); // default value
     refreshDataNode2.SetStartIndex(null); // default value
     
-    var messageNode = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode2, 1371);
+    var messageNode = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode2, 1371);
     messageNode.IsDisabled = false; // default value
     messageNode.Label = null; // default value
     messageNode.SetMessage("SuccessMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
-    var onDaySaved2 = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySaved").ConnectedBelow(messageNode, 1371);
+    var onDaySaved2 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySaved").ConnectedBelow(messageNode, 1371);
     onDaySaved2.Description = null; // default value
     onDaySaved2.Event = onDaySaved;
     onDaySaved2.IsDisabled = false; // default value
     onDaySaved2.SetArgumentValue(date, "EditDate");
     
-    var endNode5 = dayEditorSaved2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onDaySaved2, 1371);
+    var endNode5 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onDaySaved2, 1371);
     endNode5.IsDisabled = false; // default value
-    dayEditorSaved.Action = dayEditorSaved2;
     
-    var endNode6 = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(dayEditorSaved, 1371);
+    var onChange_EditorTime = hoursCalendar.CreateScreenAction("OnChange_EditorTime");
+    onChange_EditorTime.Description = "OnChange of HoursDropdown and MinutesDropdown in the day editor: recomputes the live total of the day.";
+    
+    var startNode6 = onChange_EditorTime.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode6.HorizontalPosition = 3200;
+    startNode6.IsDisabled = false; // default value
+    startNode6.VerticalPosition = 800;
+    
+    var recalcEditorTotal = onChange_EditorTime.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("RecalcEditorTotal").ConnectedBelow(startNode6, 1371);
+    recalcEditorTotal.IsDisabled = false; // default value
+    
+    var recalcEditorTotal2 = hoursCalendar.CreateScreenAction("RecalcEditorTotal");
+    recalcEditorTotal2.Description = "Recomputes EditorTotal (minutes) from the hours/minutes dropdowns of EditorLines.";
+    
+    var startNode7 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode7.HorizontalPosition = 3200;
+    startNode7.IsDisabled = false; // default value
+    startNode7.VerticalPosition = 800;
+    
+    var assignNode9 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode7, 1371);
+    assignNode9.IsDisabled = false; // default value
+    assignNode9.Label = null; // default value
+    
+    var assignment13 = assignNode9.CreateAssignment("EditorTotal", "0");
+    
+    var forEachNode = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode9, 1371);
+    forEachNode.IsDisabled = false; // default value
+    forEachNode.Label = null; // default value
+    forEachNode.SetMaximumIterations(null); // default value
+    forEachNode.SetRecordList("EditorLines");
+    forEachNode.SetStartIndex(null); // default value
+    
+    var assignNode10 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
+    assignNode10.IsDisabled = false; // default value
+    assignNode10.Label = null; // default value
+    assignNode10.Target = forEachNode;
+    
+    var assignment14 = assignNode10.CreateAssignment("EditorTotal", "EditorTotal + EditorLines.Current.Hours * 60 + EditorLines.Current.Mins");
+    
+    var endNode6 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
     endNode6.IsDisabled = false; // default value
-    dayEditorSaved.SetArgumentValue(successMessage, "If(IsFutureDay, \"Day off removed.\", \"Day cleared.\")");
+    recalcEditorTotal.Action = recalcEditorTotal2;
     
-    var allExceptions = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
+    var endNode7 = onChange_EditorTime.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(recalcEditorTotal, 1371);
+    endNode7.IsDisabled = false; // default value
+    forEachNode.CycleTarget = assignNode10;
+    forEachNode.Target = endNode6;
+    
+    var onClick_CancelButton = hoursCalendar.CreateScreenAction("OnClick_CancelButton");
+    onClick_CancelButton.Description = "Cancel: closes the day editor without saving.";
+    
+    var startNode8 = onClick_CancelButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode8.IsDisabled = false; // default value
+    
+    var assignNode11 = onClick_CancelButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode8, 1371);
+    assignNode11.IsDisabled = false; // default value
+    assignNode11.Label = null; // default value
+    
+    var assignment15 = assignNode11.CreateAssignment("ShowDayEditor", "False");
+    
+    var endNode8 = onClick_CancelButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode11, 1371);
+    endNode8.IsDisabled = false; // default value
+    
+    var onClick_CancelFillButton = hoursCalendar.CreateScreenAction("OnClick_CancelFillButton");
+    onClick_CancelFillButton.Description = "Cancel: closes FillPendingPopup without filling.";
+    
+    var startNode9 = onClick_CancelFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode9.IsDisabled = false; // default value
+    
+    var assignNode12 = onClick_CancelFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode9, 1371);
+    assignNode12.IsDisabled = false; // default value
+    assignNode12.Label = null; // default value
+    
+    var assignment16 = assignNode12.CreateAssignment("ShowFillPopup", "False");
+    
+    var endNode9 = onClick_CancelFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode12, 1371);
+    endNode9.IsDisabled = false; // default value
+    
+    var onClick_ClearDayButton = hoursCalendar.CreateScreenAction("OnClick_ClearDayButton");
+    onClick_ClearDayButton.Description = "Calls ClearDaySheet for EditDate (Clear day / Remove day off). Errors stay in the popup.";
+    
+    var startNode10 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode10.HorizontalPosition = 3200;
+    startNode10.IsDisabled = false; // default value
+    startNode10.VerticalPosition = 800;
+    
+    var daySheet_Clear = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Clear").ConnectedBelow(startNode10, 1371);
+    var daySheet_Clear2 = eSpace.ServerActions.Named("DaySheet_Clear");
+    daySheet_Clear.Action = daySheet_Clear2;
+    daySheet_Clear.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    daySheet_Clear.IsDisabled = false; // default value
+    daySheet_Clear.ServerRequestTimeout = null; // default value
+    var date3 = daySheet_Clear2.InputParameters.Named("Date");
+    daySheet_Clear.SetArgumentValue(date3, "EditDate");
+    
+    var finishDaySave2 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("FinishDaySave").ConnectedBelow(daySheet_Clear, 1371);
+    finishDaySave2.Action = finishDaySave;
+    finishDaySave2.IsDisabled = false; // default value
+    finishDaySave2.SetArgumentValue(successMessage, "If(IsFutureDay, \"Day off removed.\", \"Day cleared.\")");
+    
+    var endNode10 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(finishDaySave2, 1371);
+    endNode10.IsDisabled = false; // default value
+    
+    var allExceptions = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
     allExceptions.AbortTransaction = false;
     allExceptions.Exception = eSpace.AllExceptions;
     allExceptions.HorizontalPosition = 6856;
@@ -459,114 +537,84 @@
     allExceptions.LogError = false;
     allExceptions.VerticalPosition = 800;
     
-    var assignNode9 = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
-    assignNode9.IsDisabled = false; // default value
-    assignNode9.Label = null; // default value
+    var assignNode13 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
+    assignNode13.IsDisabled = false; // default value
+    assignNode13.Label = null; // default value
     
-    var assignment13 = assignNode9.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
+    var assignment17 = assignNode13.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
-    var endNode7 = clearDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode9, 1371);
-    endNode7.IsDisabled = false; // default value
+    var endNode11 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode13, 1371);
+    endNode11.IsDisabled = false; // default value
     
-    var closeDayEditor = hoursCalendar.CreateScreenAction("CloseDayEditor");
-    closeDayEditor.Description = "Cancel: closes the day editor without saving.";
+    var onClick_ConfirmFillButton = hoursCalendar.CreateScreenAction("OnClick_ConfirmFillButton");
+    onClick_ConfirmFillButton.Description = "Runs FillPendingDays for the month; on success shows \"X days filled\", refreshes GetCalendar and raises OnDaySaved(CurrDate()). Errors stay in the popup.";
     
-    var startNode7 = closeDayEditor.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode7.IsDisabled = false; // default value
+    var startNode11 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode11.HorizontalPosition = 3200;
+    startNode11.IsDisabled = false; // default value
+    startNode11.VerticalPosition = 800;
     
-    var assignNode10 = closeDayEditor.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode7, 1371);
-    assignNode10.IsDisabled = false; // default value
-    assignNode10.Label = null; // default value
-    
-    var assignment14 = assignNode10.CreateAssignment("ShowDayEditor", "False");
-    
-    var endNode8 = closeDayEditor.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode10, 1371);
-    endNode8.IsDisabled = false; // default value
-    
-    var closeFillPopup = hoursCalendar.CreateScreenAction("CloseFillPopup");
-    closeFillPopup.Description = "Cancel: closes FillPendingPopup without filling.";
-    
-    var startNode8 = closeFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode8.IsDisabled = false; // default value
-    
-    var assignNode11 = closeFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode8, 1371);
-    assignNode11.IsDisabled = false; // default value
-    assignNode11.Label = null; // default value
-    
-    var assignment15 = assignNode11.CreateAssignment("ShowFillPopup", "False");
-    
-    var endNode9 = closeFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode11, 1371);
-    endNode9.IsDisabled = false; // default value
-    
-    var confirmFill = hoursCalendar.CreateScreenAction("ConfirmFill");
-    confirmFill.Description = "Runs FillPendingDays for the month; on success shows \"X days filled\", refreshes GetCalendar and raises OnDaySaved(CurrDate()). Errors stay in the popup.";
-    
-    var startNode9 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode9.HorizontalPosition = 3200;
-    startNode9.IsDisabled = false; // default value
-    startNode9.VerticalPosition = 800;
-    
-    var ifNode4 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode9, 1371);
+    var ifNode4 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(startNode11, 1371);
     ifNode4.SetCondition("FillProjectId = NullIdentifier()");
     ifNode4.IsDisabled = false; // default value
     ifNode4.Label = "!No project?";
     
-    var fillPendingDays = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("FillPendingDays").Below(ifNode4, 1371);
-    var fillPendingDays2 = eSpace.ServerActions.Named("FillPendingDays");
-    fillPendingDays.Action = fillPendingDays2;
-    fillPendingDays.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    fillPendingDays.IsDisabled = false; // default value
-    fillPendingDays.ServerRequestTimeout = null; // default value
-    var year5 = fillPendingDays2.InputParameters.Named("Year");
-    fillPendingDays.SetArgumentValue(year5, "Year");
-    var minutesPerDay = fillPendingDays2.InputParameters.Named("MinutesPerDay");
-    fillPendingDays.SetArgumentValue(minutesPerDay, "FillHours * 60 + FillMins");
-    var month5 = fillPendingDays2.InputParameters.Named("Month");
-    fillPendingDays.SetArgumentValue(month5, "Month");
-    var projectId = fillPendingDays2.InputParameters.Named("ProjectId");
-    fillPendingDays.SetArgumentValue(projectId, "FillProjectId");
-    ifNode4.FalseTarget = fillPendingDays;
+    var daySheet_FillPending = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_FillPending").Below(ifNode4, 1371);
+    var daySheet_FillPending2 = eSpace.ServerActions.Named("DaySheet_FillPending");
+    daySheet_FillPending.Action = daySheet_FillPending2;
+    daySheet_FillPending.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    daySheet_FillPending.IsDisabled = false; // default value
+    daySheet_FillPending.ServerRequestTimeout = null; // default value
+    var year5 = daySheet_FillPending2.InputParameters.Named("Year");
+    daySheet_FillPending.SetArgumentValue(year5, "Year");
+    var minutesPerDay = daySheet_FillPending2.InputParameters.Named("MinutesPerDay");
+    daySheet_FillPending.SetArgumentValue(minutesPerDay, "FillHours * 60 + FillMins");
+    var month5 = daySheet_FillPending2.InputParameters.Named("Month");
+    daySheet_FillPending.SetArgumentValue(month5, "Month");
+    var projectId = daySheet_FillPending2.InputParameters.Named("ProjectId");
+    daySheet_FillPending.SetArgumentValue(projectId, "FillProjectId");
+    ifNode4.FalseTarget = daySheet_FillPending;
     
-    var assignNode12 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
-    assignNode12.HorizontalPosition = 5028;
-    assignNode12.IsDisabled = false; // default value
-    assignNode12.Label = null; // default value
-    assignNode12.VerticalPosition = 3542;
+    var assignNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
+    assignNode14.HorizontalPosition = 5028;
+    assignNode14.IsDisabled = false; // default value
+    assignNode14.Label = null; // default value
+    assignNode14.VerticalPosition = 3542;
     
-    var assignment16 = assignNode12.CreateAssignment("FillError", "\"Choose a project.\"");
-    ifNode4.TrueTarget = assignNode12;
+    var assignment18 = assignNode14.CreateAssignment("FillError", "\"Choose a project.\"");
+    ifNode4.TrueTarget = assignNode14;
     
-    var assignNode13 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(fillPendingDays, 1371);
-    assignNode13.IsDisabled = false; // default value
-    assignNode13.Label = null; // default value
+    var assignNode15 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_FillPending, 1371);
+    assignNode15.IsDisabled = false; // default value
+    assignNode15.Label = null; // default value
     
-    var assignment17 = assignNode13.CreateAssignment("ShowFillPopup", "False");
+    var assignment19 = assignNode15.CreateAssignment("ShowFillPopup", "False");
     
-    var endNode10 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode12, 1371);
-    endNode10.IsDisabled = false; // default value
+    var endNode12 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode14, 1371);
+    endNode12.IsDisabled = false; // default value
     
-    var refreshDataNode3 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(assignNode13, 1371);
+    var refreshDataNode3 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(assignNode15, 1371);
     refreshDataNode3.DataSource = getCalendar;
     refreshDataNode3.IsDisabled = false; // default value
     refreshDataNode3.SetMaxRecords(null); // default value
     refreshDataNode3.SetStartIndex(null); // default value
     
-    var messageNode2 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode3, 1371);
+    var messageNode2 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode3, 1371);
     messageNode2.IsDisabled = false; // default value
     messageNode2.Label = null; // default value
-    messageNode2.SetMessage("FillPendingDays.FilledCount + \" days filled\"");
+    messageNode2.SetMessage("DaySheet_FillPending.FilledCount + \" days filled\"");
     messageNode2.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
-    var onDaySaved3 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySaved").ConnectedBelow(messageNode2, 1371);
+    var onDaySaved3 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySaved").ConnectedBelow(messageNode2, 1371);
     onDaySaved3.Description = null; // default value
     onDaySaved3.Event = onDaySaved;
     onDaySaved3.IsDisabled = false; // default value
     onDaySaved3.SetArgumentValue(date, "CurrDate()");
     
-    var endNode11 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onDaySaved3, 1371);
-    endNode11.IsDisabled = false; // default value
+    var endNode13 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onDaySaved3, 1371);
+    endNode13.IsDisabled = false; // default value
     
-    var allExceptions2 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
+    var allExceptions2 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
     allExceptions2.AbortTransaction = false;
     allExceptions2.Exception = eSpace.AllExceptions;
     allExceptions2.HorizontalPosition = 8684;
@@ -574,46 +622,46 @@
     allExceptions2.LogError = false;
     allExceptions2.VerticalPosition = 800;
     
-    var assignNode14 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
-    assignNode14.IsDisabled = false; // default value
-    assignNode14.Label = null; // default value
+    var assignNode16 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
+    assignNode16.IsDisabled = false; // default value
+    assignNode16.Label = null; // default value
     
-    var assignment18 = assignNode14.CreateAssignment("FillError", "AllExceptions.ExceptionMessage");
+    var assignment20 = assignNode16.CreateAssignment("FillError", "AllExceptions.ExceptionMessage");
     
-    var endNode12 = confirmFill.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode14, 1371);
-    endNode12.IsDisabled = false; // default value
+    var endNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode16, 1371);
+    endNode14.IsDisabled = false; // default value
     
-    var dayOnClick = hoursCalendar.CreateScreenAction("DayOnClick");
-    dayOnClick.Description = "Raises OnDaySelected for any day; opens the day editor only when the day is editable (not a weekend or holiday).";
+    var onClick_DayCell = hoursCalendar.CreateScreenAction("OnClick_DayCell");
+    onClick_DayCell.Description = "Raises OnDaySelected for any day; opens the day editor only when the day is editable (not a weekend or holiday).";
     
-    var day = dayOnClick.CreateInputParameter("Day");
+    var day = onClick_DayCell.CreateInputParameter("Day");
     day.DataType = calendarDay;
     day.Description = null; // default value
     day.IsMandatory = true; // default value
     
-    var startNode10 = dayOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode10.HorizontalPosition = 3200;
-    startNode10.IsDisabled = false; // default value
-    startNode10.VerticalPosition = 800;
+    var startNode12 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode12.HorizontalPosition = 3200;
+    startNode12.IsDisabled = false; // default value
+    startNode12.VerticalPosition = 800;
     
-    var onDaySelected2 = dayOnClick.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySelected").ConnectedBelow(startNode10, 1371);
+    var onDaySelected2 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnDaySelected").ConnectedBelow(startNode12, 1371);
     onDaySelected2.Description = null; // default value
     onDaySelected2.Event = onDaySelected;
     onDaySelected2.IsDisabled = false; // default value
     onDaySelected2.SetArgumentValue(date2, "Day.Date");
     
-    var ifNode5 = dayOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(onDaySelected2, 1371);
+    var ifNode5 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(onDaySelected2, 1371);
     ifNode5.SetCondition("Day.IsEditable");
     ifNode5.IsDisabled = false; // default value
     ifNode5.Label = "Editable?";
     
-    var endNode13 = dayOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode5, 1371);
-    endNode13.IsDisabled = false; // default value
-    ifNode5.FalseTarget = endNode13;
+    var endNode15 = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode5, 1371);
+    endNode15.IsDisabled = false; // default value
+    ifNode5.FalseTarget = endNode15;
     
-    var openDayEditor = dayOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("OpenDayEditor").ToTheRightOf(ifNode5, 1828);
+    var openDayEditor = onClick_DayCell.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("OpenDayEditor").ToTheRightOf(ifNode5, 1828);
     openDayEditor.IsDisabled = false; // default value
-    openDayEditor.Target = endNode13;
+    openDayEditor.Target = endNode15;
     ifNode5.TrueTarget = openDayEditor;
     
     var openDayEditor2 = hoursCalendar.CreateScreenAction("OpenDayEditor");
@@ -628,167 +676,116 @@
     line.DataType = dayEditorLine;
     line.Description = null; // default value
     
-    var startNode11 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode11.HorizontalPosition = 3200;
-    startNode11.IsDisabled = false; // default value
-    startNode11.VerticalPosition = 800;
+    var startNode13 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode13.HorizontalPosition = 3200;
+    startNode13.IsDisabled = false; // default value
+    startNode13.VerticalPosition = 800;
     
-    var getDaySheetDetail = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetDaySheetDetail").ConnectedBelow(startNode11, 1371);
-    var getDaySheetDetail2 = eSpace.ServerActions.Named("GetDaySheetDetail");
-    getDaySheetDetail.Action = getDaySheetDetail2;
-    getDaySheetDetail.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getDaySheetDetail.IsDisabled = false; // default value
-    getDaySheetDetail.ServerRequestTimeout = null; // default value
-    var date4 = getDaySheetDetail2.InputParameters.Named("Date");
-    getDaySheetDetail.SetArgumentValue(date4, "Day.Date");
+    var daySheet_GetDetail = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_GetDetail").ConnectedBelow(startNode13, 1371);
+    var daySheet_GetDetail2 = eSpace.ServerActions.Named("DaySheet_GetDetail");
+    daySheet_GetDetail.Action = daySheet_GetDetail2;
+    daySheet_GetDetail.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    daySheet_GetDetail.IsDisabled = false; // default value
+    daySheet_GetDetail.ServerRequestTimeout = null; // default value
+    var date4 = daySheet_GetDetail2.InputParameters.Named("Date");
+    daySheet_GetDetail.SetArgumentValue(date4, "Day.Date");
     
-    var assignNode15 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getDaySheetDetail, 1371);
-    assignNode15.IsDisabled = false; // default value
-    assignNode15.Label = null; // default value
+    var assignNode17 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_GetDetail, 1371);
+    assignNode17.IsDisabled = false; // default value
+    assignNode17.Label = null; // default value
     
-    var assignment19 = assignNode15.CreateAssignment("EditDate", "Day.Date");
+    var assignment21 = assignNode17.CreateAssignment("EditDate", "Day.Date");
     
-    var assignment20 = assignNode15.CreateAssignment("IsFutureDay", "Day.Date > CurrDate()");
+    var assignment22 = assignNode17.CreateAssignment("IsFutureDay", "Day.Date > CurrDate()");
     
-    var assignment21 = assignNode15.CreateAssignment("HasDaySheet", "GetDaySheetDetail.Detail.DaySheetId <> NullIdentifier()");
+    var assignment23 = assignNode17.CreateAssignment("HasDaySheet", "DaySheet_GetDetail.Detail.DaySheetId <> NullIdentifier()");
     
-    var assignment22 = assignNode15.CreateAssignment("IsDayOff", "GetDaySheetDetail.Detail.DayStatusId = Entities.DayStatus.DayOff or Day.Date > CurrDate()");
+    var assignment24 = assignNode17.CreateAssignment("IsDayOff", "DaySheet_GetDetail.Detail.DayStatusId = Entities.DayStatus.DayOff or Day.Date > CurrDate()");
     
-    var assignment23 = assignNode15.CreateAssignment("EditorNotes", "GetDaySheetDetail.Detail.Notes");
+    var assignment25 = assignNode17.CreateAssignment("EditorNotes", "DaySheet_GetDetail.Detail.Notes");
     
-    var assignment24 = assignNode15.CreateAssignment("SavedMinutes", "GetDaySheetDetail.Detail.TotalMinutes");
+    var assignment26 = assignNode17.CreateAssignment("SavedMinutes", "DaySheet_GetDetail.Detail.TotalMinutes");
     
-    var assignment25 = assignNode15.CreateAssignment("EditorError", "\"\"");
+    var assignment27 = assignNode17.CreateAssignment("EditorError", "\"\"");
     
-    var listClear = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListClear").ConnectedBelow(assignNode15, 1371);
+    var listClear = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListClear").ConnectedBelow(assignNode17, 1371);
     var listClear2 = _System_.ClientActions.Named("ListClear");
     listClear.Action = listClear2;
     listClear.IsDisabled = false; // default value
     var list4 = listClear2.InputParameters.Named("List");
     listClear.SetArgumentValue(list4, "EditorLines");
     
-    var forEachNode = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(listClear, 1371);
-    forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
-    forEachNode.SetMaximumIterations(null); // default value
-    forEachNode.SetRecordList("GetDaySheetDetail.Detail.Lines");
-    forEachNode.SetStartIndex(null); // default value
-    
-    var assignNode16 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
-    assignNode16.IsDisabled = false; // default value
-    assignNode16.Label = null; // default value
-    
-    var assignment26 = assignNode16.CreateAssignment("Line.ProjectId", "GetDaySheetDetail.Detail.Lines.Current.ProjectId");
-    
-    var assignment27 = assignNode16.CreateAssignment("Line.ClientName", "GetDaySheetDetail.Detail.Lines.Current.ClientName");
-    
-    var assignment28 = assignNode16.CreateAssignment("Line.ProjectName", "GetDaySheetDetail.Detail.Lines.Current.ProjectName");
-    
-    var assignment29 = assignNode16.CreateAssignment("Line.ProjectCode", "GetDaySheetDetail.Detail.Lines.Current.ProjectCode");
-    
-    var assignment30 = assignNode16.CreateAssignment("Line.Hours", "DecimalToInteger(Trunc(GetDaySheetDetail.Detail.Lines.Current.Minutes / 60))");
-    
-    var assignment31 = assignNode16.CreateAssignment("Line.Mins", "DecimalToInteger(Mod(GetDaySheetDetail.Detail.Lines.Current.Minutes, 60))");
-    
-    var assignment32 = assignNode16.CreateAssignment("Line.Description", "GetDaySheetDetail.Detail.Lines.Current.Description");
-    
-    var recalcEditorTotal = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("RecalcEditorTotal").Below(forEachNode, 1371);
-    recalcEditorTotal.IsDisabled = false; // default value
-    
-    var listAppend5 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode16, 1371);
-    listAppend5.Action = listAppend4;
-    listAppend5.IsDisabled = false; // default value
-    listAppend5.Target = forEachNode;
-    listAppend5.SetArgumentValue(list3, "EditorLines");
-    listAppend5.SetArgumentValue(element2, "Line");
-    
-    var assignNode17 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(recalcEditorTotal, 1371);
-    assignNode17.IsDisabled = false; // default value
-    assignNode17.Label = null; // default value
-    
-    var assignment33 = assignNode17.CreateAssignment("ShowDayEditor", "True");
-    
-    var endNode14 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode17, 1371);
-    endNode14.IsDisabled = false; // default value
-    openDayEditor.Action = openDayEditor2;
-    openDayEditor.SetArgumentValue(day2, "Day");
-    forEachNode.CycleTarget = assignNode16;
-    forEachNode.Target = recalcEditorTotal;
-    
-    var recalcEditorTotal2 = hoursCalendar.CreateScreenAction("RecalcEditorTotal");
-    recalcEditorTotal2.Description = "Recomputes EditorTotal (minutes) from the hours/minutes dropdowns of EditorLines.";
-    
-    var startNode12 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode12.HorizontalPosition = 3200;
-    startNode12.IsDisabled = false; // default value
-    startNode12.VerticalPosition = 800;
-    
-    var assignNode18 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode12, 1371);
-    assignNode18.IsDisabled = false; // default value
-    assignNode18.Label = null; // default value
-    
-    var assignment34 = assignNode18.CreateAssignment("EditorTotal", "0");
-    
-    var forEachNode2 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode18, 1371);
+    var forEachNode2 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(listClear, 1371);
     forEachNode2.IsDisabled = false; // default value
     forEachNode2.Label = null; // default value
     forEachNode2.SetMaximumIterations(null); // default value
-    forEachNode2.SetRecordList("EditorLines");
+    forEachNode2.SetRecordList("DaySheet_GetDetail.Detail.Lines");
     forEachNode2.SetStartIndex(null); // default value
     
-    var assignNode19 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode2, 1828);
+    var assignNode18 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode2, 1828);
+    assignNode18.IsDisabled = false; // default value
+    assignNode18.Label = null; // default value
+    
+    var assignment28 = assignNode18.CreateAssignment("Line.ProjectId", "DaySheet_GetDetail.Detail.Lines.Current.ProjectId");
+    
+    var assignment29 = assignNode18.CreateAssignment("Line.ClientName", "DaySheet_GetDetail.Detail.Lines.Current.ClientName");
+    
+    var assignment30 = assignNode18.CreateAssignment("Line.ProjectName", "DaySheet_GetDetail.Detail.Lines.Current.ProjectName");
+    
+    var assignment31 = assignNode18.CreateAssignment("Line.ProjectCode", "DaySheet_GetDetail.Detail.Lines.Current.ProjectCode");
+    
+    var assignment32 = assignNode18.CreateAssignment("Line.Hours", "DecimalToInteger(Trunc(DaySheet_GetDetail.Detail.Lines.Current.Minutes / 60))");
+    
+    var assignment33 = assignNode18.CreateAssignment("Line.Mins", "DecimalToInteger(Mod(DaySheet_GetDetail.Detail.Lines.Current.Minutes, 60))");
+    
+    var assignment34 = assignNode18.CreateAssignment("Line.Description", "DaySheet_GetDetail.Detail.Lines.Current.Description");
+    
+    var recalcEditorTotal3 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("RecalcEditorTotal").Below(forEachNode2, 1371);
+    recalcEditorTotal3.Action = recalcEditorTotal2;
+    recalcEditorTotal3.IsDisabled = false; // default value
+    
+    var listAppend5 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode18, 1371);
+    listAppend5.Action = listAppend4;
+    listAppend5.IsDisabled = false; // default value
+    listAppend5.Target = forEachNode2;
+    listAppend5.SetArgumentValue(list3, "EditorLines");
+    listAppend5.SetArgumentValue(element2, "Line");
+    
+    var assignNode19 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(recalcEditorTotal3, 1371);
     assignNode19.IsDisabled = false; // default value
     assignNode19.Label = null; // default value
-    assignNode19.Target = forEachNode2;
     
-    var assignment35 = assignNode19.CreateAssignment("EditorTotal", "EditorTotal + EditorLines.Current.Hours * 60 + EditorLines.Current.Mins");
+    var assignment35 = assignNode19.CreateAssignment("ShowDayEditor", "True");
     
-    var endNode15 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode2, 1371);
-    endNode15.IsDisabled = false; // default value
-    recalcEditorTotal.Action = recalcEditorTotal2;
-    forEachNode2.CycleTarget = assignNode19;
-    forEachNode2.Target = endNode15;
-    
-    var nextMonthOnClick = hoursCalendar.CreateScreenAction("NextMonthOnClick");
-    nextMonthOnClick.Description = "Raises OnMonthChanged with the next month (December rolls over to January of the next year).";
-    
-    var startNode13 = nextMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode13.HorizontalPosition = 3200;
-    startNode13.IsDisabled = false; // default value
-    startNode13.VerticalPosition = 800;
-    
-    var onMonthChanged2 = nextMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnMonthChanged").ConnectedBelow(startNode13, 1371);
-    onMonthChanged2.Description = null; // default value
-    onMonthChanged2.Event = onMonthChanged;
-    onMonthChanged2.IsDisabled = false; // default value
-    onMonthChanged2.SetArgumentValue(year3, "If(Month = 12, Year + 1, Year)");
-    onMonthChanged2.SetArgumentValue(month3, "If(Month = 12, 1, Month + 1)");
-    
-    var endNode16 = nextMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged2, 1371);
+    var endNode16 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode19, 1371);
     endNode16.IsDisabled = false; // default value
+    openDayEditor.Action = openDayEditor2;
+    openDayEditor.SetArgumentValue(day2, "Day");
+    forEachNode2.CycleTarget = assignNode18;
+    forEachNode2.Target = recalcEditorTotal3;
     
-    var openFillPopup = hoursCalendar.CreateScreenAction("OpenFillPopup");
-    openFillPopup.Description = "Loads the projects assigned today and opens FillPendingPopup with the time defaulting to Site.DailyExpectedMinutes.";
+    var onClick_FillPendingButton = hoursCalendar.CreateScreenAction("OnClick_FillPendingButton");
+    onClick_FillPendingButton.Description = "Loads the projects assigned today and opens FillPendingPopup with the time defaulting to Site.DailyExpectedMinutes.";
     
-    var startNode14 = openFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode14 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode14.IsDisabled = false; // default value
     
-    var getUserProjects = openFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetUserProjects").ConnectedBelow(startNode14, 1371);
-    var getUserProjects2 = eSpace.ServerActions.Named("GetUserProjects");
-    getUserProjects.Action = getUserProjects2;
-    getUserProjects.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getUserProjects.IsDisabled = false; // default value
-    getUserProjects.ServerRequestTimeout = null; // default value
-    var forDate = getUserProjects2.InputParameters.Named("ForDate");
-    getUserProjects.SetArgumentValue(forDate, "CurrDate()");
+    var project_GetAssignedToUser = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("Project_GetAssignedToUser").ConnectedBelow(startNode14, 1371);
+    var project_GetAssignedToUser2 = eSpace.ServerActions.Named("Project_GetAssignedToUser");
+    project_GetAssignedToUser.Action = project_GetAssignedToUser2;
+    project_GetAssignedToUser.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    project_GetAssignedToUser.IsDisabled = false; // default value
+    project_GetAssignedToUser.ServerRequestTimeout = null; // default value
+    var forDate = project_GetAssignedToUser2.InputParameters.Named("ForDate");
+    project_GetAssignedToUser.SetArgumentValue(forDate, "CurrDate()");
     
-    var assignNode20 = openFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getUserProjects, 1371);
+    var assignNode20 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(project_GetAssignedToUser, 1371);
     assignNode20.IsDisabled = false; // default value
     assignNode20.Label = null; // default value
     
-    var assignment36 = assignNode20.CreateAssignment("FillProjects", "GetUserProjects.Projects");
+    var assignment36 = assignNode20.CreateAssignment("FillProjects", "Project_GetAssignedToUser.Projects");
     
-    var assignment37 = assignNode20.CreateAssignment("FillProjectId", "GetUserProjects.Projects.Current.ProjectId");
+    var assignment37 = assignNode20.CreateAssignment("FillProjectId", "Project_GetAssignedToUser.Projects.Current.ProjectId");
     
     var assignment38 = assignNode20.CreateAssignment("FillHours", "DecimalToInteger(Trunc(GetCalendar.DailyExpectedMinutes / 60))");
     
@@ -798,63 +795,81 @@
     
     var assignment41 = assignNode20.CreateAssignment("ShowFillPopup", "True");
     
-    var endNode17 = openFillPopup.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode20, 1371);
+    var endNode17 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode20, 1371);
     endNode17.IsDisabled = false; // default value
     
-    var previousMonthOnClick = hoursCalendar.CreateScreenAction("PreviousMonthOnClick");
-    previousMonthOnClick.Description = "Raises OnMonthChanged with the previous month (January rolls back to December of the previous year).";
+    var onClick_NextMonth = hoursCalendar.CreateScreenAction("OnClick_NextMonth");
+    onClick_NextMonth.Description = "Raises OnMonthChanged with the next month (December rolls over to January of the next year).";
     
-    var startNode15 = previousMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    var startNode15 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
     startNode15.HorizontalPosition = 3200;
     startNode15.IsDisabled = false; // default value
     startNode15.VerticalPosition = 800;
     
-    var onMonthChanged3 = previousMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnMonthChanged").ConnectedBelow(startNode15, 1371);
+    var onMonthChanged2 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnMonthChanged").ConnectedBelow(startNode15, 1371);
+    onMonthChanged2.Description = null; // default value
+    onMonthChanged2.Event = onMonthChanged;
+    onMonthChanged2.IsDisabled = false; // default value
+    onMonthChanged2.SetArgumentValue(year3, "If(Month = 12, Year + 1, Year)");
+    onMonthChanged2.SetArgumentValue(month3, "If(Month = 12, 1, Month + 1)");
+    
+    var endNode18 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged2, 1371);
+    endNode18.IsDisabled = false; // default value
+    
+    var onClick_PreviousMonth = hoursCalendar.CreateScreenAction("OnClick_PreviousMonth");
+    onClick_PreviousMonth.Description = "Raises OnMonthChanged with the previous month (January rolls back to December of the previous year).";
+    
+    var startNode16 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode16.HorizontalPosition = 3200;
+    startNode16.IsDisabled = false; // default value
+    startNode16.VerticalPosition = 800;
+    
+    var onMonthChanged3 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.ITriggerNode>("OnMonthChanged").ConnectedBelow(startNode16, 1371);
     onMonthChanged3.Description = null; // default value
     onMonthChanged3.Event = onMonthChanged;
     onMonthChanged3.IsDisabled = false; // default value
     onMonthChanged3.SetArgumentValue(month3, "If(Month = 1, 12, Month - 1)");
     onMonthChanged3.SetArgumentValue(year3, "If(Month = 1, Year - 1, Year)");
     
-    var endNode18 = previousMonthOnClick.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged3, 1371);
-    endNode18.IsDisabled = false; // default value
+    var endNode19 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged3, 1371);
+    endNode19.IsDisabled = false; // default value
     
-    var saveDay = hoursCalendar.CreateScreenAction("SaveDay");
-    saveDay.Description = "Builds the entries from EditorLines and calls SaveDaySheet. Validation errors stay in the popup (EditorError).";
+    var onClick_SaveDay = hoursCalendar.CreateScreenAction("OnClick_SaveDay");
+    onClick_SaveDay.Description = "Builds the entries from EditorLines and calls SaveDaySheet. Validation errors stay in the popup (EditorError).";
     
-    var confirm = saveDay.CreateInputParameter("Confirm");
+    var confirm = onClick_SaveDay.CreateInputParameter("Confirm");
     confirm.DataType = eSpace.BooleanType;
     confirm.Description = null; // default value
     confirm.IsMandatory = true; // default value
     
-    var entries = saveDay.CreateLocalVariable("Entries");
+    var entries = onClick_SaveDay.CreateLocalVariable("Entries");
     var timeEntryInput = eSpace.Structures.Named("TimeEntryInput");
     entries.DataType = eSpace.GetOrCreateListType(timeEntryInput);
     entries.Description = null; // default value
     
-    var entry = saveDay.CreateLocalVariable("Entry");
+    var entry = onClick_SaveDay.CreateLocalVariable("Entry");
     entry.DataType = timeEntryInput;
     entry.Description = null; // default value
     
-    var startNode16 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode16.HorizontalPosition = 3200;
-    startNode16.IsDisabled = false; // default value
-    startNode16.VerticalPosition = 800;
+    var startNode17 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode17.HorizontalPosition = 3200;
+    startNode17.IsDisabled = false; // default value
+    startNode17.VerticalPosition = 800;
     
-    var assignNode21 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode16, 1371);
+    var assignNode21 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode17, 1371);
     assignNode21.IsDisabled = false; // default value
     assignNode21.Label = null; // default value
     
     var assignment42 = assignNode21.CreateAssignment("EditorError", "\"\"");
     
-    var forEachNode3 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode21, 1371);
+    var forEachNode3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode21, 1371);
     forEachNode3.IsDisabled = false; // default value
     forEachNode3.Label = null; // default value
     forEachNode3.SetMaximumIterations(null); // default value
     forEachNode3.SetRecordList("EditorLines");
     forEachNode3.SetStartIndex(null); // default value
     
-    var assignNode22 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
+    var assignNode22 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
     assignNode22.IsDisabled = false; // default value
     assignNode22.Label = null; // default value
     
@@ -865,40 +880,40 @@
     var assignment45 = assignNode22.CreateAssignment("Entry.Description", "EditorLines.Current.Description");
     forEachNode3.CycleTarget = assignNode22;
     
-    var saveDaySheet = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("SaveDaySheet").Below(forEachNode3, 1371);
-    var saveDaySheet2 = eSpace.ServerActions.Named("SaveDaySheet");
-    saveDaySheet.Action = saveDaySheet2;
-    saveDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    saveDaySheet.IsDisabled = false; // default value
-    saveDaySheet.ServerRequestTimeout = null; // default value
-    var date5 = saveDaySheet2.InputParameters.Named("Date");
-    saveDaySheet.SetArgumentValue(date5, "EditDate");
-    var notes = saveDaySheet2.InputParameters.Named("Notes");
-    saveDaySheet.SetArgumentValue(notes, "EditorNotes");
-    var entries2 = saveDaySheet2.InputParameters.Named("Entries");
-    saveDaySheet.SetArgumentValue(entries2, "Entries");
-    var confirm2 = saveDaySheet2.InputParameters.Named("Confirm");
-    saveDaySheet.SetArgumentValue(confirm2, "Confirm");
-    var isDayOff2 = saveDaySheet2.InputParameters.Named("IsDayOff");
-    saveDaySheet.SetArgumentValue(isDayOff2, "IsDayOff");
-    forEachNode3.Target = saveDaySheet;
+    var daySheet_Save = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").Below(forEachNode3, 1371);
+    var daySheet_Save2 = eSpace.ServerActions.Named("DaySheet_Save");
+    daySheet_Save.Action = daySheet_Save2;
+    daySheet_Save.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    daySheet_Save.IsDisabled = false; // default value
+    daySheet_Save.ServerRequestTimeout = null; // default value
+    var date5 = daySheet_Save2.InputParameters.Named("Date");
+    daySheet_Save.SetArgumentValue(date5, "EditDate");
+    var notes = daySheet_Save2.InputParameters.Named("Notes");
+    daySheet_Save.SetArgumentValue(notes, "EditorNotes");
+    var entries2 = daySheet_Save2.InputParameters.Named("Entries");
+    daySheet_Save.SetArgumentValue(entries2, "Entries");
+    var confirm2 = daySheet_Save2.InputParameters.Named("Confirm");
+    daySheet_Save.SetArgumentValue(confirm2, "Confirm");
+    var isDayOff2 = daySheet_Save2.InputParameters.Named("IsDayOff");
+    daySheet_Save.SetArgumentValue(isDayOff2, "IsDayOff");
+    forEachNode3.Target = daySheet_Save;
     
-    var listAppend6 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode22, 1371);
+    var listAppend6 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode22, 1371);
     listAppend6.Action = listAppend4;
     listAppend6.IsDisabled = false; // default value
     listAppend6.Target = forEachNode3;
     listAppend6.SetArgumentValue(list3, "Entries");
     listAppend6.SetArgumentValue(element2, "Entry");
     
-    var dayEditorSaved3 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("DayEditorSaved").ConnectedBelow(saveDaySheet, 1371);
-    dayEditorSaved3.Action = dayEditorSaved2;
-    dayEditorSaved3.IsDisabled = false; // default value
-    dayEditorSaved3.SetArgumentValue(successMessage, "If(IsDayOff, \"Day off saved.\", If(Confirm, \"Day confirmed.\", \"Draft saved.\"))");
+    var finishDaySave3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("FinishDaySave").ConnectedBelow(daySheet_Save, 1371);
+    finishDaySave3.Action = finishDaySave;
+    finishDaySave3.IsDisabled = false; // default value
+    finishDaySave3.SetArgumentValue(successMessage, "If(IsDayOff, \"Day off saved.\", If(Confirm, \"Day confirmed.\", \"Draft saved.\"))");
     
-    var endNode19 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(dayEditorSaved3, 1371);
-    endNode19.IsDisabled = false; // default value
+    var endNode20 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(finishDaySave3, 1371);
+    endNode20.IsDisabled = false; // default value
     
-    var allExceptions3 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
+    var allExceptions3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
     allExceptions3.AbortTransaction = false;
     allExceptions3.Exception = eSpace.AllExceptions;
     allExceptions3.HorizontalPosition = 8684;
@@ -906,14 +921,14 @@
     allExceptions3.LogError = false;
     allExceptions3.VerticalPosition = 800;
     
-    var assignNode23 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions3, 1371);
+    var assignNode23 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions3, 1371);
     assignNode23.IsDisabled = false; // default value
     assignNode23.Label = null; // default value
     
     var assignment46 = assignNode23.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
-    var endNode20 = saveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode23, 1371);
-    endNode20.IsDisabled = false; // default value
+    var endNode21 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode23, 1371);
+    endNode21.IsDisabled = false; // default value
     
     var calendar = hoursCalendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("Calendar");
     calendar.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1003,7 +1018,7 @@
     icon.Weight = null; // default value
     var builtinEvent = previousMonth.OnClick;
     builtinEvent.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent.Destination = previousMonthOnClick;
+    builtinEvent.Destination = onClick_PreviousMonth;
     builtinEvent.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
     
     var extendedProperty = previousMonth.CreateExtendedProperty();
@@ -1086,7 +1101,7 @@
     icon2.Weight = null; // default value
     var builtinEvent2 = nextMonth.OnClick;
     builtinEvent2.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent2.Destination = nextMonthOnClick;
+    builtinEvent2.Destination = onClick_NextMonth;
     builtinEvent2.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
     
     var extendedProperty2 = nextMonth.CreateExtendedProperty();
@@ -1462,13 +1477,13 @@
     container11.Width = "(fill parent)"; // default value
     var builtinEvent3 = dayCell.OnClick;
     builtinEvent3.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent3.Destination = dayOnClick;
+    builtinEvent3.Destination = onClick_DayCell;
     builtinEvent3.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
     builtinEvent3.SetArgumentValue(day, "GetCalendar.Cells.Current");
     
     var extendedProperty3 = dayCell.CreateExtendedProperty();
     extendedProperty3.Property = "title";
-    extendedProperty3.SetValue("If(GetCalendar.Cells.Current.HolidayName <> \"\", GetCalendar.Cells.Current.HolidayName, If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Confirmed, \"Confirmed\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.DayOff, \"Day off\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Holiday, \"Holiday\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Pending, \"Pending\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Weekend, \"Weekend\", \"Future\"))))) + \" · \" + FormatMinutes(GetCalendar.Cells.Current.TotalMinutes, \":\"))");
+    extendedProperty3.SetValue("If(GetCalendar.Cells.Current.HolidayName <> \"\", GetCalendar.Cells.Current.HolidayName, If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Confirmed, \"Confirmed\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.DayOff, \"Day off\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Holiday, \"Holiday\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Pending, \"Pending\", If(GetCalendar.Cells.Current.DayTypeId = Entities.CalendarDayType.Weekend, \"Weekend\", \"Future\"))))) + \" · \" + Minutes_Format(GetCalendar.Cells.Current.TotalMinutes, \":\"))");
     
     var extendedProperty4 = dayCell.CreateExtendedProperty();
     extendedProperty4.Property = "aria-label";
@@ -1533,7 +1548,7 @@
     textWidget8.Text = "Fill all pending days";
     var builtinEvent5 = fillPendingButton.OnClick;
     builtinEvent5.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent5.Destination = openFillPopup;
+    builtinEvent5.Destination = onClick_FillPendingButton;
     builtinEvent5.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
     
     var dayEditorPopup = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IPopup>("DayEditorPopup");
@@ -1943,7 +1958,7 @@
     hoursDropdown.Width = ""; // default value
     var builtinEvent7 = hoursDropdown.OnChange;
     builtinEvent7.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent7.Destination = recalcEditorTotal2;
+    builtinEvent7.Destination = onChange_EditorTime;
     builtinEvent7.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty5 = hoursDropdown.CreateExtendedProperty();
@@ -1984,7 +1999,7 @@
     minutesDropdown.Width = ""; // default value
     var builtinEvent8 = minutesDropdown.OnChange;
     builtinEvent8.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent8.Destination = recalcEditorTotal2;
+    builtinEvent8.Destination = onChange_EditorTime;
     builtinEvent8.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty6 = minutesDropdown.CreateExtendedProperty();
@@ -2052,7 +2067,7 @@
     expression6.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
     expression6.RowSpan = null; // default value
     expression6.SetStyle(null); // default value
-    expression6.SetValue("\"Total of the day: \" + FormatMinutes(EditorTotal, \":\")");
+    expression6.SetValue("\"Total of the day: \" + Minutes_Format(EditorTotal, \":\")");
     expression6.Width = ""; // default value
     
     var hasHoursWarning = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasHoursWarning");
@@ -2094,7 +2109,7 @@
     expression7.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
     expression7.RowSpan = null; // default value
     expression7.SetStyle(null); // default value
-    expression7.SetValue("\"This day has \" + FormatMinutes(SavedMinutes, \":\") + \" logged. Setting it as a day off deletes those hours.\"");
+    expression7.SetValue("\"This day has \" + Minutes_Format(SavedMinutes, \":\") + \" logged. Setting it as a day off deletes those hours.\"");
     expression7.Width = ""; // default value
     
     var hasEditorError = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasEditorError");
@@ -2206,7 +2221,7 @@
     expression9.Width = ""; // default value
     var builtinEvent11 = saveDraftButton.OnClick;
     builtinEvent11.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent11.Destination = saveDay;
+    builtinEvent11.Destination = onClick_SaveDay;
     builtinEvent11.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     builtinEvent11.SetArgumentValue(confirm, "False");
     
@@ -2249,7 +2264,7 @@
     expression10.Width = ""; // default value
     var builtinEvent12 = confirmDayButton.OnClick;
     builtinEvent12.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent12.Destination = saveDay;
+    builtinEvent12.Destination = onClick_SaveDay;
     builtinEvent12.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     builtinEvent12.SetArgumentValue(confirm, "True");
     
@@ -2292,7 +2307,7 @@
     expression11.Width = ""; // default value
     var builtinEvent13 = saveDayOffButton.OnClick;
     builtinEvent13.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent13.Destination = saveDay;
+    builtinEvent13.Destination = onClick_SaveDay;
     builtinEvent13.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     builtinEvent13.SetArgumentValue(confirm, "False");
     
@@ -2335,7 +2350,7 @@
     expression12.Width = ""; // default value
     var builtinEvent14 = dayOffDeleteHoursButton.OnClick;
     builtinEvent14.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent14.Destination = saveDay;
+    builtinEvent14.Destination = onClick_SaveDay;
     builtinEvent14.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     builtinEvent14.SetArgumentValue(confirm, "False");
     
@@ -2378,7 +2393,7 @@
     expression13.Width = ""; // default value
     var builtinEvent15 = clearDayButton.OnClick;
     builtinEvent15.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent15.Destination = clearDay;
+    builtinEvent15.Destination = onClick_ClearDayButton;
     builtinEvent15.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var cancelButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("CancelButton");
@@ -2420,7 +2435,7 @@
     expression14.Width = ""; // default value
     var builtinEvent16 = cancelButton.OnClick;
     builtinEvent16.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent16.Destination = closeDayEditor;
+    builtinEvent16.Destination = onClick_CancelButton;
     builtinEvent16.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var fillPendingPopup = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IPopup>("FillPendingPopup");
@@ -2861,7 +2876,7 @@
     expression17.Width = ""; // default value
     var builtinEvent20 = confirmFillButton.OnClick;
     builtinEvent20.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent20.Destination = confirmFill;
+    builtinEvent20.Destination = onClick_ConfirmFillButton;
     builtinEvent20.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var cancelFillButton = fillActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("CancelFillButton");
@@ -2903,6 +2918,6 @@
     expression18.Width = ""; // default value
     var builtinEvent21 = cancelFillButton.OnClick;
     builtinEvent21.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent21.Destination = closeFillPopup;
+    builtinEvent21.Destination = onClick_CancelFillButton;
     builtinEvent21.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
 }
