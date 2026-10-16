@@ -10,5 +10,11 @@
     "Description": "Screen where users login.",
     "UIFlow": "Common",
     "IsReferenced": false
+  },
+  {
+    "Name": "MySheet",
+    "Description": "The consultant's timesheet: monthly total, calendar, day status KPIs and weekly project hours, kept in sync. Default screen of the module.",
+    "UIFlow": "MainFlow",
+    "IsReferenced": false
   }
 ]

@@ -70,11 +70,6 @@
     "IsReferenced": true
   },
   {
-    "Name": "Date_GetWeekStart",
-    "Description": "Returns the Monday of the week that contains Date.",
-    "IsReferenced": false
-  },
-  {
     "Name": "DatePickerClear",
     "Description": "Resets the selected dates (if any) and clears the input of a DatePicker with a given identifier.",
     "IsReferenced": true

@@ -346,4 +346,8 @@
     expression3.SetStyle(null); // default value
     expression3.SetValue("If(GetSummary.IsDataFetched, \"You currently worked \" + Replace(Replace(Replace(Replace(FormatDecimal(GetSummary.Summary.TotalMinutes / 60, 2, \".\", \"\") + \"#\", \"0#\", \"#\"), \"0#\", \"#\"), \".#\", \"\"), \"#\", \"\") + \" hours in \" + GetSummary.Summary.ElapsedDays + \" day(s)\", \"--\")");
     expression3.Width = ""; // default value
+    
+    var extendedProperty = totalHours.CreateExtendedProperty();
+    extendedProperty.Property = "data-refresh-key";
+    extendedProperty.SetValue("RefreshKey");
 }

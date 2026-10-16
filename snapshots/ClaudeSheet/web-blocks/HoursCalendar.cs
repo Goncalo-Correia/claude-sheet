@@ -1364,7 +1364,31 @@
     calendarDays.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     calendarDays.Width = "(fill parent)"; // default value
     
-    var isBlankCell = calendarDays.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("IsBlankCell");
+    var calendarCell = calendarDays.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("CalendarCell");
+    calendarCell.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
+    calendarCell.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    calendarCell.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    calendarCell.Animate = false; // default value
+    calendarCell.ColumnGap = null; // default value
+    calendarCell.ColumnSpan = null; // default value
+    calendarCell.CustomStyle = null; // default value
+    calendarCell.FlexBasis = null; // default value
+    calendarCell.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    calendarCell.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    calendarCell.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    calendarCell.Gap = null;
+    calendarCell.GridColumns = null; // default value
+    calendarCell.GridRows = null; // default value
+    calendarCell.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    calendarCell.RowGap = null; // default value
+    calendarCell.RowSpan = null; // default value
+    calendarCell.SetStyle("\"sheet-cal__cell\"");
+    calendarCell.SetVisible("True"); // default value
+    calendarCell.VisibleWasExpression = false; // default value
+    calendarCell.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    calendarCell.Width = "(fill parent)"; // default value
+    
+    var isBlankCell = calendarCell.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("IsBlankCell");
     isBlankCell.Animate = false; // default value
     isBlankCell.SetCondition("GetCalendar.Cells.Current.DayNumber = 0");
     isBlankCell.CustomStyle = null; // default value
@@ -2924,4 +2948,8 @@
     builtinEvent21.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
     builtinEvent21.Destination = onClick_CancelFillButton;
     builtinEvent21.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    
+    var extendedProperty13 = calendar.CreateExtendedProperty();
+    extendedProperty13.Property = "data-refresh-key";
+    extendedProperty13.SetValue("RefreshKey");
 }

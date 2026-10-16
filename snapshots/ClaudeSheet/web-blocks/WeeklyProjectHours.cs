@@ -1199,4 +1199,8 @@
     var extendedProperty18 = weekGrid.CreateExtendedProperty();
     extendedProperty18.Property = "aria-busy";
     extendedProperty18.SetValue("If(GetWeek.IsDataFetched, \"false\", \"true\")");
+    
+    var extendedProperty19 = weekGrid.CreateExtendedProperty();
+    extendedProperty19.Property = "data-refresh-key";
+    extendedProperty19.SetValue("RefreshKey");
 }

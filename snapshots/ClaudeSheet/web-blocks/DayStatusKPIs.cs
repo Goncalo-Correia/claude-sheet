@@ -659,4 +659,8 @@
     var extendedProperty5 = kPICards.CreateExtendedProperty();
     extendedProperty5.Property = "aria-busy";
     extendedProperty5.SetValue("If(GetKPIs.IsDataFetched, \"false\", \"true\")");
+    
+    var extendedProperty6 = kPICards.CreateExtendedProperty();
+    extendedProperty6.Property = "data-refresh-key";
+    extendedProperty6.SetValue("RefreshKey");
 }
