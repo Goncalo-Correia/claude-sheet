@@ -48,7 +48,7 @@
     
     var assignNode = getHolidays.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(holiday_GetList, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set holidays";
     
     var assignment = assignNode.CreateAssignment("Holidays", "Holiday_GetList.Holidays");
     
@@ -65,7 +65,7 @@
     
     var assignNode2 = getHolidays.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Keep error";
     
     var assignment2 = assignNode2.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -95,7 +95,7 @@
     
     var messageNode = onAfterFetch_GetHolidays.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetHolidays.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
@@ -160,7 +160,7 @@
     
     var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode4, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Current year";
     
     var assignment3 = assignNode3.CreateAssignment("SelectedYear", "Year(CurrDate())");
     
@@ -187,7 +187,7 @@
     
     var assignNode4 = onClick_AddHolidayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode5, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "New holiday";
     
     var assignment4 = assignNode4.CreateAssignment("EditHoliday.Id", "NullIdentifier()");
     
@@ -216,7 +216,7 @@
     
     var assignNode5 = onClick_CancelPopupButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode6, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Close popup";
     
     var assignment11 = assignNode5.CreateAssignment("ShowHolidayPopup", "False");
     
@@ -233,7 +233,7 @@
     
     var assignNode6 = onClick_CopyYearButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode7, 1371);
     assignNode6.IsDisabled = false; // default value
-    assignNode6.Label = null; // default value
+    assignNode6.Label = "Clear error";
     
     var assignment12 = assignNode6.CreateAssignment("PageError", "\"\"");
     
@@ -250,7 +250,7 @@
     
     var messageNode2 = onClick_CopyYearButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(holiday_CopyYear, 1371);
     messageNode2.IsDisabled = false; // default value
-    messageNode2.Label = null; // default value
+    messageNode2.Label = "Show copied count";
     messageNode2.SetMessage("If(Holiday_CopyYear.CopiedCount = 0, \"Nothing to copy: \" + (SelectedYear + 1) + \" already has these holidays.\", Holiday_CopyYear.CopiedCount + \" holiday(s) copied to \" + (SelectedYear + 1) + \".\")");
     messageNode2.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -267,7 +267,7 @@
     
     var assignNode7 = onClick_CopyYearButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
     assignNode7.IsDisabled = false; // default value
-    assignNode7.Label = null; // default value
+    assignNode7.Label = "Keep error";
     
     var assignment13 = assignNode7.CreateAssignment("PageError", "AllExceptions.ExceptionMessage");
     
@@ -289,7 +289,7 @@
     
     var assignNode8 = onClick_EditHolidayLink.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode8, 1371);
     assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    assignNode8.Label = "Edit holiday";
     
     var assignment14 = assignNode8.CreateAssignment("EditHoliday", "Row");
     
@@ -310,7 +310,7 @@
     
     var assignNode9 = onClick_NextYearButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode9, 1371);
     assignNode9.IsDisabled = false; // default value
-    assignNode9.Label = null; // default value
+    assignNode9.Label = "Next year";
     
     var assignment17 = assignNode9.CreateAssignment("SelectedYear", "SelectedYear + 1");
     
@@ -335,7 +335,7 @@
     
     var assignNode10 = onClick_PreviousYearButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode10, 1371);
     assignNode10.IsDisabled = false; // default value
-    assignNode10.Label = null; // default value
+    assignNode10.Label = "Previous year";
     
     var assignment19 = assignNode10.CreateAssignment("SelectedYear", "SelectedYear - 1");
     
@@ -360,7 +360,7 @@
     
     var assignNode11 = onClick_SaveHolidayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode11, 1371);
     assignNode11.IsDisabled = false; // default value
-    assignNode11.Label = null; // default value
+    assignNode11.Label = "Clear error";
     
     var assignment21 = assignNode11.CreateAssignment("PopupError", "\"\"");
     
@@ -375,7 +375,7 @@
     
     var assignNode12 = onClick_SaveHolidayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(holiday_CreateOrUpdate, 1371);
     assignNode12.IsDisabled = false; // default value
-    assignNode12.Label = null; // default value
+    assignNode12.Label = "Close and show year";
     
     var assignment22 = assignNode12.CreateAssignment("ShowHolidayPopup", "False");
     
@@ -389,7 +389,7 @@
     
     var messageNode3 = onClick_SaveHolidayButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode4, 1371);
     messageNode3.IsDisabled = false; // default value
-    messageNode3.Label = null; // default value
+    messageNode3.Label = "Show saved";
     messageNode3.SetMessage("\"Holiday saved.\"");
     messageNode3.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -406,7 +406,7 @@
     
     var assignNode13 = onClick_SaveHolidayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions3, 1371);
     assignNode13.IsDisabled = false; // default value
-    assignNode13.Label = null; // default value
+    assignNode13.Label = "Keep error";
     
     var assignment24 = assignNode13.CreateAssignment("PopupError", "AllExceptions.ExceptionMessage");
     
@@ -428,7 +428,7 @@
     
     var assignNode14 = onClick_ToggleHolidayLink.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode12, 1371);
     assignNode14.IsDisabled = false; // default value
-    assignNode14.Label = null; // default value
+    assignNode14.Label = "Clear error";
     
     var assignment25 = assignNode14.CreateAssignment("PageError", "\"\"");
     
@@ -451,7 +451,7 @@
     
     var messageNode4 = onClick_ToggleHolidayLink.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode5, 1371);
     messageNode4.IsDisabled = false; // default value
-    messageNode4.Label = null; // default value
+    messageNode4.Label = "Show status";
     messageNode4.SetMessage("If(Row.IsActive, \"Holiday deactivated.\", \"Holiday activated.\")");
     messageNode4.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -468,7 +468,7 @@
     
     var assignNode15 = onClick_ToggleHolidayLink.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions4, 1371);
     assignNode15.IsDisabled = false; // default value
-    assignNode15.Label = null; // default value
+    assignNode15.Label = "Keep error";
     
     var assignment26 = assignNode15.CreateAssignment("PageError", "AllExceptions.ExceptionMessage");
     

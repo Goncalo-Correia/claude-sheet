@@ -58,7 +58,7 @@
     
     var forEachNode = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getKPIDayTypes, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each day type";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetKPIDayTypes.List");
     forEachNode.SetStartIndex(null); // default value
@@ -103,7 +103,7 @@
     
     var assignNode2 = getKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Keep error";
     
     var assignment5 = assignNode2.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -132,7 +132,7 @@
     
     var messageNode = onAfterFetch_GetKPIs.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetKPIs.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     

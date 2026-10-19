@@ -4,7 +4,8 @@
     var daySheet_GetDetail = eSpace.CreateServerAction("DaySheet_GetDetail");
     daySheet_GetDetail.CacheInMinutes = null; // default value
     daySheet_GetDetail.Description = "Day editor data for the current user: DaySheet status and notes, holiday, and one line per project assigned on Date (GetUserProjects) merged with the existing TimeEntry minutes and description.";
-    daySheet_GetDetail.Folder = null; // default value
+    var daySheet = eSpace.Folders.Named("DaySheet");
+    daySheet_GetDetail.Folder = daySheet;
     daySheet_GetDetail.Function = false; // default value
     daySheet_GetDetail.Icon = null; // default value
     daySheet_GetDetail.Public = true;
@@ -39,8 +40,8 @@
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
-    var daySheet = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
+    var daySheet3 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
+    var daySheet2 = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet3);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
     
@@ -55,10 +56,10 @@
     getDayEntries.Timeout = null; // default value
     var timeEntry2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("TimeEntry");
     var timeEntry = getDayEntries.AsDatabaseAggregate.CreateSource(timeEntry2);
-    var daySheet3 = getDayEntries.AsDatabaseAggregate.CreateSource(daySheet2);
+    var daySheet4 = getDayEntries.AsDatabaseAggregate.CreateSource(daySheet3);
     var join = getDayEntries.AsDatabaseAggregate.CreateJoin();
     join.LeftSource = timeEntry;
-    join.RightSource = daySheet3;
+    join.RightSource = daySheet4;
     join.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
     join.SetCondition("TimeEntry.DaySheetId = DaySheet.Id");
     getDayEntries.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
@@ -89,7 +90,7 @@
     
     var assignNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(project_GetAssignedToUser, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Fill header";
     
     var assignment = assignNode.CreateAssignment("Detail.SheetDate", "Date");
     
@@ -109,14 +110,14 @@
     
     var forEachNode = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each line";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("Detail.Lines");
     forEachNode.SetStartIndex(null); // default value
     
     var forEachNode2 = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ToTheRightOf(forEachNode, 1828);
     forEachNode2.IsDisabled = false; // default value
-    forEachNode2.Label = null; // default value
+    forEachNode2.Label = "Each entry";
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("GetDayEntries.List");
     forEachNode2.SetStartIndex(null); // default value
@@ -136,7 +137,7 @@
     
     var assignNode2 = daySheet_GetDetail.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Merge entry";
     assignNode2.Target = forEachNode2;
     
     var assignment9 = assignNode2.CreateAssignment("Detail.Lines.Current.TimeEntryId", "GetDayEntries.List.Current.TimeEntry.Id");

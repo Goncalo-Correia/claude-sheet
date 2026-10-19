@@ -9,8 +9,12 @@
     var anonymous = eSpace.SystemRoles.OfType<OutSystems.Model.Logic.ISystemRole>().Named("Anonymous");
     login.Roles.Add(anonymous);
     var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var sheetManager = claudeSheet_CS.Roles.Named("SheetManager");
+    login.Roles.Add(sheetManager);
     var sheetUser = claudeSheet_CS.Roles.Named("SheetUser");
     login.Roles.Add(sheetUser);
+    var sheetAdmin = claudeSheet_CS.Roles.Named("SheetAdmin");
+    login.Roles.Add(sheetAdmin);
     var registered = eSpace.SystemRoles.OfType<OutSystems.Model.Logic.ISystemRole>().Named("Registered");
     login.Roles.Add(registered);
     login.AnonymousAccess = false; // default value
@@ -65,7 +69,7 @@
     var assignNode = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>();
     assignNode.HorizontalPosition = 3192;
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Not executing";
     assignNode.VerticalPosition = 2964;
     
     var assignment = assignNode.CreateAssignment("IsExecuting", "False");
@@ -91,7 +95,7 @@
     
     var assignNode2 = login2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode3, 1600);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Start executing";
     
     var assignment2 = assignNode2.CreateAssignment("IsExecuting", "True");
     

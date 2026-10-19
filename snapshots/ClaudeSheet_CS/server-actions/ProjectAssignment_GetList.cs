@@ -4,7 +4,8 @@
     var projectAssignment_GetList = eSpace.CreateServerAction("ProjectAssignment_GetList");
     projectAssignment_GetList.CacheInMinutes = null; // default value
     projectAssignment_GetList.Description = "Assignments of a project (ProjectId) or of a user (UserId), or both, with project, client and user names and Status on today\'s date (Inactive, Upcoming, Ended, Active), sorted by client, project, user and start date (SheetAdmin only). Raises AssignmentValidation when both are empty.";
-    projectAssignment_GetList.Folder = null; // default value
+    var projectAssignment = eSpace.Folders.Named("ProjectAssignment");
+    projectAssignment_GetList.Folder = projectAssignment;
     projectAssignment_GetList.Function = false; // default value
     projectAssignment_GetList.Icon = null; // default value
     projectAssignment_GetList.Public = true;
@@ -87,7 +88,7 @@
     
     var assignNode = projectAssignment_GetList.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getAssignments, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("Assignments", "GetAssignments.List mapTo {  }");
     getAssignments.SetArgumentValue(today, "CurrDate()");

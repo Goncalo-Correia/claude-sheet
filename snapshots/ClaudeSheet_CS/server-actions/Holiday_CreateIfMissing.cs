@@ -4,7 +4,8 @@
     var holiday_CreateIfMissing = eSpace.CreateServerAction("Holiday_CreateIfMissing");
     holiday_CreateIfMissing.CacheInMinutes = null; // default value
     holiday_CreateIfMissing.Description = "Creates an active Holiday for HolidayDate unless one already exists for that date (active or not); Created tells whether it did. IsFixedDate (default True) is stored on create; when it is False and the existing holiday is still marked fixed, the existing one is marked movable. Used by Bootstrap and Holiday_CopyYear.";
-    holiday_CreateIfMissing.Folder = null; // default value
+    var holiday = eSpace.Folders.Named("Holiday");
+    holiday_CreateIfMissing.Folder = holiday;
     holiday_CreateIfMissing.Function = false; // default value
     holiday_CreateIfMissing.Icon = null; // default value
     holiday_CreateIfMissing.Public = false; // default value
@@ -27,8 +28,8 @@
     isFixedDate.IsMandatory = false;
     
     var newHoliday = holiday_CreateIfMissing.CreateLocalVariable("NewHoliday");
-    var holiday = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
-    newHoliday.DataType = holiday;
+    var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
+    newHoliday.DataType = holiday2;
     newHoliday.Description = null; // default value
     
     var startNode = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
@@ -43,7 +44,7 @@
     getExistingHoliday.SetMaxRecords(null); // default value
     getExistingHoliday.SetStartIndex(null); // default value
     getExistingHoliday.Timeout = null; // default value
-    var holiday2 = getExistingHoliday.AsDatabaseAggregate.CreateSource(holiday);
+    var holiday3 = getExistingHoliday.AsDatabaseAggregate.CreateSource(holiday2);
     getExistingHoliday.AsDatabaseAggregate.CreateFilter("Holiday.HolidayDate = HolidayDate");
     
     
@@ -60,7 +61,7 @@
     
     var assignNode = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "New holiday";
     
     var assignment = assignNode.CreateAssignment("NewHoliday.HolidayDate", "HolidayDate");
     
@@ -79,7 +80,7 @@
     
     var assignNode2 = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Mark movable";
     
     var assignment6 = assignNode2.CreateAssignment("NewHoliday", "GetExistingHoliday.List.Current.Holiday");
     
@@ -87,20 +88,20 @@
     ifNode2.TrueTarget = assignNode2;
     
     var createHoliday = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateHoliday").ConnectedBelow(assignNode, 1371);
-    createHoliday.Action = holiday.CreateAction;
+    createHoliday.Action = holiday2.CreateAction;
     createHoliday.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createHoliday.IsDisabled = false; // default value
     createHoliday.ServerRequestTimeout = null; // default value
-    var createHoliday2 = holiday.CreateAction;
+    var createHoliday2 = holiday2.CreateAction;
     var source = createHoliday2.InputParameters.Named("Source");
     createHoliday.SetArgumentValue(source, "NewHoliday");
     
     var updateHoliday = holiday_CreateIfMissing.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateHoliday").ConnectedBelow(assignNode2, 1371);
-    updateHoliday.Action = holiday.UpdateAction;
+    updateHoliday.Action = holiday2.UpdateAction;
     updateHoliday.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     updateHoliday.IsDisabled = false; // default value
     updateHoliday.ServerRequestTimeout = null; // default value
-    var updateHoliday2 = holiday.UpdateAction;
+    var updateHoliday2 = holiday2.UpdateAction;
     var source2 = updateHoliday2.InputParameters.Named("Source");
     updateHoliday.SetArgumentValue(source2, "NewHoliday");
     

@@ -4,7 +4,8 @@
     var project_GetList = eSpace.CreateServerAction("Project_GetList");
     project_GetList.CacheInMinutes = null; // default value
     project_GetList.Description = "Projects for the admin list (SheetAdmin only), with client name and the number of distinct users with an active assignment that hasn\'t ended, sorted by client and project name. ClientId filters by client (empty = all); IncludeInactive also returns deactivated projects.";
-    project_GetList.Folder = null; // default value
+    var project = eSpace.Folders.Named("Project");
+    project_GetList.Folder = project;
     project_GetList.Function = false; // default value
     project_GetList.Icon = null; // default value
     project_GetList.Public = true;
@@ -72,7 +73,7 @@
     
     var assignNode = project_GetList.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getProjects, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("Projects", "GetProjects.List mapTo {  }");
     getProjects.SetArgumentValue(today, "CurrDate()");

@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US8 (Admin › Holidays, Menu HolidaysLink)
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT8 (action folders and node names)
 
 ## Own elements (references excluded)
 
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- TT8 (2026-10-19), targeted mode: `client-actions/Minutes_Format.cs` (folder Minutes), the 7 screens (ClientDetail, Clients, Holidays, Login, MySheet, ProjectDetail, Projects) and the 6 blocks (DayStatusKPIs, HoursCalendar, Menu, TotalHoursMonth, UserInfo, WeeklyProjectHours): 121 node labels, and AppendHourOption/AppendMinuteOption in HoursCalendar.OnInitialize. `web-blocks/UserInfo.cs` is new. HoursCalendar, WeeklyProjectHours, Login, ProjectDetail, Holidays, Projects and ClientDetail were rebuilt from the saved tool output (too large for the transcript). Other files are as of the US8 refresh.
+
+### US8 refresh (2026-10-19)
 
 - US8 (2026-10-19), targeted mode: `names/screens.json`, `web-blocks/Menu.cs` (HolidaysLink) and the new `screens/Holidays.cs` (rebuilt from the saved tool output, too large for the transcript).
 

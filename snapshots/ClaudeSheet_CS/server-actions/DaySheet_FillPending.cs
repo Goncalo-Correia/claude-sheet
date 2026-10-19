@@ -4,7 +4,8 @@
     var daySheet_FillPending = eSpace.CreateServerAction("DaySheet_FillPending");
     daySheet_FillPending.CacheInMinutes = null; // default value
     daySheet_FillPending.Description = "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.";
-    daySheet_FillPending.Folder = null; // default value
+    var daySheet = eSpace.Folders.Named("DaySheet");
+    daySheet_FillPending.Folder = daySheet;
     daySheet_FillPending.Function = false; // default value
     daySheet_FillPending.Icon = null; // default value
     daySheet_FillPending.Public = true;
@@ -41,8 +42,8 @@
     oneEntry.Description = null; // default value
     
     var sheetRec = daySheet_FillPending.CreateLocalVariable("SheetRec");
-    var daySheet = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
-    sheetRec.DataType = daySheet;
+    var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
+    sheetRec.DataType = daySheet2;
     sheetRec.Description = null; // default value
     
     var startNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
@@ -76,7 +77,7 @@
     
     var assignNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonth, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Init entry";
     
     var assignment = assignNode.CreateAssignment("Entry.ProjectId", "ProjectId");
     
@@ -98,7 +99,7 @@
     
     var forEachNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(listAppend, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each day";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("Calendar_GetMonth.Days");
     forEachNode.SetStartIndex(null); // default value
@@ -139,25 +140,25 @@
     ifNode3.FalseTarget = daySheet_Save;
     
     var getDaySheetForUpdate = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetDaySheetForUpdate").Below(ifNode3, 1371);
-    getDaySheetForUpdate.Action = daySheet.GetForUpdateAction;
+    getDaySheetForUpdate.Action = daySheet2.GetForUpdateAction;
     getDaySheetForUpdate.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     getDaySheetForUpdate.IsDisabled = false; // default value
     getDaySheetForUpdate.ServerRequestTimeout = null; // default value
-    var getDaySheetForUpdate2 = daySheet.GetForUpdateAction;
+    var getDaySheetForUpdate2 = daySheet2.GetForUpdateAction;
     var id = getDaySheetForUpdate2.InputParameters.Named("Id");
     getDaySheetForUpdate.SetArgumentValue(id, "Calendar_GetMonth.Days.Current.DaySheetId");
     ifNode3.TrueTarget = getDaySheetForUpdate;
     
     var assignNode2 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_Save, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Count filled";
     assignNode2.Target = forEachNode;
     
     var assignment4 = assignNode2.CreateAssignment("FilledCount", "FilledCount + 1");
     
     var assignNode3 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getDaySheetForUpdate, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Confirm draft";
     
     var assignment5 = assignNode3.CreateAssignment("SheetRec", "GetDaySheetForUpdate.Record");
     
@@ -166,17 +167,17 @@
     var assignment7 = assignNode3.CreateAssignment("SheetRec.UpdatedOn", "CurrDateTime()");
     
     var updateDaySheet = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateDaySheet").ConnectedBelow(assignNode3, 1371);
-    updateDaySheet.Action = daySheet.UpdateAction;
+    updateDaySheet.Action = daySheet2.UpdateAction;
     updateDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     updateDaySheet.IsDisabled = false; // default value
     updateDaySheet.ServerRequestTimeout = null; // default value
-    var updateDaySheet2 = daySheet.UpdateAction;
+    var updateDaySheet2 = daySheet2.UpdateAction;
     var source = updateDaySheet2.InputParameters.Named("Source");
     updateDaySheet.SetArgumentValue(source, "SheetRec");
     
     var assignNode4 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(updateDaySheet, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Count filled";
     assignNode4.Target = forEachNode;
     
     var assignment8 = assignNode4.CreateAssignment("FilledCount", "FilledCount + 1");

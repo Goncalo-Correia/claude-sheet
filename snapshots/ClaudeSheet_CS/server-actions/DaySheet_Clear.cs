@@ -4,7 +4,8 @@
     var daySheet_Clear = eSpace.CreateServerAction("DaySheet_Clear");
     daySheet_Clear.CacheInMinutes = null; // default value
     daySheet_Clear.Description = "Deletes the current user\'s DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.";
-    daySheet_Clear.Folder = null; // default value
+    var daySheet = eSpace.Folders.Named("DaySheet");
+    daySheet_Clear.Folder = daySheet;
     daySheet_Clear.Function = false; // default value
     daySheet_Clear.Icon = null; // default value
     daySheet_Clear.Public = true;
@@ -39,8 +40,8 @@
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
-    var daySheet = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
+    var daySheet3 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
+    var daySheet2 = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet3);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
     
@@ -56,11 +57,11 @@
     ifNode2.FalseTarget = endNode;
     
     var deleteDaySheet = daySheet_Clear.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteDaySheet").Below(ifNode2, 1371);
-    deleteDaySheet.Action = daySheet2.DeleteAction;
+    deleteDaySheet.Action = daySheet3.DeleteAction;
     deleteDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     deleteDaySheet.IsDisabled = false; // default value
     deleteDaySheet.ServerRequestTimeout = null; // default value
-    var deleteDaySheet2 = daySheet2.DeleteAction;
+    var deleteDaySheet2 = daySheet3.DeleteAction;
     var id = deleteDaySheet2.InputParameters.Named("Id");
     deleteDaySheet.SetArgumentValue(id, "GetDayRecord.List.Current.DaySheet.Id");
     ifNode2.TrueTarget = deleteDaySheet;

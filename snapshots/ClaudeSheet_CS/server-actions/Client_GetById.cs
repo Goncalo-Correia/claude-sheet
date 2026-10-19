@@ -4,15 +4,16 @@
     var client_GetById = eSpace.CreateServerAction("Client_GetById");
     client_GetById.CacheInMinutes = null; // default value
     client_GetById.Description = "One client (ClientRecord) with its projects sorted by name (SheetAdmin only). Raises ClientValidation when the client doesn\'t exist.";
-    client_GetById.Folder = null; // default value
+    var client = eSpace.Folders.Named("Client");
+    client_GetById.Folder = client;
     client_GetById.Function = false; // default value
     client_GetById.Icon = null; // default value
     client_GetById.Public = true;
     client_GetById.Shareable = true;
     
     var clientId = client_GetById.CreateInputParameter("ClientId");
-    var client = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
-    clientId.DataType = client.IdentifierType;
+    var client2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
+    clientId.DataType = client2.IdentifierType;
     clientId.Description = null; // default value
     clientId.IsMandatory = true; // default value
     
@@ -40,7 +41,7 @@
     getClient.SetMaxRecords(null); // default value
     getClient.SetStartIndex(null); // default value
     getClient.Timeout = null; // default value
-    var client2 = getClient.AsDatabaseAggregate.CreateSource(client);
+    var client3 = getClient.AsDatabaseAggregate.CreateSource(client2);
     getClient.AsDatabaseAggregate.CreateFilter("Client.Id = ClientId");
     
     ifNode.TrueTarget = getClient;
@@ -73,7 +74,7 @@
     
     var assignNode = client_GetById.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getClientProjects, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set outputs";
     
     var assignment = assignNode.CreateAssignment("ClientRecord", "GetClient.List.Current.Client");
     
@@ -83,7 +84,7 @@
     endNode.IsDisabled = false; // default value
     
     var clientRecord = client_GetById.CreateOutputParameter("ClientRecord");
-    clientRecord.DataType = client;
+    clientRecord.DataType = client2;
     clientRecord.Description = null; // default value
     
     var projects = client_GetById.CreateOutputParameter("Projects");

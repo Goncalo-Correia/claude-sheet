@@ -4,7 +4,8 @@
     var holiday_GetList = eSpace.CreateServerAction("Holiday_GetList");
     holiday_GetList.CacheInMinutes = null; // default value
     holiday_GetList.Description = "Holidays of Year sorted by date (SheetAdmin only). IncludeInactive also returns deactivated holidays.";
-    holiday_GetList.Folder = null; // default value
+    var holiday = eSpace.Folders.Named("Holiday");
+    holiday_GetList.Folder = holiday;
     holiday_GetList.Function = false; // default value
     holiday_GetList.Icon = null; // default value
     holiday_GetList.Public = true;
@@ -45,8 +46,8 @@
     getYearHolidays.SetMaxRecords(null); // default value
     getYearHolidays.SetStartIndex(null); // default value
     getYearHolidays.Timeout = null; // default value
-    var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
-    var holiday = getYearHolidays.AsDatabaseAggregate.CreateSource(holiday2);
+    var holiday3 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
+    var holiday2 = getYearHolidays.AsDatabaseAggregate.CreateSource(holiday3);
     getYearHolidays.AsDatabaseAggregate.CreateFilter("Holiday.HolidayDate >= NewDate(Year, 1, 1) and Holiday.HolidayDate <= NewDate(Year, 12, 31)");
     getYearHolidays.AsDatabaseAggregate.CreateFilter("IncludeInactive or Holiday.IsActive");
     getYearHolidays.AsDatabaseAggregate.CreateSort().SetAttribute("Holiday.HolidayDate");
@@ -55,7 +56,7 @@
     
     var assignNode = holiday_GetList.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getYearHolidays, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("Holidays", "GetYearHolidays.List mapTo {  }");
     
@@ -63,6 +64,6 @@
     endNode.IsDisabled = false; // default value
     
     var holidays = holiday_GetList.CreateOutputParameter("Holidays");
-    holidays.DataType = eSpace.GetOrCreateListType(holiday2);
+    holidays.DataType = eSpace.GetOrCreateListType(holiday3);
     holidays.Description = null; // default value
 }

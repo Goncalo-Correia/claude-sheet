@@ -4,7 +4,8 @@
     var client_GetList = eSpace.CreateServerAction("Client_GetList");
     client_GetList.CacheInMinutes = null; // default value
     client_GetList.Description = "Clients for the admin list (SheetAdmin only): name, active flag and number of projects, sorted by name. IncludeInactive also returns deactivated clients; Search filters by name (contains).";
-    client_GetList.Folder = null; // default value
+    var client = eSpace.Folders.Named("Client");
+    client_GetList.Folder = client;
     client_GetList.Function = false; // default value
     client_GetList.Icon = null; // default value
     client_GetList.Public = true;
@@ -65,7 +66,7 @@
     
     var assignNode = client_GetList.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getClients, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("Clients", "GetClients.List mapTo {  }");
     getClients.SetArgumentValue(includeInactive2, "IncludeInactive");

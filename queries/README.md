@@ -18,3 +18,4 @@ Some checks and fixes can't be written in ModelQL because they need node positio
 
 - [`flow-layout.cs`](flow-layout.cs): **report** (saves nothing). Per flow: vertical/horizontal connectors, allowed diagonals (For Each loop-backs, merges into a non-End node), other diagonals, crossings and overlapping nodes. Checks `docs/conventions.md` › Flow layout.
 - [`layout-flow.cs`](layout-flow.cs): **lays out** the flows listed in its `targets` and **saves** (not a probe). Positions plus new End nodes only. Run `flow-layout.cs` afterwards.
+- [`node-names.cs`](node-names.cs): **report** (saves nothing). Server/client actions outside a folder, unlabelled Assign / If / Message / For Each / Switch nodes per flow, and Execute nodes whose name ends in a digit. Checks `docs/conventions.md` › Action folders and Node names; a module passes with every count at 0.

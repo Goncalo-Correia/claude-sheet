@@ -4,15 +4,16 @@
     var holiday_CreateOrUpdate = eSpace.CreateServerAction("Holiday_CreateOrUpdate");
     holiday_CreateOrUpdate.CacheInMinutes = null; // default value
     holiday_CreateOrUpdate.Description = "Creates or updates a holiday (SheetAdmin only). Name is trimmed and required, the date is required and unique (UQ_Holiday_HolidayDate, inactive holidays included). Raises HolidayValidation with a user-facing message otherwise. Returns the holiday\'s Id.";
-    holiday_CreateOrUpdate.Folder = null; // default value
+    var holiday = eSpace.Folders.Named("Holiday");
+    holiday_CreateOrUpdate.Folder = holiday;
     holiday_CreateOrUpdate.Function = false; // default value
     holiday_CreateOrUpdate.Icon = null; // default value
     holiday_CreateOrUpdate.Public = true;
     holiday_CreateOrUpdate.Shareable = true;
     
     var holidayRecord = holiday_CreateOrUpdate.CreateInputParameter("HolidayRecord");
-    var holiday = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
-    holidayRecord.DataType = holiday;
+    var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
+    holidayRecord.DataType = holiday2;
     holidayRecord.Description = null; // default value
     holidayRecord.IsMandatory = true; // default value
     
@@ -59,7 +60,7 @@
     getSameDate.SetMaxRecords(null); // default value
     getSameDate.SetStartIndex(null); // default value
     getSameDate.Timeout = null; // default value
-    var holiday2 = getSameDate.AsDatabaseAggregate.CreateSource(holiday);
+    var holiday3 = getSameDate.AsDatabaseAggregate.CreateSource(holiday2);
     getSameDate.AsDatabaseAggregate.CreateFilter("Holiday.HolidayDate = HolidayRecord.HolidayDate");
     getSameDate.AsDatabaseAggregate.CreateFilter("Holiday.Id <> HolidayRecord.Id");
     
@@ -78,7 +79,7 @@
     
     var assignNode = holiday_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Trim name";
     
     var assignment = assignNode.CreateAssignment("HolidayRecord.Name", "Trim(HolidayRecord.Name)");
     ifNode4.FalseTarget = assignNode;
@@ -90,17 +91,17 @@
     ifNode4.TrueTarget = raiseExceptionNode4;
     
     var createOrUpdateHoliday = holiday_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateOrUpdateHoliday").ConnectedBelow(assignNode, 1371);
-    createOrUpdateHoliday.Action = holiday.CreateOrUpdateAction;
+    createOrUpdateHoliday.Action = holiday2.CreateOrUpdateAction;
     createOrUpdateHoliday.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createOrUpdateHoliday.IsDisabled = false; // default value
     createOrUpdateHoliday.ServerRequestTimeout = null; // default value
-    var createOrUpdateHoliday2 = holiday.CreateOrUpdateAction;
+    var createOrUpdateHoliday2 = holiday2.CreateOrUpdateAction;
     var source = createOrUpdateHoliday2.InputParameters.Named("Source");
     createOrUpdateHoliday.SetArgumentValue(source, "HolidayRecord");
     
     var assignNode2 = holiday_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(createOrUpdateHoliday, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Return Id";
     
     var assignment2 = assignNode2.CreateAssignment("HolidayId", "CreateOrUpdateHoliday.Id");
     
@@ -108,7 +109,7 @@
     endNode.IsDisabled = false; // default value
     
     var holidayId = holiday_CreateOrUpdate.CreateOutputParameter("HolidayId");
-    holidayId.DataType = holiday.IdentifierType;
+    holidayId.DataType = holiday2.IdentifierType;
     holidayId.SetDefaultValue(null); // default value
     holidayId.Description = null; // default value
 }

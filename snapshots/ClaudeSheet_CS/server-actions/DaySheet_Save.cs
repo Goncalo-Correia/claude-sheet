@@ -4,7 +4,8 @@
     var daySheet_Save = eSpace.CreateServerAction("DaySheet_Save");
     daySheet_Save.CacheInMinutes = null; // default value
     daySheet_Save.Description = "Validates and saves the current user\'s day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day\'s entries. Raises DaySheetValidation with a user-facing message.";
-    daySheet_Save.Folder = null; // default value
+    var daySheet = eSpace.Folders.Named("DaySheet");
+    daySheet_Save.Folder = daySheet;
     daySheet_Save.Function = false; // default value
     daySheet_Save.Icon = null; // default value
     daySheet_Save.Public = true;
@@ -48,13 +49,13 @@
     found.Description = null; // default value
     
     var sheetId = daySheet_Save.CreateLocalVariable("SheetId");
-    var daySheet = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
-    sheetId.DataType = daySheet.IdentifierType;
+    var daySheet2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("DaySheet");
+    sheetId.DataType = daySheet2.IdentifierType;
     sheetId.SetDefaultValue(null); // default value
     sheetId.Description = null; // default value
     
     var sheetRec = daySheet_Save.CreateLocalVariable("SheetRec");
-    sheetRec.DataType = daySheet;
+    sheetRec.DataType = daySheet2;
     sheetRec.Description = null; // default value
     
     var entryRec = daySheet_Save.CreateLocalVariable("EntryRec");
@@ -129,7 +130,7 @@
     
     var forEachNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(project_GetAssignedToUser, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each entry";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("Entries");
     forEachNode.SetStartIndex(null); // default value
@@ -148,7 +149,7 @@
     
     var assignNode = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Add to total";
     
     var assignment = assignNode.CreateAssignment("Total", "Total + Entries.Current.Minutes");
     
@@ -193,7 +194,7 @@
     
     var forEachNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(ifNode7, 1371);
     forEachNode2.IsDisabled = false; // default value
-    forEachNode2.Label = null; // default value
+    forEachNode2.Label = "Each assigned project";
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("Project_GetAssignedToUser.Projects");
     forEachNode2.SetStartIndex(null); // default value
@@ -206,7 +207,7 @@
     getDayRecord.SetMaxRecords(null); // default value
     getDayRecord.SetStartIndex(null); // default value
     getDayRecord.Timeout = null; // default value
-    var daySheet2 = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet);
+    var daySheet3 = getDayRecord.AsDatabaseAggregate.CreateSource(daySheet2);
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.UserId = GetUserId()");
     getDayRecord.AsDatabaseAggregate.CreateFilter("DaySheet.SheetDate = Date");
     
@@ -239,7 +240,7 @@
     
     var assignNode2 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode9, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Mark assigned";
     assignNode2.Target = forEachNode2;
     
     var assignment3 = assignNode2.CreateAssignment("Found", "True");
@@ -253,14 +254,14 @@
     
     var assignNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode11, 1828);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Use existing sheet";
     
     var assignment4 = assignNode3.CreateAssignment("SheetRec", "GetDayRecord.List.Current.DaySheet");
     ifNode11.FalseTarget = assignNode3;
     
     var assignNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode11, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "New sheet";
     
     var assignment5 = assignNode4.CreateAssignment("SheetRec.UserId", "GetUserId()");
     
@@ -271,7 +272,7 @@
     
     var assignNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(assignNode4, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Set status and notes";
     
     var assignment8 = assignNode5.CreateAssignment("SheetRec.DayStatusId", "If(IsDayOff, Entities.DayStatus.DayOff, If(Confirm, Entities.DayStatus.Confirmed, Entities.DayStatus.Draft))");
     
@@ -281,17 +282,17 @@
     assignNode3.Target = assignNode5;
     
     var createOrUpdateDaySheet = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateOrUpdateDaySheet").ConnectedBelow(assignNode5, 1371);
-    createOrUpdateDaySheet.Action = daySheet.CreateOrUpdateAction;
+    createOrUpdateDaySheet.Action = daySheet2.CreateOrUpdateAction;
     createOrUpdateDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createOrUpdateDaySheet.IsDisabled = false; // default value
     createOrUpdateDaySheet.ServerRequestTimeout = null; // default value
-    var createOrUpdateDaySheet2 = daySheet.CreateOrUpdateAction;
+    var createOrUpdateDaySheet2 = daySheet2.CreateOrUpdateAction;
     var source = createOrUpdateDaySheet2.InputParameters.Named("Source");
     createOrUpdateDaySheet.SetArgumentValue(source, "SheetRec");
     
     var assignNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(createOrUpdateDaySheet, 1371);
     assignNode6.IsDisabled = false; // default value
-    assignNode6.Label = null; // default value
+    assignNode6.Label = "Keep sheet Id";
     
     var assignment11 = assignNode6.CreateAssignment("SheetId", "CreateOrUpdateDaySheet.Id");
     
@@ -308,14 +309,14 @@
     
     var forEachNode3 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getSheetEntries, 1371);
     forEachNode3.IsDisabled = false; // default value
-    forEachNode3.Label = null; // default value
+    forEachNode3.Label = "Each saved entry";
     forEachNode3.SetMaximumIterations(null); // default value
     forEachNode3.SetRecordList("GetSheetEntries.List");
     forEachNode3.SetStartIndex(null); // default value
     
     var assignNode7 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 3656);
     assignNode7.IsDisabled = false; // default value
-    assignNode7.Label = null; // default value
+    assignNode7.Label = "Reset found";
     
     var assignment12 = assignNode7.CreateAssignment("Found", "False");
     forEachNode3.CycleTarget = assignNode7;
@@ -328,7 +329,7 @@
     
     var forEachNode4 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode7, 1371);
     forEachNode4.IsDisabled = false; // default value
-    forEachNode4.Label = null; // default value
+    forEachNode4.Label = "Each entry";
     forEachNode4.SetMaximumIterations(null); // default value
     forEachNode4.SetRecordList("Entries");
     forEachNode4.SetStartIndex(null); // default value
@@ -339,7 +340,7 @@
     
     var forEachNode5 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(ifNode12, 1371);
     forEachNode5.IsDisabled = false; // default value
-    forEachNode5.Label = null; // default value
+    forEachNode5.Label = "Each entry";
     forEachNode5.SetMaximumIterations(null); // default value
     forEachNode5.SetRecordList("Entries");
     forEachNode5.SetStartIndex(null); // default value
@@ -372,7 +373,7 @@
     
     var assignNode8 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode13, 1371);
     assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    assignNode8.Label = "Update entry";
     
     var assignment13 = assignNode8.CreateAssignment("EntryRec", "GetSheetEntries.List.Current.TimeEntry");
     
@@ -398,7 +399,7 @@
     
     var assignNode9 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode15, 1371);
     assignNode9.IsDisabled = false; // default value
-    assignNode9.Label = null; // default value
+    assignNode9.Label = "Reset found";
     
     var assignment18 = assignNode9.CreateAssignment("Found", "False");
     ifNode15.TrueTarget = assignNode9;
@@ -415,7 +416,7 @@
     
     var forEachNode6 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode9, 1371);
     forEachNode6.IsDisabled = false; // default value
-    forEachNode6.Label = null; // default value
+    forEachNode6.Label = "Each saved entry";
     forEachNode6.SetMaximumIterations(null); // default value
     forEachNode6.SetRecordList("GetSheetEntries.List");
     forEachNode6.SetStartIndex(null); // default value
@@ -436,7 +437,7 @@
     
     var assignNode10 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode16, 1371);
     assignNode10.IsDisabled = false; // default value
-    assignNode10.Label = null; // default value
+    assignNode10.Label = "Mark found";
     assignNode10.Target = forEachNode6;
     
     var assignment19 = assignNode10.CreateAssignment("Found", "True");
@@ -444,7 +445,7 @@
     
     var assignNode11 = daySheet_Save.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode17, 1371);
     assignNode11.IsDisabled = false; // default value
-    assignNode11.Label = null; // default value
+    assignNode11.Label = "New entry";
     
     var assignment20 = assignNode11.CreateAssignment("EntryRec.Id", "NullIdentifier()");
     

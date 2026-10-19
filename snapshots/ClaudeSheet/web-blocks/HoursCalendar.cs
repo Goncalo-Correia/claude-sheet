@@ -68,7 +68,7 @@
     
     var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(settings_GetDailyExpectedMinutes, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set outputs";
     
     var assignment = assignNode.CreateAssignment("Summary", "Calendar_GetMonthSummary.Summary");
     
@@ -292,7 +292,7 @@
     
     var assignNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode2, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Start hours at 0";
     
     var assignment4 = assignNode2.CreateAssignment("I", "0");
     
@@ -303,31 +303,31 @@
     
     var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode2, 1828);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Hour option";
     
     var assignment5 = assignNode3.CreateAssignment("Option.Value", "I");
     
     var assignment6 = assignNode3.CreateAssignment("Option.Label", "I");
     
-    var listAppend3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode3, 1371);
-    var listAppend4 = _System_.ClientActions.Named("ListAppend");
-    listAppend3.Action = listAppend4;
-    listAppend3.IsDisabled = false; // default value
-    var element2 = listAppend4.InputParameters.Named("Element");
-    listAppend3.SetArgumentValue(element2, "Option");
-    var list3 = listAppend4.InputParameters.Named("List");
-    listAppend3.SetArgumentValue(list3, "HourOptions");
+    var appendHourOption = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("AppendHourOption").ConnectedBelow(assignNode3, 1371);
+    var listAppend3 = _System_.ClientActions.Named("ListAppend");
+    appendHourOption.Action = listAppend3;
+    appendHourOption.IsDisabled = false; // default value
+    var element2 = listAppend3.InputParameters.Named("Element");
+    appendHourOption.SetArgumentValue(element2, "Option");
+    var list3 = listAppend3.InputParameters.Named("List");
+    appendHourOption.SetArgumentValue(list3, "HourOptions");
     
-    var assignNode4 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
+    var assignNode4 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(appendHourOption, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Next hour";
     assignNode4.Target = ifNode2;
     
     var assignment7 = assignNode4.CreateAssignment("I", "I + 1");
     
     var assignNode5 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 4113);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Start minutes at 0";
     
     var assignment8 = assignNode5.CreateAssignment("I", "0");
     
@@ -338,21 +338,21 @@
     
     var assignNode6 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode3, 1828);
     assignNode6.IsDisabled = false; // default value
-    assignNode6.Label = null; // default value
+    assignNode6.Label = "Minute option";
     
     var assignment9 = assignNode6.CreateAssignment("Option.Value", "I");
     
     var assignment10 = assignNode6.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
     
-    var listAppend22 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend2").ConnectedBelow(assignNode6, 1371);
-    listAppend22.Action = listAppend4;
-    listAppend22.IsDisabled = false; // default value
-    listAppend22.SetArgumentValue(list3, "MinuteOptions");
-    listAppend22.SetArgumentValue(element2, "Option");
+    var appendMinuteOption = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("AppendMinuteOption").ConnectedBelow(assignNode6, 1371);
+    appendMinuteOption.Action = listAppend3;
+    appendMinuteOption.IsDisabled = false; // default value
+    appendMinuteOption.SetArgumentValue(list3, "MinuteOptions");
+    appendMinuteOption.SetArgumentValue(element2, "Option");
     
-    var assignNode7 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend22, 1371);
+    var assignNode7 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(appendMinuteOption, 1371);
     assignNode7.IsDisabled = false; // default value
-    assignNode7.Label = null; // default value
+    assignNode7.Label = "Next quarter";
     assignNode7.Target = ifNode3;
     
     var assignment11 = assignNode7.CreateAssignment("I", "I + 15");
@@ -405,7 +405,7 @@
     
     var assignNode8 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode5, 1371);
     assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    assignNode8.Label = "Close editor";
     
     var assignment12 = assignNode8.CreateAssignment("ShowDayEditor", "False");
     
@@ -417,7 +417,7 @@
     
     var messageNode = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode2, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show success";
     messageNode.SetMessage("SuccessMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -451,20 +451,20 @@
     
     var assignNode9 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode7, 1371);
     assignNode9.IsDisabled = false; // default value
-    assignNode9.Label = null; // default value
+    assignNode9.Label = "Reset total";
     
     var assignment13 = assignNode9.CreateAssignment("EditorTotal", "0");
     
     var forEachNode = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode9, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each editor line";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("EditorLines");
     forEachNode.SetStartIndex(null); // default value
     
     var assignNode10 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
     assignNode10.IsDisabled = false; // default value
-    assignNode10.Label = null; // default value
+    assignNode10.Label = "Add line minutes";
     assignNode10.Target = forEachNode;
     
     var assignment14 = assignNode10.CreateAssignment("EditorTotal", "EditorTotal + EditorLines.Current.Hours * 60 + EditorLines.Current.Mins");
@@ -486,7 +486,7 @@
     
     var assignNode11 = onClick_CancelButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode8, 1371);
     assignNode11.IsDisabled = false; // default value
-    assignNode11.Label = null; // default value
+    assignNode11.Label = "Close editor";
     
     var assignment15 = assignNode11.CreateAssignment("ShowDayEditor", "False");
     
@@ -501,7 +501,7 @@
     
     var assignNode12 = onClick_CancelFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode9, 1371);
     assignNode12.IsDisabled = false; // default value
-    assignNode12.Label = null; // default value
+    assignNode12.Label = "Close popup";
     
     var assignment16 = assignNode12.CreateAssignment("ShowFillPopup", "False");
     
@@ -543,7 +543,7 @@
     
     var assignNode13 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode13.IsDisabled = false; // default value
-    assignNode13.Label = null; // default value
+    assignNode13.Label = "Keep error";
     
     var assignment17 = assignNode13.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
@@ -581,14 +581,14 @@
     
     var assignNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode4, 1828);
     assignNode14.IsDisabled = false; // default value
-    assignNode14.Label = null; // default value
+    assignNode14.Label = "No project error";
     
     var assignment18 = assignNode14.CreateAssignment("FillError", "\"Choose a project.\"");
     ifNode4.TrueTarget = assignNode14;
     
     var assignNode15 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_FillPending, 1371);
     assignNode15.IsDisabled = false; // default value
-    assignNode15.Label = null; // default value
+    assignNode15.Label = "Close popup";
     
     var assignment19 = assignNode15.CreateAssignment("ShowFillPopup", "False");
     
@@ -603,7 +603,7 @@
     
     var messageNode2 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode3, 1371);
     messageNode2.IsDisabled = false; // default value
-    messageNode2.Label = null; // default value
+    messageNode2.Label = "Show filled count";
     messageNode2.SetMessage("DaySheet_FillPending.FilledCount + \" days filled\"");
     messageNode2.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -626,7 +626,7 @@
     
     var assignNode16 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
     assignNode16.IsDisabled = false; // default value
-    assignNode16.Label = null; // default value
+    assignNode16.Label = "Keep error";
     
     var assignment20 = assignNode16.CreateAssignment("FillError", "AllExceptions.ExceptionMessage");
     
@@ -693,7 +693,7 @@
     
     var assignNode17 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_GetDetail, 1371);
     assignNode17.IsDisabled = false; // default value
-    assignNode17.Label = null; // default value
+    assignNode17.Label = "Set day state";
     
     var assignment21 = assignNode17.CreateAssignment("EditDate", "Day.Date");
     
@@ -718,14 +718,14 @@
     
     var forEachNode2 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(listClear, 1371);
     forEachNode2.IsDisabled = false; // default value
-    forEachNode2.Label = null; // default value
+    forEachNode2.Label = "Each detail line";
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("DaySheet_GetDetail.Detail.Lines");
     forEachNode2.SetStartIndex(null); // default value
     
     var assignNode18 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode2, 1828);
     assignNode18.IsDisabled = false; // default value
-    assignNode18.Label = null; // default value
+    assignNode18.Label = "Build editor line";
     
     var assignment28 = assignNode18.CreateAssignment("Line.ProjectId", "DaySheet_GetDetail.Detail.Lines.Current.ProjectId");
     
@@ -745,16 +745,16 @@
     recalcEditorTotal3.Action = recalcEditorTotal2;
     recalcEditorTotal3.IsDisabled = false; // default value
     
-    var listAppend5 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode18, 1371);
-    listAppend5.Action = listAppend4;
-    listAppend5.IsDisabled = false; // default value
-    listAppend5.Target = forEachNode2;
-    listAppend5.SetArgumentValue(list3, "EditorLines");
-    listAppend5.SetArgumentValue(element2, "Line");
+    var listAppend4 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode18, 1371);
+    listAppend4.Action = listAppend3;
+    listAppend4.IsDisabled = false; // default value
+    listAppend4.Target = forEachNode2;
+    listAppend4.SetArgumentValue(list3, "EditorLines");
+    listAppend4.SetArgumentValue(element2, "Line");
     
     var assignNode19 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(recalcEditorTotal3, 1371);
     assignNode19.IsDisabled = false; // default value
-    assignNode19.Label = null; // default value
+    assignNode19.Label = "Open editor";
     
     var assignment35 = assignNode19.CreateAssignment("ShowDayEditor", "True");
     
@@ -785,7 +785,7 @@
     
     var assignNode20 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(project_GetAssignedToUser, 1371);
     assignNode20.IsDisabled = false; // default value
-    assignNode20.Label = null; // default value
+    assignNode20.Label = "Init fill popup";
     
     var assignment36 = assignNode20.CreateAssignment("FillProjects", "Project_GetAssignedToUser.Projects");
     
@@ -862,20 +862,20 @@
     
     var assignNode21 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode17, 1371);
     assignNode21.IsDisabled = false; // default value
-    assignNode21.Label = null; // default value
+    assignNode21.Label = "Clear error";
     
     var assignment42 = assignNode21.CreateAssignment("EditorError", "\"\"");
     
     var forEachNode3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode21, 1371);
     forEachNode3.IsDisabled = false; // default value
-    forEachNode3.Label = null; // default value
+    forEachNode3.Label = "Each editor line";
     forEachNode3.SetMaximumIterations(null); // default value
     forEachNode3.SetRecordList("EditorLines");
     forEachNode3.SetStartIndex(null); // default value
     
     var assignNode22 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode3, 1828);
     assignNode22.IsDisabled = false; // default value
-    assignNode22.Label = null; // default value
+    assignNode22.Label = "Build entry";
     
     var assignment43 = assignNode22.CreateAssignment("Entry.ProjectId", "EditorLines.Current.ProjectId");
     
@@ -902,12 +902,12 @@
     daySheet_Save.SetArgumentValue(isDayOff2, "IsDayOff");
     forEachNode3.Target = daySheet_Save;
     
-    var listAppend6 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode22, 1371);
-    listAppend6.Action = listAppend4;
-    listAppend6.IsDisabled = false; // default value
-    listAppend6.Target = forEachNode3;
-    listAppend6.SetArgumentValue(list3, "Entries");
-    listAppend6.SetArgumentValue(element2, "Entry");
+    var listAppend5 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListAppend").ConnectedBelow(assignNode22, 1371);
+    listAppend5.Action = listAppend3;
+    listAppend5.IsDisabled = false; // default value
+    listAppend5.Target = forEachNode3;
+    listAppend5.SetArgumentValue(list3, "Entries");
+    listAppend5.SetArgumentValue(element2, "Entry");
     
     var finishDaySave3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("FinishDaySave").ConnectedBelow(daySheet_Save, 1371);
     finishDaySave3.Action = finishDaySave;
@@ -927,7 +927,7 @@
     
     var assignNode23 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions3, 1371);
     assignNode23.IsDisabled = false; // default value
-    assignNode23.Label = null; // default value
+    assignNode23.Label = "Keep error";
     
     var assignment46 = assignNode23.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     

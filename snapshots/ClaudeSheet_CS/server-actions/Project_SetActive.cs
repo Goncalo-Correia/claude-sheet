@@ -4,15 +4,16 @@
     var project_SetActive = eSpace.CreateServerAction("Project_SetActive");
     project_SetActive.CacheInMinutes = null; // default value
     project_SetActive.Description = "Activates or deactivates a project (SheetAdmin only); projects are deactivated instead of deleted (ProjectAssignment.ProjectId and TimeEntry.ProjectId are Protect). Inactive projects are no longer offered to users (Project_GetAssignedToUser filters on Project.IsActive).";
-    project_SetActive.Folder = null; // default value
+    var project = eSpace.Folders.Named("Project");
+    project_SetActive.Folder = project;
     project_SetActive.Function = false; // default value
     project_SetActive.Icon = null; // default value
     project_SetActive.Public = true;
     project_SetActive.Shareable = true;
     
     var projectId = project_SetActive.CreateInputParameter("ProjectId");
-    var project = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
-    projectId.DataType = project.IdentifierType;
+    var project2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
+    projectId.DataType = project2.IdentifierType;
     projectId.Description = null; // default value
     projectId.IsMandatory = true; // default value
     
@@ -22,7 +23,7 @@
     isActive.IsMandatory = true; // default value
     
     var projectRecord = project_SetActive.CreateLocalVariable("ProjectRecord");
-    projectRecord.DataType = project;
+    projectRecord.DataType = project2;
     projectRecord.Description = null; // default value
     
     var startNode = project_SetActive.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
@@ -49,7 +50,7 @@
     getProject.SetMaxRecords(null); // default value
     getProject.SetStartIndex(null); // default value
     getProject.Timeout = null; // default value
-    var project2 = getProject.AsDatabaseAggregate.CreateSource(project);
+    var project3 = getProject.AsDatabaseAggregate.CreateSource(project2);
     getProject.AsDatabaseAggregate.CreateFilter("Project.Id = ProjectId");
     
     ifNode.TrueTarget = getProject;
@@ -61,7 +62,7 @@
     
     var assignNode = project_SetActive.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set IsActive";
     
     var assignment = assignNode.CreateAssignment("ProjectRecord", "GetProject.List.Current.Project");
     
@@ -76,11 +77,11 @@
     ifNode2.TrueTarget = raiseExceptionNode2;
     
     var updateProject = project_SetActive.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateProject").ConnectedBelow(assignNode, 1371);
-    updateProject.Action = project.UpdateAction;
+    updateProject.Action = project2.UpdateAction;
     updateProject.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     updateProject.IsDisabled = false; // default value
     updateProject.ServerRequestTimeout = null; // default value
-    var updateProject2 = project.UpdateAction;
+    var updateProject2 = project2.UpdateAction;
     var source = updateProject2.InputParameters.Named("Source");
     updateProject.SetArgumentValue(source, "ProjectRecord");
     

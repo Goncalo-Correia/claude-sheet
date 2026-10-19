@@ -4,15 +4,16 @@
     var projectAssignment_CreateOrUpdate = eSpace.CreateServerAction("ProjectAssignment_CreateOrUpdate");
     projectAssignment_CreateOrUpdate.CacheInMinutes = null; // default value
     projectAssignment_CreateOrUpdate.Description = "Creates or updates an assignment (SheetAdmin only): user and start date required; EndDate empty (open end) or not before StartDate; project and its client active; no overlap with another active period of the same user and project, nor the same start date (ADR 0002). Raises AssignmentValidation with a user-facing message otherwise. Saves the assignment as active and returns its Id.";
-    projectAssignment_CreateOrUpdate.Folder = null; // default value
+    var projectAssignment = eSpace.Folders.Named("ProjectAssignment");
+    projectAssignment_CreateOrUpdate.Folder = projectAssignment;
     projectAssignment_CreateOrUpdate.Function = false; // default value
     projectAssignment_CreateOrUpdate.Icon = null; // default value
     projectAssignment_CreateOrUpdate.Public = true;
     projectAssignment_CreateOrUpdate.Shareable = true;
     
     var projectAssignmentRecord = projectAssignment_CreateOrUpdate.CreateInputParameter("ProjectAssignmentRecord");
-    var projectAssignment = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
-    projectAssignmentRecord.DataType = projectAssignment;
+    var projectAssignment2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
+    projectAssignmentRecord.DataType = projectAssignment2;
     projectAssignmentRecord.Description = null; // default value
     projectAssignmentRecord.IsMandatory = true; // default value
     
@@ -114,7 +115,7 @@
     getOverlapping.SetMaxRecords(null); // default value
     getOverlapping.SetStartIndex(null); // default value
     getOverlapping.Timeout = null; // default value
-    var projectAssignment2 = getOverlapping.AsDatabaseAggregate.CreateSource(projectAssignment);
+    var projectAssignment3 = getOverlapping.AsDatabaseAggregate.CreateSource(projectAssignment2);
     getOverlapping.AsDatabaseAggregate.CreateFilter("ProjectAssignment.UserId = ProjectAssignmentRecord.UserId");
     getOverlapping.AsDatabaseAggregate.CreateFilter("ProjectAssignment.ProjectId = ProjectAssignmentRecord.ProjectId");
     getOverlapping.AsDatabaseAggregate.CreateFilter("ProjectAssignment.Id <> ProjectAssignmentRecord.Id");
@@ -137,7 +138,7 @@
     
     var assignNode = projectAssignment_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode7, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Mark active";
     
     var assignment = assignNode.CreateAssignment("ProjectAssignmentRecord.IsActive", "True");
     ifNode7.FalseTarget = assignNode;
@@ -149,17 +150,17 @@
     ifNode7.TrueTarget = raiseExceptionNode7;
     
     var createOrUpdateProjectAssignment = projectAssignment_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateOrUpdateProjectAssignment").ConnectedBelow(assignNode, 1371);
-    createOrUpdateProjectAssignment.Action = projectAssignment.CreateOrUpdateAction;
+    createOrUpdateProjectAssignment.Action = projectAssignment2.CreateOrUpdateAction;
     createOrUpdateProjectAssignment.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createOrUpdateProjectAssignment.IsDisabled = false; // default value
     createOrUpdateProjectAssignment.ServerRequestTimeout = null; // default value
-    var createOrUpdateProjectAssignment2 = projectAssignment.CreateOrUpdateAction;
+    var createOrUpdateProjectAssignment2 = projectAssignment2.CreateOrUpdateAction;
     var source = createOrUpdateProjectAssignment2.InputParameters.Named("Source");
     createOrUpdateProjectAssignment.SetArgumentValue(source, "ProjectAssignmentRecord");
     
     var assignNode2 = projectAssignment_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(createOrUpdateProjectAssignment, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Return Id";
     
     var assignment2 = assignNode2.CreateAssignment("ProjectAssignmentId", "CreateOrUpdateProjectAssignment.Id");
     
@@ -167,7 +168,7 @@
     endNode.IsDisabled = false; // default value
     
     var projectAssignmentId = projectAssignment_CreateOrUpdate.CreateOutputParameter("ProjectAssignmentId");
-    projectAssignmentId.DataType = projectAssignment.IdentifierType;
+    projectAssignmentId.DataType = projectAssignment2.IdentifierType;
     projectAssignmentId.SetDefaultValue(null); // default value
     projectAssignmentId.Description = null; // default value
 }

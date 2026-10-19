@@ -4,7 +4,8 @@
     var user_GetActive = eSpace.CreateServerAction("User_GetActive");
     user_GetActive.CacheInMinutes = null; // default value
     user_GetActive.Description = "Active users for a dropdown (SheetAdmin only): UserId, name and username, sorted by name. Used by the assignment popup in ClaudeSheet.";
-    user_GetActive.Folder = null; // default value
+    var user = eSpace.Folders.Named("User");
+    user_GetActive.Folder = user;
     user_GetActive.Function = false; // default value
     user_GetActive.Icon = null; // default value
     user_GetActive.Public = true;
@@ -41,7 +42,7 @@
     
     var assignNode = user_GetActive.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getUsers, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("Users", "GetUsers.List mapTo {  }");
     

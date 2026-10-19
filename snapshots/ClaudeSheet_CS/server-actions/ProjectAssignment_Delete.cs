@@ -4,15 +4,16 @@
     var projectAssignment_Delete = eSpace.CreateServerAction("ProjectAssignment_Delete");
     projectAssignment_Delete.CacheInMinutes = null; // default value
     projectAssignment_Delete.Description = "Deletes an assignment (SheetAdmin only), only when its user has no TimeEntry on its project between StartDate and EndDate (open end = no limit). Otherwise raises AssignmentValidation asking to end it instead (ProjectAssignment_End).";
-    projectAssignment_Delete.Folder = null; // default value
+    var projectAssignment = eSpace.Folders.Named("ProjectAssignment");
+    projectAssignment_Delete.Folder = projectAssignment;
     projectAssignment_Delete.Function = false; // default value
     projectAssignment_Delete.Icon = null; // default value
     projectAssignment_Delete.Public = true;
     projectAssignment_Delete.Shareable = true;
     
     var projectAssignmentId = projectAssignment_Delete.CreateInputParameter("ProjectAssignmentId");
-    var projectAssignment = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
-    projectAssignmentId.DataType = projectAssignment.IdentifierType;
+    var projectAssignment2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
+    projectAssignmentId.DataType = projectAssignment2.IdentifierType;
     projectAssignmentId.Description = null; // default value
     projectAssignmentId.IsMandatory = true; // default value
     
@@ -40,7 +41,7 @@
     getAssignment.SetMaxRecords(null); // default value
     getAssignment.SetStartIndex(null); // default value
     getAssignment.Timeout = null; // default value
-    var projectAssignment2 = getAssignment.AsDatabaseAggregate.CreateSource(projectAssignment);
+    var projectAssignment3 = getAssignment.AsDatabaseAggregate.CreateSource(projectAssignment2);
     getAssignment.AsDatabaseAggregate.CreateFilter("ProjectAssignment.Id = ProjectAssignmentId");
     
     ifNode.TrueTarget = getAssignment;
@@ -86,11 +87,11 @@
     ifNode3.Label = "Has entries?";
     
     var deleteProjectAssignment = projectAssignment_Delete.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DeleteProjectAssignment").Below(ifNode3, 1371);
-    deleteProjectAssignment.Action = projectAssignment.DeleteAction;
+    deleteProjectAssignment.Action = projectAssignment2.DeleteAction;
     deleteProjectAssignment.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     deleteProjectAssignment.IsDisabled = false; // default value
     deleteProjectAssignment.ServerRequestTimeout = null; // default value
-    var deleteProjectAssignment2 = projectAssignment.DeleteAction;
+    var deleteProjectAssignment2 = projectAssignment2.DeleteAction;
     var id = deleteProjectAssignment2.InputParameters.Named("Id");
     deleteProjectAssignment.SetArgumentValue(id, "ProjectAssignmentId");
     ifNode3.FalseTarget = deleteProjectAssignment;

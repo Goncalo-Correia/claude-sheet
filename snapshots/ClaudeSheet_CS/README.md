@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet_CS (Reactive, Core): the backend of ClaudeSheet (ADR 0004)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US8's producer part
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT8's ClaudeSheet_CS part
 
 ## Own elements (references excluded)
 
@@ -19,6 +19,10 @@
 | References | | (System) only |
 
 ## Notes on this refresh
+
+- TT8 (2026-10-19), targeted mode: all 29 `server-actions/*.cs`. Every action is now in a server-action folder (Calendar, Client, Date, DaySheet, Holiday, Project, ProjectAssignment, ProjectHours, Settings, User, Setup), 84 nodes got labels and 17 Execute nodes were renamed (Bootstrap `CreateHoliday_<name>`, `GrantSheetUserRole_Admin`; ProjectHours_GetWeekly `AppendDayTotal`/`AppendCell`/`AppendRow`). Other files are as of the US8 refresh.
+
+### US8 refresh (2026-10-19)
 
 - US8 (2026-10-19), targeted mode: `data-model.cs` (Holiday.IsFixedDate), `user-exceptions.cs`, `names/server-actions.json`, `server-actions/Bootstrap.cs` (IsFixedDate = False on the 3 movable holidays), `server-actions/Holiday_CreateIfMissing.cs` (IsFixedDate in, Created out) and the 4 new `server-actions/Holiday_*.cs`. Other files are as of the US7 refresh.
 

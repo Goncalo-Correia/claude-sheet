@@ -4,15 +4,16 @@
     var projectAssignment_End = eSpace.CreateServerAction("ProjectAssignment_End");
     projectAssignment_End.CacheInMinutes = null; // default value
     projectAssignment_End.Description = "Ends an assignment on EndDate (SheetAdmin only): EndDate required and not before the assignment\'s StartDate. Raises AssignmentValidation otherwise. Use it instead of ProjectAssignment_Delete once the user has time entries.";
-    projectAssignment_End.Folder = null; // default value
+    var projectAssignment = eSpace.Folders.Named("ProjectAssignment");
+    projectAssignment_End.Folder = projectAssignment;
     projectAssignment_End.Function = false; // default value
     projectAssignment_End.Icon = null; // default value
     projectAssignment_End.Public = true;
     projectAssignment_End.Shareable = true;
     
     var projectAssignmentId = projectAssignment_End.CreateInputParameter("ProjectAssignmentId");
-    var projectAssignment = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
-    projectAssignmentId.DataType = projectAssignment.IdentifierType;
+    var projectAssignment2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
+    projectAssignmentId.DataType = projectAssignment2.IdentifierType;
     projectAssignmentId.Description = null; // default value
     projectAssignmentId.IsMandatory = true; // default value
     
@@ -22,7 +23,7 @@
     endDate.IsMandatory = true; // default value
     
     var projectAssignmentRecord = projectAssignment_End.CreateLocalVariable("ProjectAssignmentRecord");
-    projectAssignmentRecord.DataType = projectAssignment;
+    projectAssignmentRecord.DataType = projectAssignment2;
     projectAssignmentRecord.Description = null; // default value
     
     var startNode = projectAssignment_End.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
@@ -49,7 +50,7 @@
     getAssignment.SetMaxRecords(null); // default value
     getAssignment.SetStartIndex(null); // default value
     getAssignment.Timeout = null; // default value
-    var projectAssignment2 = getAssignment.AsDatabaseAggregate.CreateSource(projectAssignment);
+    var projectAssignment3 = getAssignment.AsDatabaseAggregate.CreateSource(projectAssignment2);
     getAssignment.AsDatabaseAggregate.CreateFilter("ProjectAssignment.Id = ProjectAssignmentId");
     
     ifNode.TrueTarget = getAssignment;
@@ -86,7 +87,7 @@
     
     var assignNode = projectAssignment_End.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set end date";
     
     var assignment = assignNode.CreateAssignment("ProjectAssignmentRecord", "GetAssignment.List.Current.ProjectAssignment");
     
@@ -100,11 +101,11 @@
     ifNode4.TrueTarget = raiseExceptionNode4;
     
     var updateProjectAssignment = projectAssignment_End.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateProjectAssignment").ConnectedBelow(assignNode, 1371);
-    updateProjectAssignment.Action = projectAssignment.UpdateAction;
+    updateProjectAssignment.Action = projectAssignment2.UpdateAction;
     updateProjectAssignment.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     updateProjectAssignment.IsDisabled = false; // default value
     updateProjectAssignment.ServerRequestTimeout = null; // default value
-    var updateProjectAssignment2 = projectAssignment.UpdateAction;
+    var updateProjectAssignment2 = projectAssignment2.UpdateAction;
     var source = updateProjectAssignment2.InputParameters.Named("Source");
     updateProjectAssignment.SetArgumentValue(source, "ProjectAssignmentRecord");
     

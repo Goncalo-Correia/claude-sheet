@@ -4,7 +4,8 @@
     var calendar_GetMonthSummary = eSpace.CreateServerAction("Calendar_GetMonthSummary");
     calendar_GetMonthSummary.CacheInMinutes = null; // default value
     calendar_GetMonthSummary.Description = "Month totals and KPI counts for the current user, derived from GetMonthCalendar. TotalMinutes = minutes on Draft/Confirmed day sheets. ExpectedMinutes = (weekdays - holidays - days off of the whole month) * Site.DailyExpectedMinutes. ProgressPercent = Total/Expected*100 capped at 100 (0 when Expected = 0). ElapsedDays = calendar days elapsed in the month up to today (past month = days in month, future month = 0).";
-    calendar_GetMonthSummary.Folder = null; // default value
+    var calendar = eSpace.Folders.Named("Calendar");
+    calendar_GetMonthSummary.Folder = calendar;
     calendar_GetMonthSummary.Function = false; // default value
     calendar_GetMonthSummary.Icon = null; // default value
     calendar_GetMonthSummary.Public = true;
@@ -61,7 +62,7 @@
     
     var assignNode = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonth, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Init summary";
     
     var assignment = assignNode.CreateAssignment("Summary.Year", "Year");
     
@@ -71,14 +72,14 @@
     
     var forEachNode = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each day";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("Calendar_GetMonth.Days");
     forEachNode.SetStartIndex(null); // default value
     
     var assignNode2 = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Add day to totals";
     assignNode2.Target = forEachNode;
     
     var assignment4 = assignNode2.CreateAssignment("Summary.TotalMinutes", "Summary.TotalMinutes + If(Calendar_GetMonth.Days.Current.DayStatusId = Entities.DayStatus.DayOff, 0, Calendar_GetMonth.Days.Current.TotalMinutes)");
@@ -96,7 +97,7 @@
     
     var assignNode3 = calendar_GetMonthSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(forEachNode, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Expected and progress";
     
     var assignment10 = assignNode3.CreateAssignment("Summary.ElapsedDays", "If(Year * 100 + Month < Year(Today) * 100 + Month(Today), Calendar_GetMonth.Days.Length, If(Year = Year(Today) and Month = Month(Today), Day(Today), 0))");
     

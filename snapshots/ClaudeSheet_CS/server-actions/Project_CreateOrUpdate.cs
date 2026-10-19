@@ -4,15 +4,16 @@
     var project_CreateOrUpdate = eSpace.CreateServerAction("Project_CreateOrUpdate");
     project_CreateOrUpdate.CacheInMinutes = null; // default value
     project_CreateOrUpdate.Description = "Creates or updates a project (SheetAdmin only). Name and Code are trimmed and required, the client must exist and be active, and Code is unique per client (case-insensitive by the database collation). Raises ProjectValidation with a user-facing message otherwise. Returns the project\'s Id.";
-    project_CreateOrUpdate.Folder = null; // default value
+    var project = eSpace.Folders.Named("Project");
+    project_CreateOrUpdate.Folder = project;
     project_CreateOrUpdate.Function = false; // default value
     project_CreateOrUpdate.Icon = null; // default value
     project_CreateOrUpdate.Public = true;
     project_CreateOrUpdate.Shareable = true;
     
     var projectRecord = project_CreateOrUpdate.CreateInputParameter("ProjectRecord");
-    var project = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
-    projectRecord.DataType = project;
+    var project2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
+    projectRecord.DataType = project2;
     projectRecord.Description = null; // default value
     projectRecord.IsMandatory = true; // default value
     
@@ -95,7 +96,7 @@
     getSameCode.SetMaxRecords(null); // default value
     getSameCode.SetStartIndex(null); // default value
     getSameCode.Timeout = null; // default value
-    var project2 = getSameCode.AsDatabaseAggregate.CreateSource(project);
+    var project3 = getSameCode.AsDatabaseAggregate.CreateSource(project2);
     getSameCode.AsDatabaseAggregate.CreateFilter("Project.ClientId = ProjectRecord.ClientId");
     getSameCode.AsDatabaseAggregate.CreateFilter("Project.Code = Trim(ProjectRecord.Code)");
     getSameCode.AsDatabaseAggregate.CreateFilter("Project.Id <> ProjectRecord.Id");
@@ -115,7 +116,7 @@
     
     var assignNode = project_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode6, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Trim name and code";
     
     var assignment = assignNode.CreateAssignment("ProjectRecord.Name", "Trim(ProjectRecord.Name)");
     
@@ -129,17 +130,17 @@
     ifNode6.TrueTarget = raiseExceptionNode6;
     
     var createOrUpdateProject = project_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateOrUpdateProject").ConnectedBelow(assignNode, 1371);
-    createOrUpdateProject.Action = project.CreateOrUpdateAction;
+    createOrUpdateProject.Action = project2.CreateOrUpdateAction;
     createOrUpdateProject.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createOrUpdateProject.IsDisabled = false; // default value
     createOrUpdateProject.ServerRequestTimeout = null; // default value
-    var createOrUpdateProject2 = project.CreateOrUpdateAction;
+    var createOrUpdateProject2 = project2.CreateOrUpdateAction;
     var source = createOrUpdateProject2.InputParameters.Named("Source");
     createOrUpdateProject.SetArgumentValue(source, "ProjectRecord");
     
     var assignNode2 = project_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(createOrUpdateProject, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Return Id";
     
     var assignment3 = assignNode2.CreateAssignment("ProjectId", "CreateOrUpdateProject.Id");
     
@@ -147,7 +148,7 @@
     endNode.IsDisabled = false; // default value
     
     var projectId = project_CreateOrUpdate.CreateOutputParameter("ProjectId");
-    projectId.DataType = project.IdentifierType;
+    projectId.DataType = project2.IdentifierType;
     projectId.SetDefaultValue(null); // default value
     projectId.Description = null; // default value
 }

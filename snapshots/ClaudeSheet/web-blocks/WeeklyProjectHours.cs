@@ -38,7 +38,7 @@
     
     var assignNode = getWeek.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(projectHours_GetWeekly, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set week";
     
     var assignment = assignNode.CreateAssignment("Week", "ProjectHours_GetWeekly.Week");
     
@@ -55,7 +55,7 @@
     
     var assignNode2 = getWeek.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Keep error";
     
     var assignment2 = assignNode2.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -82,7 +82,7 @@
     
     var messageNode = onAfterFetch_GetWeek.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ToTheRightOf(ifNode, 1828);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetWeek.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
@@ -147,7 +147,7 @@
     
     var assignNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode4, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Set reference date";
     
     var assignment3 = assignNode3.CreateAssignment("CurrentReferenceDate", "If(ReferenceDate = NullDate(), CurrDate(), ReferenceDate)");
     
@@ -165,7 +165,7 @@
     
     var assignNode4 = onParametersChanged.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode5, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Set reference date";
     
     var assignment4 = assignNode4.CreateAssignment("CurrentReferenceDate", "If(ReferenceDate = NullDate(), CurrDate(), ReferenceDate)");
     
@@ -181,7 +181,7 @@
     
     var assignNode5 = onClick_NextWeek.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode3, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Next week";
     
     var assignment5 = assignNode5.CreateAssignment("CurrentReferenceDate", "DateTimeToDate(AddDays(GetWeek.Week.WeekStart, 7))");
     
@@ -210,7 +210,7 @@
     
     var assignNode6 = onClick_PreviousWeek.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode6, 1371);
     assignNode6.IsDisabled = false; // default value
-    assignNode6.Label = null; // default value
+    assignNode6.Label = "Previous week";
     
     var assignment6 = assignNode6.CreateAssignment("CurrentReferenceDate", "DateTimeToDate(AddDays(GetWeek.Week.WeekStart, -7))");
     

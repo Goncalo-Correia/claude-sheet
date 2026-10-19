@@ -40,7 +40,7 @@
     
     var assignNode = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(calendar_GetMonthSummary, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set summary";
     
     var assignment = assignNode.CreateAssignment("Summary", "Calendar_GetMonthSummary.Summary");
     
@@ -57,7 +57,7 @@
     
     var assignNode2 = getSummary.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Keep error";
     
     var assignment2 = assignNode2.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -87,7 +87,7 @@
     
     var messageNode = onAfterFetch_GetSummary.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetSummary.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     

@@ -4,7 +4,8 @@
     var project_GetAssignedToUser = eSpace.CreateServerAction("Project_GetAssignedToUser");
     project_GetAssignedToUser.CacheInMinutes = null; // default value
     project_GetAssignedToUser.Description = "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.";
-    project_GetAssignedToUser.Folder = null; // default value
+    var project = eSpace.Folders.Named("Project");
+    project_GetAssignedToUser.Folder = project;
     project_GetAssignedToUser.Function = false; // default value
     project_GetAssignedToUser.Icon = null; // default value
     project_GetAssignedToUser.Public = true;
@@ -48,15 +49,15 @@
     var projectAssignment = getAssignedProjects.AsDatabaseAggregate.CreateSource(projectAssignment2);
     var client2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
     var client = getAssignedProjects.AsDatabaseAggregate.CreateSource(client2);
-    var project2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
-    var project = getAssignedProjects.AsDatabaseAggregate.CreateSource(project2);
+    var project3 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
+    var project2 = getAssignedProjects.AsDatabaseAggregate.CreateSource(project3);
     var join = getAssignedProjects.AsDatabaseAggregate.CreateJoin();
     join.LeftSource = projectAssignment;
-    join.RightSource = project;
+    join.RightSource = project2;
     join.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
     join.SetCondition("ProjectAssignment.ProjectId = Project.Id");
     var join2 = getAssignedProjects.AsDatabaseAggregate.CreateJoin();
-    join2.LeftSource = project;
+    join2.LeftSource = project2;
     join2.RightSource = client;
     join2.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
     join2.SetCondition("Project.ClientId = Client.Id");
@@ -73,14 +74,14 @@
     
     var forEachNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getAssignedProjects, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each project";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetAssignedProjects.List");
     forEachNode.SetStartIndex(null); // default value
     
     var assignNode = project_GetAssignedToUser.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 1828);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Build line";
     
     var assignment = assignNode.CreateAssignment("Line.ProjectId", "GetAssignedProjects.List.Current.Project.Id");
     

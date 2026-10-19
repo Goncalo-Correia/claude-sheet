@@ -4,7 +4,8 @@
     var settings_GetDailyExpectedMinutes = eSpace.CreateServerAction("Settings_GetDailyExpectedMinutes");
     settings_GetDailyExpectedMinutes.CacheInMinutes = null; // default value
     settings_GetDailyExpectedMinutes.Description = "Returns the DailyExpectedMinutes site property (minutes a user is expected to record per working day), for modules that can\'t read the site property directly.";
-    settings_GetDailyExpectedMinutes.Folder = null; // default value
+    var settings = eSpace.Folders.Named("Settings");
+    settings_GetDailyExpectedMinutes.Folder = settings;
     settings_GetDailyExpectedMinutes.Function = false; // default value
     settings_GetDailyExpectedMinutes.Icon = null; // default value
     settings_GetDailyExpectedMinutes.Public = true;
@@ -29,7 +30,7 @@
     
     var assignNode = settings_GetDailyExpectedMinutes.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Read site property";
     
     var assignment = assignNode.CreateAssignment("Minutes", "Site.DailyExpectedMinutes");
     ifNode.TrueTarget = assignNode;

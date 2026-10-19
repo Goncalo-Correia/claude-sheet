@@ -53,6 +53,7 @@ Every node in an action flow (server, client, screen/block and data actions) tha
 - **Label** on Assign, If, Message, For Each and Switch nodes. An If is a yes/no question (`Is SheetAdmin?`, `Date taken?`). An Assign says what it sets (`Copy fields`, `Count copied`, `Close popup`). A Message says what it reports (`Saved`, `Show error`). A For Each names what it loops over (`Each fixed holiday`).
 - **Name** on Execute Action, Aggregate, SQL, JavaScript and Exception Handler nodes. Aggregates and SQL nodes are `Get<What>` (`GetSameDate`). An Execute node keeps the action's name, but a numeric suffix (`Holiday_CreateIfMissing13`) is replaced by what that call does (`CreateHoliday_Christmas`). Exception handlers are named after the exception they catch.
 - Start, End, Raise Exception, Refresh Data and Destination nodes have no name in the model. They're described by their target and message.
+- Check with [`queries/node-names.cs`](../queries/node-names.cs) (a report that saves nothing): every count must be 0 before merging.
 
 (Added 2026-10-19.)
 

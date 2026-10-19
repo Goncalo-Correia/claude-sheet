@@ -4,7 +4,8 @@
     var holiday_CopyYear = eSpace.CreateServerAction("Holiday_CopyYear");
     holiday_CopyYear.CacheInMinutes = null; // default value
     holiday_CopyYear.Description = "Copies the active fixed-date holidays (IsFixedDate) of FromYear to the same day and month of ToYear (SheetAdmin only), skipping dates that already have a holiday and 29 February. Returns CopiedCount; running it again copies nothing.";
-    holiday_CopyYear.Folder = null; // default value
+    var holiday = eSpace.Folders.Named("Holiday");
+    holiday_CopyYear.Folder = holiday;
     holiday_CopyYear.Function = false; // default value
     holiday_CopyYear.Icon = null; // default value
     holiday_CopyYear.Public = true;
@@ -50,8 +51,8 @@
     getFixedHolidays.SetMaxRecords(null); // default value
     getFixedHolidays.SetStartIndex(null); // default value
     getFixedHolidays.Timeout = null; // default value
-    var holiday2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
-    var holiday = getFixedHolidays.AsDatabaseAggregate.CreateSource(holiday2);
+    var holiday3 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Holiday");
+    var holiday2 = getFixedHolidays.AsDatabaseAggregate.CreateSource(holiday3);
     getFixedHolidays.AsDatabaseAggregate.CreateFilter("Holiday.HolidayDate >= NewDate(FromYear, 1, 1) and Holiday.HolidayDate <= NewDate(FromYear, 12, 31)");
     getFixedHolidays.AsDatabaseAggregate.CreateFilter("Holiday.IsActive");
     getFixedHolidays.AsDatabaseAggregate.CreateFilter("Holiday.IsFixedDate");
@@ -69,7 +70,7 @@
     
     var forEachNode = holiday_CopyYear.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getFixedHolidays, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each fixed holiday";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetFixedHolidays.List");
     forEachNode.SetStartIndex(null); // default value
@@ -94,7 +95,7 @@
     
     var assignNode = holiday_CopyYear.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(holiday_CreateIfMissing, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Count copied";
     assignNode.Target = forEachNode;
     
     var assignment = assignNode.CreateAssignment("CopiedCount", "CopiedCount + If(Holiday_CreateIfMissing.Created, 1, 0)");

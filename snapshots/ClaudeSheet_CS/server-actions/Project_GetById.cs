@@ -4,15 +4,16 @@
     var project_GetById = eSpace.CreateServerAction("Project_GetById");
     project_GetById.CacheInMinutes = null; // default value
     project_GetById.Description = "One project (ProjectRecord) for the admin detail screen (SheetAdmin only). Raises ProjectValidation when the project doesn\'t exist.";
-    project_GetById.Folder = null; // default value
+    var project = eSpace.Folders.Named("Project");
+    project_GetById.Folder = project;
     project_GetById.Function = false; // default value
     project_GetById.Icon = null; // default value
     project_GetById.Public = true;
     project_GetById.Shareable = true;
     
     var projectId = project_GetById.CreateInputParameter("ProjectId");
-    var project = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
-    projectId.DataType = project.IdentifierType;
+    var project2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Project");
+    projectId.DataType = project2.IdentifierType;
     projectId.Description = null; // default value
     projectId.IsMandatory = true; // default value
     
@@ -40,7 +41,7 @@
     getProject.SetMaxRecords(null); // default value
     getProject.SetStartIndex(null); // default value
     getProject.Timeout = null; // default value
-    var project2 = getProject.AsDatabaseAggregate.CreateSource(project);
+    var project3 = getProject.AsDatabaseAggregate.CreateSource(project2);
     getProject.AsDatabaseAggregate.CreateFilter("Project.Id = ProjectId");
     
     ifNode.TrueTarget = getProject;
@@ -52,7 +53,7 @@
     
     var assignNode = project_GetById.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set output";
     
     var assignment = assignNode.CreateAssignment("ProjectRecord", "GetProject.List.Current.Project");
     ifNode2.FalseTarget = assignNode;
@@ -68,6 +69,6 @@
     endNode.IsDisabled = false; // default value
     
     var projectRecord = project_GetById.CreateOutputParameter("ProjectRecord");
-    projectRecord.DataType = project;
+    projectRecord.DataType = project2;
     projectRecord.Description = null; // default value
 }

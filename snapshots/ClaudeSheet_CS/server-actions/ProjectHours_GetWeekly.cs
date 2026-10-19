@@ -4,7 +4,8 @@
     var projectHours_GetWeekly = eSpace.CreateServerAction("ProjectHours_GetWeekly");
     projectHours_GetWeekly.CacheInMinutes = null; // default value
     projectHours_GetWeekly.Description = "Weekly grid for the current user: the Monday-Sunday week containing ReferenceDate, day headers classified like the calendar (Calendar_GetMonth), one row per project assigned during the week or with entries in it (sorted by client, project), 7 cells per row with the \"-\" rule, totals per row, per day and for the week.";
-    projectHours_GetWeekly.Folder = null; // default value
+    var projectHours = eSpace.Folders.Named("ProjectHours");
+    projectHours_GetWeekly.Folder = projectHours;
     projectHours_GetWeekly.Function = false; // default value
     projectHours_GetWeekly.Icon = null; // default value
     projectHours_GetWeekly.Public = true;
@@ -82,7 +83,7 @@
     
     var assignNode2 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(endMonth, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Start at Monday";
     
     var assignment3 = assignNode2.CreateAssignment("DayIndex", "0");
     
@@ -201,18 +202,18 @@
     
     var forEachNode = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getWeekEntries, 1371);
     forEachNode.IsDisabled = false; // default value
-    forEachNode.Label = null; // default value
+    forEachNode.Label = "Each project";
     forEachNode.SetMaximumIterations(null); // default value
     forEachNode.SetRecordList("GetWeekProjects.List");
     forEachNode.SetStartIndex(null); // default value
     
-    var listAppend22 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend2").ConnectedBelow(listAppend, 1371);
-    listAppend22.Action = listAppend2;
-    listAppend22.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    listAppend22.IsDisabled = false; // default value
-    listAppend22.ServerRequestTimeout = null; // default value
-    listAppend22.SetArgumentValue(element, "Cell");
-    listAppend22.SetArgumentValue(list, "Week.DayTotals");
+    var appendDayTotal = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("AppendDayTotal").ConnectedBelow(listAppend, 1371);
+    appendDayTotal.Action = listAppend2;
+    appendDayTotal.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    appendDayTotal.IsDisabled = false; // default value
+    appendDayTotal.ServerRequestTimeout = null; // default value
+    appendDayTotal.SetArgumentValue(element, "Cell");
+    appendDayTotal.SetArgumentValue(list, "Week.DayTotals");
     
     var assignNode4 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(forEachNode, 5484);
     assignNode4.IsDisabled = false; // default value
@@ -235,9 +236,9 @@
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
-    var assignNode5 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend22, 1371);
+    var assignNode5 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(appendDayTotal, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Next day";
     assignNode5.Target = ifNode2;
     
     var assignment21 = assignNode5.CreateAssignment("DayIndex", "DayIndex + 1");
@@ -256,15 +257,15 @@
     ifNode3.IsDisabled = false; // default value
     ifNode3.Label = "More cells?";
     
-    var listAppend4 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend4").Below(ifNode3, 8226);
-    listAppend4.Action = listAppend2;
-    listAppend4.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    listAppend4.IsDisabled = false; // default value
-    listAppend4.ServerRequestTimeout = null; // default value
-    listAppend4.Target = forEachNode;
-    listAppend4.SetArgumentValue(element, "Row");
-    listAppend4.SetArgumentValue(list, "Week.Rows");
-    ifNode3.FalseTarget = listAppend4;
+    var appendRow = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("AppendRow").Below(ifNode3, 8226);
+    appendRow.Action = listAppend2;
+    appendRow.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    appendRow.IsDisabled = false; // default value
+    appendRow.ServerRequestTimeout = null; // default value
+    appendRow.Target = forEachNode;
+    appendRow.SetArgumentValue(element, "Row");
+    appendRow.SetArgumentValue(list, "Week.Rows");
+    ifNode3.FalseTarget = appendRow;
     
     var assignNode6 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode3, 3656);
     assignNode6.IsDisabled = false; // default value
@@ -277,7 +278,7 @@
     
     var forEachNode2 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode6, 1371);
     forEachNode2.IsDisabled = false; // default value
-    forEachNode2.Label = null; // default value
+    forEachNode2.Label = "Each entry";
     forEachNode2.SetMaximumIterations(null); // default value
     forEachNode2.SetRecordList("GetWeekEntries.List");
     forEachNode2.SetStartIndex(null); // default value
@@ -306,23 +307,23 @@
     
     var assignNode8 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
     assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    assignNode8.Label = "Add minutes";
     assignNode8.Target = forEachNode2;
     
     var assignment29 = assignNode8.CreateAssignment("Cell.Minutes", "Cell.Minutes + LongIntegerToInteger(GetWeekEntries.List.Current.Minutes)");
     ifNode4.TrueTarget = assignNode8;
     
-    var listAppend3 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend3").ConnectedBelow(assignNode7, 1371);
-    listAppend3.Action = listAppend2;
-    listAppend3.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    listAppend3.IsDisabled = false; // default value
-    listAppend3.ServerRequestTimeout = null; // default value
-    listAppend3.SetArgumentValue(list, "Row.Cells");
-    listAppend3.SetArgumentValue(element, "Cell");
+    var appendCell = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("AppendCell").ConnectedBelow(assignNode7, 1371);
+    appendCell.Action = listAppend2;
+    appendCell.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    appendCell.IsDisabled = false; // default value
+    appendCell.ServerRequestTimeout = null; // default value
+    appendCell.SetArgumentValue(list, "Row.Cells");
+    appendCell.SetArgumentValue(element, "Cell");
     
-    var assignNode9 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(listAppend3, 1371);
+    var assignNode9 = projectHours_GetWeekly.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(appendCell, 1371);
     assignNode9.IsDisabled = false; // default value
-    assignNode9.Label = null; // default value
+    assignNode9.Label = "Next day";
     assignNode9.Target = ifNode3;
     
     var assignment30 = assignNode9.CreateAssignment("DayIndex", "DayIndex + 1");

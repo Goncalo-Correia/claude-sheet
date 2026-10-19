@@ -4,15 +4,16 @@
     var client_CreateOrUpdate = eSpace.CreateServerAction("Client_CreateOrUpdate");
     client_CreateOrUpdate.CacheInMinutes = null; // default value
     client_CreateOrUpdate.Description = "Creates or updates a client (SheetAdmin only). Name is trimmed, required and unique (case-insensitive by the database collation); raises ClientValidation with a user-facing message otherwise. Returns the client\'s Id.";
-    client_CreateOrUpdate.Folder = null; // default value
+    var client = eSpace.Folders.Named("Client");
+    client_CreateOrUpdate.Folder = client;
     client_CreateOrUpdate.Function = false; // default value
     client_CreateOrUpdate.Icon = null; // default value
     client_CreateOrUpdate.Public = true;
     client_CreateOrUpdate.Shareable = true;
     
     var clientRecord = client_CreateOrUpdate.CreateInputParameter("ClientRecord");
-    var client = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
-    clientRecord.DataType = client;
+    var client2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
+    clientRecord.DataType = client2;
     clientRecord.Description = null; // default value
     clientRecord.IsMandatory = true; // default value
     
@@ -46,7 +47,7 @@
     getSameName.SetMaxRecords(null); // default value
     getSameName.SetStartIndex(null); // default value
     getSameName.Timeout = null; // default value
-    var client2 = getSameName.AsDatabaseAggregate.CreateSource(client);
+    var client3 = getSameName.AsDatabaseAggregate.CreateSource(client2);
     getSameName.AsDatabaseAggregate.CreateFilter("Client.Name = Trim(ClientRecord.Name)");
     getSameName.AsDatabaseAggregate.CreateFilter("Client.Id <> ClientRecord.Id");
     
@@ -66,7 +67,7 @@
     
     var assignNode = client_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode3, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Trim name";
     
     var assignment = assignNode.CreateAssignment("ClientRecord.Name", "Trim(ClientRecord.Name)");
     ifNode3.FalseTarget = assignNode;
@@ -78,17 +79,17 @@
     ifNode3.TrueTarget = raiseExceptionNode3;
     
     var createOrUpdateClient = client_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateOrUpdateClient").ConnectedBelow(assignNode, 1371);
-    createOrUpdateClient.Action = client.CreateOrUpdateAction;
+    createOrUpdateClient.Action = client2.CreateOrUpdateAction;
     createOrUpdateClient.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createOrUpdateClient.IsDisabled = false; // default value
     createOrUpdateClient.ServerRequestTimeout = null; // default value
-    var createOrUpdateClient2 = client.CreateOrUpdateAction;
+    var createOrUpdateClient2 = client2.CreateOrUpdateAction;
     var source = createOrUpdateClient2.InputParameters.Named("Source");
     createOrUpdateClient.SetArgumentValue(source, "ClientRecord");
     
     var assignNode2 = client_CreateOrUpdate.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(createOrUpdateClient, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Return Id";
     
     var assignment2 = assignNode2.CreateAssignment("ClientId", "CreateOrUpdateClient.Id");
     
@@ -96,7 +97,7 @@
     endNode.IsDisabled = false; // default value
     
     var clientId = client_CreateOrUpdate.CreateOutputParameter("ClientId");
-    clientId.DataType = client.IdentifierType;
+    clientId.DataType = client2.IdentifierType;
     clientId.SetDefaultValue(null); // default value
     clientId.Description = null; // default value
 }

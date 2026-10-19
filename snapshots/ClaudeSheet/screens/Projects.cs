@@ -48,7 +48,7 @@
     
     var assignNode = getClients.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(client_GetList, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Set clients";
     
     var assignment = assignNode.CreateAssignment("Clients", "Client_GetList.Clients");
     
@@ -65,7 +65,7 @@
     
     var assignNode2 = getClients.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Keep error";
     
     var assignment2 = assignNode2.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -108,7 +108,7 @@
     
     var assignNode3 = getProjects.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(project_GetList, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Set projects";
     
     var assignment3 = assignNode3.CreateAssignment("Projects", "Project_GetList.Projects");
     
@@ -125,7 +125,7 @@
     
     var assignNode4 = getProjects.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Keep error";
     
     var assignment4 = assignNode4.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -155,7 +155,7 @@
     
     var messageNode = onAfterFetch_GetProjects.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetProjects.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     

@@ -52,14 +52,14 @@
     
     var assignNode = getClient.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheRightOf(ifNode, 1828);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "New client defaults";
     
     var assignment = assignNode.CreateAssignment("ClientRecord.IsActive", "True");
     ifNode.TrueTarget = assignNode;
     
     var assignNode2 = getClient.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(client_GetById, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Set client and projects";
     
     var assignment2 = assignNode2.CreateAssignment("ClientRecord", "Client_GetById.ClientRecord");
     
@@ -81,7 +81,7 @@
     
     var assignNode3 = getClient.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Keep error";
     
     var assignment4 = assignNode3.CreateAssignment("ErrorMessage", "AllExceptions.ExceptionMessage");
     
@@ -103,7 +103,7 @@
     
     var assignNode4 = onAfterFetch_GetClient.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode2, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Copy to form";
     
     var assignment5 = assignNode4.CreateAssignment("EditClient", "GetClient.ClientRecord");
     
@@ -117,7 +117,7 @@
     
     var messageNode = onAfterFetch_GetClient.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().Below(ifNode2, 1371);
     messageNode.IsDisabled = false; // default value
-    messageNode.Label = null; // default value
+    messageNode.Label = "Show error";
     messageNode.SetMessage("GetClient.ErrorMessage");
     messageNode.Type = OutSystems.Model.Enumerations.MessageType.Error;
     
@@ -166,7 +166,7 @@
     
     var assignNode5 = onClick_SaveButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode3, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Clear error";
     
     var assignment6 = assignNode5.CreateAssignment("FormError", "\"\"");
     
@@ -181,7 +181,7 @@
     
     var messageNode2 = onClick_SaveButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(client_CreateOrUpdate, 1371);
     messageNode2.IsDisabled = false; // default value
-    messageNode2.Label = null; // default value
+    messageNode2.Label = "Show saved";
     messageNode2.SetMessage("\"Client saved.\"");
     messageNode2.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -201,7 +201,7 @@
     
     var assignNode6 = onClick_SaveButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions2, 1371);
     assignNode6.IsDisabled = false; // default value
-    assignNode6.Label = null; // default value
+    assignNode6.Label = "Keep error";
     
     var assignment7 = assignNode6.CreateAssignment("FormError", "AllExceptions.ExceptionMessage");
     
@@ -218,7 +218,7 @@
     
     var assignNode7 = onClick_ToggleActiveButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode4, 1371);
     assignNode7.IsDisabled = false; // default value
-    assignNode7.Label = null; // default value
+    assignNode7.Label = "Clear error";
     
     var assignment8 = assignNode7.CreateAssignment("FormError", "\"\"");
     
@@ -241,7 +241,7 @@
     
     var messageNode3 = onClick_ToggleActiveButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode, 1371);
     messageNode3.IsDisabled = false; // default value
-    messageNode3.Label = null; // default value
+    messageNode3.Label = "Show status";
     messageNode3.SetMessage("If(GetClient.ClientRecord.IsActive, \"Client activated.\", \"Client deactivated.\")");
     messageNode3.Type = OutSystems.Model.Enumerations.MessageType.Success;
     
@@ -258,7 +258,7 @@
     
     var assignNode8 = onClick_ToggleActiveButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(allExceptions3, 1371);
     assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    assignNode8.Label = "Keep error";
     
     var assignment9 = assignNode8.CreateAssignment("FormError", "AllExceptions.ExceptionMessage");
     

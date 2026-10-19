@@ -64,7 +64,7 @@
     
     var assignNode = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode2, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Current month";
     
     var assignment = assignNode.CreateAssignment("SelectedYear", "Year(CurrDate())");
     
@@ -78,7 +78,7 @@
     
     var assignNode2 = onDaySaved_HoursCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode, 1371);
     assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = null; // default value
+    assignNode2.Label = "Refresh blocks";
     
     var assignment4 = assignNode2.CreateAssignment("RefreshKey", "RefreshKey + 1");
     
@@ -100,7 +100,7 @@
     
     var assignNode3 = onDaySelected_HoursCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode3, 1371);
     assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = null; // default value
+    assignNode3.Label = "Set week date";
     
     var assignment5 = assignNode3.CreateAssignment("WeekReferenceDate", "Date");
     
@@ -127,7 +127,7 @@
     
     var assignNode4 = onMonthChanged_HoursCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode4, 1371);
     assignNode4.IsDisabled = false; // default value
-    assignNode4.Label = null; // default value
+    assignNode4.Label = "Set month";
     
     var assignment6 = assignNode4.CreateAssignment("SelectedYear", "Year");
     
@@ -153,7 +153,7 @@
     
     var assignNode5 = onWeekChanged_WeeklyProjectHours.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode5, 1371);
     assignNode5.IsDisabled = false; // default value
-    assignNode5.Label = null; // default value
+    assignNode5.Label = "Set week date";
     
     var assignment9 = assignNode5.CreateAssignment("WeekReferenceDate", "WeekStartDate");
     
@@ -395,8 +395,8 @@
     eventHandler2.SetArgumentValue(date, "Date");
     var eventHandler3 = hoursCalendarInstance.EventHandlers.FirstOrDefault(e => e.Event.Name == "OnMonthChanged");
     eventHandler3.Handler = onMonthChanged_HoursCalendar;
-    eventHandler3.SetArgumentValue(month, "Month");
     eventHandler3.SetArgumentValue(year, "Year");
+    eventHandler3.SetArgumentValue(month, "Month");
     
     var kPIsColumn = monthRow.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("KPIsColumn");
     kPIsColumn.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value

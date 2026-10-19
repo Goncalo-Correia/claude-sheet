@@ -27,7 +27,7 @@
     
     var assignNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = null; // default value
+    assignNode.Label = "Check admin role";
     
     var assignment = assignNode.CreateAssignment("IsSheetAdmin", "CheckSheetAdminRole()");
     
