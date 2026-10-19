@@ -9,6 +9,9 @@
     /*** creating IUserException 'DaySheetValidation' ***/
     var daySheetValidation = eSpace.CreateUserException("DaySheetValidation");
     
+    /*** creating IUserException 'HolidayValidation' ***/
+    var holidayValidation = eSpace.CreateUserException("HolidayValidation");
+    
     /*** creating IUserException 'ProjectValidation' ***/
     var projectValidation = eSpace.CreateUserException("ProjectValidation");
 }

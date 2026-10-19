@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet_CS (Reactive, Core): the backend of ClaudeSheet (ADR 0004)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US7's producer part
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US8's producer part
 
 ## Own elements (references excluded)
 
@@ -11,14 +11,18 @@
 | Entities | 6 | Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry (Public, Read Only) |
 | Static entities | 2 | DayStatus, CalendarDayType (Public) |
 | Structures | 16 | ProjectSummary, ProjectAssignmentSummary, UserOption (US7), ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
-| Server actions | 25 | Public: Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
+| Server actions | 29 | Public: Holiday_GetList, Holiday_CreateOrUpdate, Holiday_SetActive, Holiday_CopyYear (US8), Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
 | Roles | 3 own (+ Anonymous, Registered) | SheetUser, SheetAdmin, SheetManager (Public) |
-| User exceptions | 4 | DaySheetValidation, ClientValidation, ProjectValidation, AssignmentValidation (all Public, set by hand: the Model API can't read or set that flag) |
+| User exceptions | 5 | DaySheetValidation, ClientValidation, ProjectValidation, AssignmentValidation, HolidayValidation (all Public, set by hand: the Model API can't read or set that flag) |
 | Site properties | 3 own (+ TenantName, TenantId) | DailyExpectedMinutes (480), SeedTestUsernames, SeedAdminUsernames |
 | Timers | 1 | Timer_Bootstrap (Bootstrap, WhenPublished) |
 | References | | (System) only |
 
 ## Notes on this refresh
+
+- US8 (2026-10-19), targeted mode: `data-model.cs` (Holiday.IsFixedDate), `user-exceptions.cs`, `names/server-actions.json`, `server-actions/Bootstrap.cs` (IsFixedDate = False on the 3 movable holidays), `server-actions/Holiday_CreateIfMissing.cs` (IsFixedDate in, Created out) and the 4 new `server-actions/Holiday_*.cs`. Other files are as of the US7 refresh.
+
+### US7 refresh (2026-10-19)
 
 - US7 (2026-10-19), targeted mode: `data-model.cs` (ProjectAssignment.ProjectId delete rule Delete → Protect), `structures.cs`, `user-exceptions.cs`, `names/server-actions.json` and the 9 new `server-actions/Project*.cs` / `User_GetActive.cs`. The other module-wide files were not re-read (unchanged by US7). `structures.cs` was rebuilt from the saved tool output (too large for the transcript); its diff also renumbers variables of existing structures.
 

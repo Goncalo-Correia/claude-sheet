@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT7 (admin CSS moved into the theme)
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US8 (Admin › Holidays, Menu HolidaysLink)
 
 ## Own elements (references excluded)
 
@@ -11,7 +11,7 @@
 | Entities, static entities, structures | 0 | In ClaudeSheet_CS |
 | Server actions | 2 | DoLogin, DoLogout (login template) |
 | Client actions | 1 | Minutes_Format |
-| Screens | 7 | Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
+| Screens | 8 | Admin/Holidays (US8), Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
 | Blocks | 13 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
 | Roles | 2 | Anonymous, Registered. Referenced from ClaudeSheet_CS: SheetUser, SheetAdmin, SheetManager |
 | Timers, user exceptions | 0 | In ClaudeSheet_CS |
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- US8 (2026-10-19), targeted mode: `names/screens.json`, `web-blocks/Menu.cs` (HolidaysLink) and the new `screens/Holidays.cs` (rebuilt from the saved tool output, too large for the transcript).
+
+### TT7 refresh (2026-10-19)
 
 - TT7 (2026-10-19), targeted mode: `themes/ClaudeSheet.cs` (new "Admin screens" section) and the four admin screens (`screens/Clients.cs`, `ClientDetail.cs`, `Projects.cs`, `ProjectDetail.cs`: stylesheet emptied, table modifier class). Three screens were rebuilt from the saved tool output (too large for the transcript).
 

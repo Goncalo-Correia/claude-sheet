@@ -12,6 +12,12 @@
     "IsReferenced": false
   },
   {
+    "Name": "Holidays",
+    "Description": "Admin holiday calendar per year (SheetAdmin): year selector, list with weekday and status, add/edit in a popup, activate/deactivate, copy the fixed-date holidays to the next year.",
+    "UIFlow": "Admin",
+    "IsReferenced": false
+  },
+  {
     "Name": "InvalidPermissions",
     "Description": "Screen where users will be redirected when they have invalid permissions.",
     "UIFlow": "Common",

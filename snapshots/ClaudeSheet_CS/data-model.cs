@@ -456,6 +456,16 @@
     isActive2.Label = "Is Active";
     isActive2.OriginalName = null; // default value
     isActive2.OriginalType = null; // default value
+    
+    var isFixedDate = holiday.CreateAttribute("IsFixedDate");
+    isFixedDate.DataType = eSpace.BooleanType;
+    isFixedDate.SetDefaultValue("True");
+    isFixedDate.Description = "True when the holiday falls on the same day and month every year (Holiday_CopyYear copies only these). False for movable holidays such as Good Friday, Easter and Corpus Christi.";
+    isFixedDate.IsMandatory = true;
+    isFixedDate.IsSearchable = false; // default value
+    isFixedDate.Label = "Is Fixed Date";
+    isFixedDate.OriginalName = null; // default value
+    isFixedDate.OriginalType = null; // default value
     // IServerEntitySignature (System)/Process
     var process = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*rk1aJNDvckKT91HxgCaO6w"));
     

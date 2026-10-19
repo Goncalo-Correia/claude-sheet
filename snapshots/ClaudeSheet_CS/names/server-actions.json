@@ -70,8 +70,28 @@
     "IsReferenced": false
   },
   {
+    "Name": "Holiday_CopyYear",
+    "Description": "Copies the active fixed-date holidays (IsFixedDate) of FromYear to the same day and month of ToYear (SheetAdmin only), skipping dates that already have a holiday and 29 February. Returns CopiedCount; running it again copies nothing.",
+    "IsReferenced": false
+  },
+  {
     "Name": "Holiday_CreateIfMissing",
-    "Description": "Creates an active Holiday for HolidayDate unless one already exists for that date (active or not). Used by Bootstrap.",
+    "Description": "Creates an active Holiday for HolidayDate unless one already exists for that date (active or not); Created tells whether it did. IsFixedDate (default True) is stored on create; when it is False and the existing holiday is still marked fixed, the existing one is marked movable. Used by Bootstrap and Holiday_CopyYear.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Holiday_CreateOrUpdate",
+    "Description": "Creates or updates a holiday (SheetAdmin only). Name is trimmed and required, the date is required and unique (UQ_Holiday_HolidayDate, inactive holidays included). Raises HolidayValidation with a user-facing message otherwise. Returns the holiday's Id.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Holiday_GetList",
+    "Description": "Holidays of Year sorted by date (SheetAdmin only). IncludeInactive also returns deactivated holidays.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Holiday_SetActive",
+    "Description": "Activates or deactivates a holiday (SheetAdmin only); holidays are deactivated instead of deleted. Inactive holidays are ignored by the calendar (Calendar_GetMonth filters on IsActive).",
     "IsReferenced": false
   },
   {

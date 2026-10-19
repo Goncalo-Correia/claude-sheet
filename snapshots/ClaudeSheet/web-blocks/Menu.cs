@@ -349,9 +349,47 @@
     extendedProperty3.Property = "role";
     extendedProperty3.SetValue("\"menuitem\"");
     
-    var extendedProperty4 = pageLinks.CreateExtendedProperty();
+    var holidaysLink = pageLinks.CreateWidget<ServiceStudio.Plugin.NRWidgets.ILink>("HolidaysLink");
+    holidaysLink.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    holidaysLink.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    holidaysLink.ColumnGap = null; // default value
+    holidaysLink.ColumnSpan = null; // default value
+    holidaysLink.SetConfirmationMessage(null); // default value
+    holidaysLink.CustomStyle = null; // default value
+    holidaysLink.SetEnabled("True");
+    holidaysLink.FlexBasis = null; // default value
+    holidaysLink.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    holidaysLink.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    holidaysLink.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    holidaysLink.Gap = null;
+    holidaysLink.GridColumns = null; // default value
+    holidaysLink.GridRows = null; // default value
+    holidaysLink.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    holidaysLink.RowGap = null; // default value
+    holidaysLink.RowSpan = null; // default value
+    holidaysLink.SetStyle(null); // default value
+    holidaysLink.SetVisible("GetMenuAccess.IsSheetAdmin");
+    holidaysLink.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    holidaysLink.Width = ""; // default value
+    
+    var textWidget4 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)holidaysLink.Widgets.First();
+    textWidget4.CustomStyle = null; // default value
+    textWidget4.Name = null; // default value
+    textWidget4.SetStyleClasses(null); // default value
+    textWidget4.Text = "Holidays";
+    var builtinEvent4 = holidaysLink.OnClick;
+    builtinEvent4.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    var holidays = admin.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileScreen>().Named("Holidays");
+    builtinEvent4.Destination = holidays;
+    builtinEvent4.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
+    
+    var extendedProperty4 = holidaysLink.CreateExtendedProperty();
     extendedProperty4.Property = "role";
-    extendedProperty4.SetValue("\"menubar\"");
+    extendedProperty4.SetValue("\"menuitem\"");
+    
+    var extendedProperty5 = pageLinks.CreateExtendedProperty();
+    extendedProperty5.Property = "role";
+    extendedProperty5.SetValue("\"menubar\"");
     
     var loginInfo = advancedHtml.Content.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("LoginInfo");
     loginInfo.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -383,17 +421,17 @@
     var userInfo = common.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileBlock>().Named("UserInfo");
     userInfoInstance.SourceBlock = userInfo;
     
-    var extendedProperty5 = advancedHtml.CreateExtendedProperty();
-    extendedProperty5.Property = "class";
-    extendedProperty5.SetValue("\"app-menu-content display-flex\"");
-    
     var extendedProperty6 = advancedHtml.CreateExtendedProperty();
-    extendedProperty6.Property = "role";
-    extendedProperty6.SetValue("\"navigation\"");
+    extendedProperty6.Property = "class";
+    extendedProperty6.SetValue("\"app-menu-content display-flex\"");
     
     var extendedProperty7 = advancedHtml.CreateExtendedProperty();
-    extendedProperty7.Property = "aria-label";
-    extendedProperty7.SetValue("\"Main navigation\"");
+    extendedProperty7.Property = "role";
+    extendedProperty7.SetValue("\"navigation\"");
+    
+    var extendedProperty8 = advancedHtml.CreateExtendedProperty();
+    extendedProperty8.Property = "aria-label";
+    extendedProperty8.SetValue("\"Main navigation\"");
     
     var container2 = menu.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container2.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -419,9 +457,9 @@
     container2.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container2.Width = "(fill parent)"; // default value
     
-    var extendedProperty8 = container2.CreateExtendedProperty();
-    extendedProperty8.Property = "role";
-    extendedProperty8.SetValue("\"button\"");
+    var extendedProperty9 = container2.CreateExtendedProperty();
+    extendedProperty9.Property = "role";
+    extendedProperty9.SetValue("\"button\"");
     
     var event2 = container2.CreateEvent();
     event2.Event = "onclick";
