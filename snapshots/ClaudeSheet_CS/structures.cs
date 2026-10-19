@@ -441,6 +441,98 @@
     isEditable.Label = "Is Editable";
     isEditable.NameInJSON = null; // default value
     
+    /*** creating IStructure 'ClientSummary' ***/
+    var clientSummary = eSpace.CreateStructure("ClientSummary");
+    clientSummary.Description = "One client in the admin list, with the number of its projects (Client_GetList).";
+    clientSummary.Folder = null; // default value
+    clientSummary.Public = true;
+    clientSummary.Shareable = true;
+    
+    var id4 = clientSummary.CreateAttribute("Id");
+    id4.SetDefaultValue(null); // default value
+    id4.Description = null; // default value
+    id4.IsMandatory = false; // default value
+    id4.Label = "Id";
+    id4.NameInJSON = null; // default value
+    
+    /*** creating IServerEntity 'Client' ***/
+    var client = eSpace.CreateServerEntity("Client");
+    client.Description = "Customer that projects are billed to.";
+    client.ExposeProcessEvents = false; // default value
+    client.ExposeReadOnly = true; // default value
+    client.Folder = null; // default value
+    client.IsActiveAttribute = null; // default value
+    client.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
+    client.IsRestrictedInQueries = false; // default value
+    client.Label = "Client";
+    client.LabelPlural = "Clients";
+    client.OrderByAttribute = null; // default value
+    client.Public = true;
+    client.Shareable = true;
+    client.TableNameOverride = null; // default value
+    client.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Full; // default value
+    client.UseTranslations = false; // default value
+    client.ViewNameOverride = null; // default value
+    
+    var id5 = client.CreateAttribute("Id");
+    id5.DataType = eSpace.LongIntegerType;
+    id5.SetDefaultValue(null); // default value
+    id5.Description = null; // default value
+    id5.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id5.IsSearchable = false; // default value
+    id5.Label = "Id";
+    id5.OriginalName = null; // default value
+    id5.OriginalType = null; // default value
+    
+    var name = client.CreateAttribute("Name");
+    name.DataType = eSpace.TextType;
+    name.SetDefaultValue(null); // default value
+    name.Description = null; // default value
+    name.IsMandatory = true;
+    name.IsSearchable = false; // default value
+    name.Label = "Name";
+    name.Length = 100;
+    name.OriginalName = null; // default value
+    name.OriginalType = null; // default value
+    
+    var isActive = client.CreateAttribute("IsActive");
+    isActive.DataType = eSpace.BooleanType;
+    isActive.SetDefaultValue("True");
+    isActive.Description = null; // default value
+    isActive.IsMandatory = true;
+    isActive.IsSearchable = false; // default value
+    isActive.Label = "Is Active";
+    isActive.OriginalName = null; // default value
+    isActive.OriginalType = null; // default value
+    client.IdentifierAttribute = id5;
+    client.LabelAttribute = name;
+    
+    var name2 = clientSummary.CreateAttribute("Name");
+    name2.DataType = eSpace.TextType;
+    name2.SetDefaultValue(null); // default value
+    name2.Description = null; // default value
+    name2.IsMandatory = false; // default value
+    name2.Label = "Name";
+    name2.Length = 100;
+    name2.NameInJSON = null; // default value
+    id4.DataType = client.IdentifierType;
+    
+    var isActive2 = clientSummary.CreateAttribute("IsActive");
+    isActive2.DataType = eSpace.BooleanType;
+    isActive2.SetDefaultValue(null); // default value
+    isActive2.Description = null; // default value
+    isActive2.IsMandatory = false; // default value
+    isActive2.Label = "Is Active";
+    isActive2.NameInJSON = null; // default value
+    
+    var projectCount = clientSummary.CreateAttribute("ProjectCount");
+    projectCount.DataType = eSpace.IntegerType;
+    projectCount.SetDefaultValue(null); // default value
+    projectCount.Description = null; // default value
+    projectCount.IsMandatory = false; // default value
+    projectCount.Label = "Project Count";
+    projectCount.NameInJSON = null; // default value
+    
     /*** creating IStructure 'DayEditorLine' ***/
     var dayEditorLine = eSpace.CreateStructure("DayEditorLine");
     dayEditorLine.Description = "One project line of the HoursCalendar day editor, with the time split into Hours and Mins for the dropdowns.";
@@ -474,17 +566,18 @@
     project.UseTranslations = false; // default value
     project.ViewNameOverride = null; // default value
     
-    var id4 = project.CreateAttribute("Id");
-    id4.DataType = eSpace.LongIntegerType;
-    id4.SetDefaultValue(null); // default value
-    id4.Description = null; // default value
-    id4.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id4.IsSearchable = false; // default value
-    id4.Label = "Id";
-    id4.OriginalName = null; // default value
-    id4.OriginalType = null; // default value
+    var id6 = project.CreateAttribute("Id");
+    id6.DataType = eSpace.LongIntegerType;
+    id6.SetDefaultValue(null); // default value
+    id6.Description = null; // default value
+    id6.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id6.IsSearchable = false; // default value
+    id6.Label = "Id";
+    id6.OriginalName = null; // default value
+    id6.OriginalType = null; // default value
     
     var clientId = project.CreateAttribute("ClientId");
+    clientId.DataType = client.IdentifierType;
     clientId.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
     clientId.Description = null; // default value
     clientId.IsMandatory = true;
@@ -493,16 +586,16 @@
     clientId.OriginalName = null; // default value
     clientId.OriginalType = null; // default value
     
-    var name = project.CreateAttribute("Name");
-    name.DataType = eSpace.TextType;
-    name.SetDefaultValue(null); // default value
-    name.Description = null; // default value
-    name.IsMandatory = true;
-    name.IsSearchable = false; // default value
-    name.Label = "Name";
-    name.Length = 100;
-    name.OriginalName = null; // default value
-    name.OriginalType = null; // default value
+    var name3 = project.CreateAttribute("Name");
+    name3.DataType = eSpace.TextType;
+    name3.SetDefaultValue(null); // default value
+    name3.Description = null; // default value
+    name3.IsMandatory = true;
+    name3.IsSearchable = false; // default value
+    name3.Label = "Name";
+    name3.Length = 100;
+    name3.OriginalName = null; // default value
+    name3.OriginalType = null; // default value
     
     var code = project.CreateAttribute("Code");
     code.DataType = eSpace.TextType;
@@ -515,69 +608,17 @@
     code.OriginalName = null; // default value
     code.OriginalType = null; // default value
     
-    var isActive = project.CreateAttribute("IsActive");
-    isActive.DataType = eSpace.BooleanType;
-    isActive.SetDefaultValue("True");
-    isActive.Description = null; // default value
-    isActive.IsMandatory = true;
-    isActive.IsSearchable = false; // default value
-    isActive.Label = "Is Active";
-    isActive.OriginalName = null; // default value
-    isActive.OriginalType = null; // default value
-    project.IdentifierAttribute = id4;
-    project.LabelAttribute = name;
-    
-    /*** creating IServerEntity 'Client' ***/
-    var client = eSpace.CreateServerEntity("Client");
-    client.Description = "Customer that projects are billed to.";
-    client.ExposeProcessEvents = false; // default value
-    client.ExposeReadOnly = true; // default value
-    client.Folder = null; // default value
-    client.IsActiveAttribute = null; // default value
-    client.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
-    client.IsRestrictedInQueries = false; // default value
-    client.Label = "Client";
-    client.LabelPlural = "Clients";
-    client.OrderByAttribute = null; // default value
-    client.Public = true;
-    client.Shareable = true;
-    client.TableNameOverride = null; // default value
-    client.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Full; // default value
-    client.UseTranslations = false; // default value
-    client.ViewNameOverride = null; // default value
-    
-    var id5 = client.CreateAttribute("Id");
-    id5.DataType = eSpace.LongIntegerType;
-    id5.SetDefaultValue(null); // default value
-    id5.Description = null; // default value
-    id5.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id5.IsSearchable = false; // default value
-    id5.Label = "Id";
-    id5.OriginalName = null; // default value
-    id5.OriginalType = null; // default value
-    
-    var name2 = client.CreateAttribute("Name");
-    name2.DataType = eSpace.TextType;
-    name2.SetDefaultValue(null); // default value
-    name2.Description = null; // default value
-    name2.IsMandatory = true;
-    name2.IsSearchable = false; // default value
-    name2.Label = "Name";
-    name2.Length = 100;
-    name2.OriginalName = null; // default value
-    name2.OriginalType = null; // default value
-    
-    var isActive2 = client.CreateAttribute("IsActive");
-    isActive2.DataType = eSpace.BooleanType;
-    isActive2.SetDefaultValue("True");
-    isActive2.Description = null; // default value
-    isActive2.IsMandatory = true;
-    isActive2.IsSearchable = false; // default value
-    isActive2.Label = "Is Active";
-    isActive2.OriginalName = null; // default value
-    isActive2.OriginalType = null; // default value
-    client.IdentifierAttribute = id5;
-    client.LabelAttribute = name2;
+    var isActive3 = project.CreateAttribute("IsActive");
+    isActive3.DataType = eSpace.BooleanType;
+    isActive3.SetDefaultValue("True");
+    isActive3.Description = null; // default value
+    isActive3.IsMandatory = true;
+    isActive3.IsSearchable = false; // default value
+    isActive3.Label = "Is Active";
+    isActive3.OriginalName = null; // default value
+    isActive3.OriginalType = null; // default value
+    project.IdentifierAttribute = id6;
+    project.LabelAttribute = name3;
     
     var clientName = dayEditorLine.CreateAttribute("ClientName");
     clientName.DataType = eSpace.TextType;
@@ -588,7 +629,6 @@
     clientName.Length = null; // default value
     clientName.NameInJSON = null; // default value
     projectId.DataType = project.IdentifierType;
-    clientId.DataType = client.IdentifierType;
     
     var projectName = dayEditorLine.CreateAttribute("ProjectName");
     projectName.DataType = eSpace.TextType;
@@ -782,15 +822,15 @@
     timeEntry.UseTranslations = false; // default value
     timeEntry.ViewNameOverride = null; // default value
     
-    var id6 = timeEntry.CreateAttribute("Id");
-    id6.DataType = eSpace.LongIntegerType;
-    id6.SetDefaultValue(null); // default value
-    id6.Description = null; // default value
-    id6.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id6.IsSearchable = false; // default value
-    id6.Label = "Id";
-    id6.OriginalName = null; // default value
-    id6.OriginalType = null; // default value
+    var id7 = timeEntry.CreateAttribute("Id");
+    id7.DataType = eSpace.LongIntegerType;
+    id7.SetDefaultValue(null); // default value
+    id7.Description = null; // default value
+    id7.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id7.IsSearchable = false; // default value
+    id7.Label = "Id";
+    id7.OriginalName = null; // default value
+    id7.OriginalType = null; // default value
     
     var daySheetId3 = timeEntry.CreateAttribute("DaySheetId");
     daySheetId3.DataType = daySheet.IdentifierType;
@@ -853,7 +893,7 @@
     updatedOn2.Label = "Updated On";
     updatedOn2.OriginalName = null; // default value
     updatedOn2.OriginalType = null; // default value
-    timeEntry.IdentifierAttribute = id6;
+    timeEntry.IdentifierAttribute = id7;
     
     var minutes2 = daySheetProjectLine.CreateAttribute("Minutes");
     minutes2.DataType = eSpace.IntegerType;

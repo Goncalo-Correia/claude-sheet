@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, light mode, after the manual publish of TT5 (Admin UI flow, admin and manager roles)
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US6 (Admin › Clients and ClientDetail, Menu GetMenuAccess and ClientsLink)
 
 ## Own elements (references excluded)
 
@@ -11,7 +11,7 @@
 | Entities, static entities, structures | 0 | In ClaudeSheet_CS |
 | Server actions | 2 | DoLogin, DoLogout (login template) |
 | Client actions | 1 | Minutes_Format |
-| Screens | 3 | Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
+| Screens | 5 | Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
 | Blocks | 13 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
 | Roles | 2 | Anonymous, Registered. Referenced from ClaudeSheet_CS: SheetUser, SheetAdmin, SheetManager |
 | Timers, user exceptions | 0 | In ClaudeSheet_CS |
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- US6 (2026-10-19, targeted): new `screens/Clients.cs` and `screens/ClientDetail.cs`; `web-blocks/Menu.cs` now has the server data action GetMenuAccess and the link ClientsLink (Visible = GetMenuAccess.IsSheetAdmin); `names/screens.json` lists the two Admin screens. Only `getScreenNames` was re-read of the module-wide lists; the others are unchanged by US6. `screens/ClientDetail.cs` was too large for the transcript, so it was rebuilt from the saved tool output (no fences, LF). References to ClaudeSheet_CS now include Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive, ClientSummary and ClientValidation.
+
+### TT5 refresh (2026-10-19)
 
 - TT5 (2026-10-19): `names/roles.json` gained the referenced roles SheetAdmin and SheetManager. The new, empty UI flow **Admin** has no snapshot file (UI flows aren't read separately; its screens will appear in `names/screens.json`).
 - `names/client-actions.json` and `names/web-blocks.json` were not re-read this time (about 70 KB, unchanged by TT5); they are as of the US5 refresh.

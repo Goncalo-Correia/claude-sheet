@@ -20,6 +20,26 @@
     "IsReferenced": false
   },
   {
+    "Name": "Client_CreateOrUpdate",
+    "Description": "Creates or updates a client (SheetAdmin only). Name is trimmed, required and unique (case-insensitive by the database collation); raises ClientValidation with a user-facing message otherwise. Returns the client's Id.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Client_GetById",
+    "Description": "One client (ClientRecord) with its projects sorted by name (SheetAdmin only). Raises ClientValidation when the client doesn't exist.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Client_GetList",
+    "Description": "Clients for the admin list (SheetAdmin only): name, active flag and number of projects, sorted by name. IncludeInactive also returns deactivated clients; Search filters by name (contains).",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Client_SetActive",
+    "Description": "Activates or deactivates a client (SheetAdmin only); clients are deactivated instead of deleted. Projects of an inactive client are no longer offered to users (Project_GetAssignedToUser filters on the client's IsActive).",
+    "IsReferenced": false
+  },
+  {
     "Name": "CommitTransaction",
     "Description": "Issues a database COMMIT command that makes effective all changes done on the database since the last commit.",
     "IsReferenced": true

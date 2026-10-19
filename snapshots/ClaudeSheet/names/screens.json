@@ -1,5 +1,17 @@
 [
   {
+    "Name": "ClientDetail",
+    "Description": "Create or edit one client (SheetAdmin): name, activate/deactivate, read-only list of its projects. ClientId empty = new client.",
+    "UIFlow": "Admin",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Clients",
+    "Description": "Admin list of clients (SheetAdmin): search, show inactive, project count; opens ClientDetail.",
+    "UIFlow": "Admin",
+    "IsReferenced": false
+  },
+  {
     "Name": "InvalidPermissions",
     "Description": "Screen where users will be redirected when they have invalid permissions.",
     "UIFlow": "Common",

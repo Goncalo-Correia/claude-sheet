@@ -13,8 +13,35 @@
     menu.StyleSheet = null; // default value
     menu.VerticalPosition = 2514;
     
-    var activeItem = menu.CreateInputParameter("ActiveItem");
+    var getMenuAccess = menu.CreateDataAction("GetMenuAccess");
+    /*** Deleting OutputParameters that are created by default when instantiating an IDataAction ***/
+    getMenuAccess.OutputParameters.ToList().ForEach(x => x.Delete());
+    getMenuAccess.Description = "Which role-gated menu links the user may see (server-side role checks; referenced roles have no client-side check).";
+    getMenuAccess.Fetch = OutSystems.Model.Enumerations.DataSourceFetch.AtStart; // default value
+    getMenuAccess.ServerRequestTimeout = null; // default value
+    
+    var startNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode.HorizontalPosition = 3200;
+    startNode.IsDisabled = false; // default value
+    startNode.VerticalPosition = 800;
+    
+    var assignNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode, 1371);
+    assignNode.IsDisabled = false; // default value
+    assignNode.Label = null; // default value
+    
+    var assignment = assignNode.CreateAssignment("IsSheetAdmin", "CheckSheetAdminRole()");
+    
+    var endNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode, 1371);
+    endNode.IsDisabled = false; // default value
+    getMenuAccess.OnAfterFetch.Destination = null; // default value
+    
+    var isSheetAdmin = getMenuAccess.CreateOutputParameter("IsSheetAdmin");
     var eSpace = common.GetESpace();
+    isSheetAdmin.DataType = eSpace.BooleanType;
+    isSheetAdmin.SetDefaultValue(null); // default value
+    isSheetAdmin.Description = null; // default value
+    
+    var activeItem = menu.CreateInputParameter("ActiveItem");
     activeItem.DataType = eSpace.IntegerType;
     activeItem.SetDefaultValue("-1");
     activeItem.Description = "Manually set as active a menu item, using it\'s index.";
@@ -30,14 +57,14 @@
     var hideMenu = menu.CreateScreenAction("HideMenu");
     hideMenu.Description = null; // default value
     
-    var startNode = hideMenu.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode.IsDisabled = false; // default value
+    var startNode2 = hideMenu.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode2.IsDisabled = false; // default value
     
     var onDestroy = menu.CreateScreenAction("OnDestroy");
     onDestroy.Description = null; // default value
     
-    var startNode2 = onDestroy.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode2.IsDisabled = false; // default value
+    var startNode3 = onDestroy.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode3.IsDisabled = false; // default value
     
     var menuDestroy = onDestroy.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("MenuDestroy");
     var outSystemsUI = eSpace.References.Named("OutSystemsUI");
@@ -47,17 +74,17 @@
     menuDestroy.IsDisabled = false; // default value
     menuDestroy.VerticalPosition = 2736;
     
-    var endNode = onDestroy.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode.HorizontalPosition = 3196;
-    endNode.IsDisabled = false; // default value
-    endNode.VerticalPosition = 5120;
+    var endNode2 = onDestroy.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
+    endNode2.HorizontalPosition = 3196;
+    endNode2.IsDisabled = false; // default value
+    endNode2.VerticalPosition = 5120;
     menu.OnDestroy.Destination = onDestroy;
     
     var onRender = menu.CreateScreenAction("OnRender");
     onRender.Description = null; // default value
     
-    var startNode3 = onRender.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode3.IsDisabled = false; // default value
+    var startNode4 = onRender.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode4.IsDisabled = false; // default value
     
     var setMenuListeners = onRender.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("SetMenuListeners");
     var setMenuListeners2 = outSystemsUI.ClientActions.Named("SetMenuListeners");
@@ -68,17 +95,17 @@
     var widgetId = setMenuListeners2.InputParameters.Named("WidgetId");
     setMenuListeners.SetArgumentValue(widgetId, null); // default value
     
-    var endNode2 = onRender.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode2.HorizontalPosition = 3200;
-    endNode2.IsDisabled = false; // default value
-    endNode2.VerticalPosition = 4343;
+    var endNode3 = onRender.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
+    endNode3.HorizontalPosition = 3200;
+    endNode3.IsDisabled = false; // default value
+    endNode3.VerticalPosition = 4343;
     menu.OnParametersChanged.Destination = onRender;
     
     var onReady = menu.CreateScreenAction("OnReady");
     onReady.Description = null; // default value
     
-    var startNode4 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
-    startNode4.IsDisabled = false; // default value
+    var startNode5 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode5.IsDisabled = false; // default value
     
     var menuReady = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("MenuReady");
     var menuReady2 = outSystemsUI.ClientActions.Named("MenuReady");
@@ -102,8 +129,8 @@
     var widgetId2 = setActiveMenuItems2.InputParameters.Named("WidgetId");
     setActiveMenuItems.SetArgumentValue(widgetId2, null); // default value
     
-    var endNode3 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(setActiveMenuItems, 1600);
-    endNode3.IsDisabled = false; // default value
+    var endNode4 = onReady.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(setActiveMenuItems, 1600);
+    endNode4.IsDisabled = false; // default value
     menu.OnReady.Destination = onReady;
     menu.OnRender.Destination = onRender;
     
@@ -113,19 +140,19 @@
     toggleSideMenu.HorizontalPosition = 3192;
     toggleSideMenu.IsDisabled = false; // default value
     toggleSideMenu.VerticalPosition = 2736;
-    startNode.Target = toggleSideMenu;
-    startNode2.Target = menuDestroy;
-    menuDestroy.Target = endNode;
-    startNode3.Target = setMenuListeners;
-    setMenuListeners.Target = endNode2;
-    startNode4.Target = menuReady;
+    startNode2.Target = toggleSideMenu;
+    startNode3.Target = menuDestroy;
+    menuDestroy.Target = endNode2;
+    startNode4.Target = setMenuListeners;
+    setMenuListeners.Target = endNode3;
+    startNode5.Target = menuReady;
     menuReady.Target = setActiveMenuItems;
     
-    var endNode4 = hideMenu.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
-    endNode4.HorizontalPosition = 3196;
-    endNode4.IsDisabled = false; // default value
-    endNode4.VerticalPosition = 5120;
-    toggleSideMenu.Target = endNode4;
+    var endNode5 = hideMenu.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>();
+    endNode5.HorizontalPosition = 3196;
+    endNode5.IsDisabled = false; // default value
+    endNode5.VerticalPosition = 5120;
+    toggleSideMenu.Target = endNode5;
     
     var advancedHtml = menu.CreateWidget<ServiceStudio.Plugin.NRWidgets.IAdvancedHtml>();
     advancedHtml.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
@@ -245,9 +272,48 @@
     extendedProperty.Property = "role";
     extendedProperty.SetValue("\"menuitem\"");
     
-    var extendedProperty2 = pageLinks.CreateExtendedProperty();
+    var clientsLink = pageLinks.CreateWidget<ServiceStudio.Plugin.NRWidgets.ILink>("ClientsLink");
+    clientsLink.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    clientsLink.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    clientsLink.ColumnGap = null; // default value
+    clientsLink.ColumnSpan = null; // default value
+    clientsLink.SetConfirmationMessage(null); // default value
+    clientsLink.CustomStyle = null; // default value
+    clientsLink.SetEnabled("True");
+    clientsLink.FlexBasis = null; // default value
+    clientsLink.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    clientsLink.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    clientsLink.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    clientsLink.Gap = null;
+    clientsLink.GridColumns = null; // default value
+    clientsLink.GridRows = null; // default value
+    clientsLink.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    clientsLink.RowGap = null; // default value
+    clientsLink.RowSpan = null; // default value
+    clientsLink.SetStyle(null); // default value
+    clientsLink.SetVisible("GetMenuAccess.IsSheetAdmin");
+    clientsLink.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    clientsLink.Width = ""; // default value
+    
+    var textWidget2 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)clientsLink.Widgets.First();
+    textWidget2.CustomStyle = null; // default value
+    textWidget2.Name = null; // default value
+    textWidget2.SetStyleClasses(null); // default value
+    textWidget2.Text = "Clients";
+    var builtinEvent2 = clientsLink.OnClick;
+    builtinEvent2.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    var admin = eSpace.MobileFlows.Named("Admin");
+    var clients = admin.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileScreen>().Named("Clients");
+    builtinEvent2.Destination = clients;
+    builtinEvent2.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
+    
+    var extendedProperty2 = clientsLink.CreateExtendedProperty();
     extendedProperty2.Property = "role";
-    extendedProperty2.SetValue("\"menubar\"");
+    extendedProperty2.SetValue("\"menuitem\"");
+    
+    var extendedProperty3 = pageLinks.CreateExtendedProperty();
+    extendedProperty3.Property = "role";
+    extendedProperty3.SetValue("\"menubar\"");
     
     var loginInfo = advancedHtml.Content.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("LoginInfo");
     loginInfo.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -279,17 +345,17 @@
     var userInfo = common.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileBlock>().Named("UserInfo");
     userInfoInstance.SourceBlock = userInfo;
     
-    var extendedProperty3 = advancedHtml.CreateExtendedProperty();
-    extendedProperty3.Property = "class";
-    extendedProperty3.SetValue("\"app-menu-content display-flex\"");
-    
     var extendedProperty4 = advancedHtml.CreateExtendedProperty();
-    extendedProperty4.Property = "role";
-    extendedProperty4.SetValue("\"navigation\"");
+    extendedProperty4.Property = "class";
+    extendedProperty4.SetValue("\"app-menu-content display-flex\"");
     
     var extendedProperty5 = advancedHtml.CreateExtendedProperty();
-    extendedProperty5.Property = "aria-label";
-    extendedProperty5.SetValue("\"Main navigation\"");
+    extendedProperty5.Property = "role";
+    extendedProperty5.SetValue("\"navigation\"");
+    
+    var extendedProperty6 = advancedHtml.CreateExtendedProperty();
+    extendedProperty6.Property = "aria-label";
+    extendedProperty6.SetValue("\"Main navigation\"");
     
     var container2 = menu.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container2.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -315,9 +381,9 @@
     container2.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container2.Width = "(fill parent)"; // default value
     
-    var extendedProperty6 = container2.CreateExtendedProperty();
-    extendedProperty6.Property = "role";
-    extendedProperty6.SetValue("\"button\"");
+    var extendedProperty7 = container2.CreateExtendedProperty();
+    extendedProperty7.Property = "role";
+    extendedProperty7.SetValue("\"button\"");
     
     var event2 = container2.CreateEvent();
     event2.Event = "onclick";

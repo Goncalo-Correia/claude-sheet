@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet_CS (Reactive, Core): the backend of ClaudeSheet (ADR 0004)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT5's producer part
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US6's producer part
 
 ## Own elements (references excluded)
 
@@ -10,15 +10,19 @@
 |---|---|---|
 | Entities | 6 | Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry (Public, Read Only) |
 | Static entities | 2 | DayStatus, CalendarDayType (Public) |
-| Structures | 12 | CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
-| Server actions | 12 | Public: Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
+| Structures | 13 | ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
+| Server actions | 16 | Public: Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
 | Roles | 3 own (+ Anonymous, Registered) | SheetUser, SheetAdmin, SheetManager (Public) |
-| User exceptions | 1 | DaySheetValidation (Public, set by hand: the Model API can't read or set that flag) |
+| User exceptions | 2 | DaySheetValidation, ClientValidation (both Public, set by hand: the Model API can't read or set that flag) |
 | Site properties | 3 own (+ TenantName, TenantId) | DailyExpectedMinutes (480), SeedTestUsernames, SeedAdminUsernames |
 | Timers | 1 | Timer_Bootstrap (Bootstrap, WhenPublished) |
 | References | | (System) only |
 
 ## Notes on this refresh
+
+- US6 (2026-10-19), targeted mode: `names/server-actions.json`, `structures.cs`, `user-exceptions.cs` and the 4 new `server-actions/Client_*.cs`. Other files are as of the TT5 refresh (unchanged by US6). `structures.cs` was rebuilt from the saved tool output (too large for the transcript).
+
+### TT5 refresh (2026-10-19)
 
 - TT5 (2026-10-19), targeted mode: light reads plus `server-actions/Bootstrap.cs` (admin seed loop) and the new `roles/SheetAdmin.cs` and `roles/SheetManager.cs`.
 - `server-actions/Minutes_Format.cs` was deleted with the action (it was unused; ClaudeSheet has its own client action).
