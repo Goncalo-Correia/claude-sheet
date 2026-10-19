@@ -152,6 +152,6 @@ TT0
 
 ## Trail
 
-- Changes: not auto-logged to `changes/`. The publish was a manual 1-Click Publish after two `blocked` MCP attempts, and the publish hook only fires on an MCP publish. The 6 saves are described in the implementation notes; the final code is in `snapshots/ClaudeSheet/` (`web-blocks/HoursCalendar.md`, `server-actions/{GetDaySheetDetail,SaveDaySheet,ClearDaySheet,FillPendingDays}.cs`, `user-exceptions.md`, `themes/ClaudeSheet.md`).
+- Changes: not auto-logged to `changes/`. The publish was a manual 1-Click Publish after two `blocked` MCP attempts, and the publish hook only fires on an MCP publish. The 6 saves are described in the implementation notes; the final code is in `snapshots/ClaudeSheet/` (`web-blocks/HoursCalendar.cs`, `server-actions/{GetDaySheetDetail,SaveDaySheet,ClearDaySheet,FillPendingDays}.cs`, `user-exceptions.cs`, `themes/ClaudeSheet.cs`).
 - Review: `reviews/ClaudeSheet/US2.md` (plan check round 1 and review round 1: all approved)
 - Published: see `PUBLISHES.md` (2026-10-14 17:36, success (manual))

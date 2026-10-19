@@ -53,7 +53,7 @@ Every node in an action flow (server, client, screen/block and data actions) tha
 - **Label** on Assign, If, Message, For Each and Switch nodes. An If is a yes/no question (`Is SheetAdmin?`, `Date taken?`). An Assign says what it sets (`Copy fields`, `Count copied`, `Close popup`). A Message says what it reports (`Saved`, `Show error`). A For Each names what it loops over (`Each fixed holiday`).
 - **Name** on Execute Action, Aggregate, SQL, JavaScript and Exception Handler nodes. Aggregates and SQL nodes are `Get<What>` (`GetSameDate`). An Execute node keeps the action's name, but a numeric suffix (`Holiday_CreateIfMissing13`) is replaced by what that call does (`CreateHoliday_Christmas`). Exception handlers are named after the exception they catch.
 - Start, End, Raise Exception, Refresh Data and Destination nodes have no name in the model. They're described by their target and message.
-- Check with [`checks/node-names.md`](../checks/node-names.md) (a report that saves nothing): every count must be 0 before merging.
+- Check with [`checks/node-names.cs`](../checks/node-names.cs) (a report that saves nothing): every count must be 0 before merging.
 
 (Added 2026-10-19.)
 
@@ -136,5 +136,5 @@ Applies to every server, client, screen, block and data action flow. Connectors 
 
 **Tools** (in `checks/`, see its README):
 
-- [`flow-layout.md`](../checks/flow-layout.md) reports, per flow, the connector directions, allowed diagonals, other diagonals, crossings and overlaps. It's a throw-probe, so it saves nothing. A flow follows the rules when it shows 0 other diagonals, 0 crossings and 0 overlaps.
-- [`layout-flow.md`](../checks/layout-flow.md) lays out the named flows by these rules and saves: positions and new End nodes only. Run `flow-layout.md` afterwards and fix any leftover merge or crossing by hand.
+- [`flow-layout.cs`](../checks/flow-layout.cs) reports, per flow, the connector directions, allowed diagonals, other diagonals, crossings and overlaps. It's a throw-probe, so it saves nothing. A flow follows the rules when it shows 0 other diagonals, 0 crossings and 0 overlaps.
+- [`layout-flow.cs`](../checks/layout-flow.cs) lays out the named flows by these rules and saves: positions and new End nodes only. Run `flow-layout.cs` afterwards and fix any leftover merge or crossing by hand.

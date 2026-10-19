@@ -40,7 +40,7 @@ Dependencies to add in Service Studio › Manage Dependencies › ClaudeSheet_CS
 
 - Implemented 2026-10-19 in **2 `applyModelApiCode` saves**:
   1. the roles, the site property, the Bootstrap admin loop and the deletion of Minutes_Format;
-  2. the layout of Bootstrap with `checks/layout-flow.md`.
+  2. the layout of Bootstrap with `checks/layout-flow.cs`.
 - Service Studio had restarted since the last session (the old token was rejected and the module keys changed); a new session token was issued. ClaudeSheet_CS was confirmed to be the same module (key `Hff6YxyWCUWs0l+vxIrNNw`).
 - **Roles (P01):** SheetAdmin and SheetManager, both public, with descriptions. The platform creates their Check/Grant/Revoke actions.
 - **Seed admin (P02):**
@@ -48,7 +48,7 @@ Dependencies to add in Service Studio › Manage Dependencies › ClaudeSheet_CS
   - Bootstrap: after the SeedTestUsernames loop, `Admin seed list` (SeedList = ",<names>,") → aggregate GetSeedAdmins (active users whose username is in the list) → For Each. Its body: `Has SheetUser?` (false → GrantSheetUserRole2) → `Has SheetAdmin?` (false → GrantSheetAdminRole) → back to the For Each. The existing End follows the loop.
   - Checks before granting, as in the existing user loop, so the action stays safe to run more than once. The description now mentions the admin seed.
 - **P02b:** deleted the unused, non-public server action Minutes_Format (agreed 2026-10-19); ClaudeSheet keeps its own client action. ClaudeSheet_CS now has 0 validation messages.
-- **Flow layout gate:** Bootstrap was laid out with `checks/layout-flow.md`. Report: 36 vertical, 6 horizontal, 6 loop-backs, 2 merges, 0 other diagonals, 0 crossings, 0 overlaps. The 2 merge diagonals were there before TT5: "Client missing?" / "Project missing?" rejoin the main path after the optional Create step (the Assign at the right rejoins GetSeedProject and the first Holiday_CreateIfMissing).
+- **Flow layout gate:** Bootstrap was laid out with `checks/layout-flow.cs`. Report: 36 vertical, 6 horizontal, 6 loop-backs, 2 merges, 0 other diagonals, 0 crossings, 0 overlaps. The 2 merge diagonals were there before TT5: "Client missing?" / "Project missing?" rejoin the main path after the optional Create step (the Assign at the right rejoins GetSeedProject and the first Holiday_CreateIfMissing).
 
 ### ClaudeSheet
 

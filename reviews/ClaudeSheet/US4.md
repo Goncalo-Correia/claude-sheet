@@ -2,7 +2,7 @@
 
 ## Implementation plan check — round 1 — 2026-10-15 17:03
 
-Implemented in 5 `applyModelApiCode` saves, merged with `omlMerge` (`merged: true`). Live after merge: identical to the validated state apart from the default container Gap written as null; 0 validation errors; all 7 US4 flows pass checks/flow-layout.md.
+Implemented in 5 `applyModelApiCode` saves, merged with `omlMerge` (`merged: true`). Live after merge: identical to the validated state apart from the default container Gap written as null; 0 validation errors; all 7 US4 flows pass checks/flow-layout.cs.
 
 | ID | Step | Tag | Reason / evidence | Answer |
 |---|---|---|---|---|
@@ -73,7 +73,7 @@ Plan check approved earlier the same day (P05, P21 accepted despite Rejected tag
 
 | ID | Item | Tag | Evidence | Answer |
 |---|---|---|---|---|
-| N01 | No convention violations | Approved | Names, 7 flows pass flow-layout.md, role check, CSS in theme | Yes |
+| N01 | No convention violations | Approved | Names, 7 flows pass flow-layout.cs, role check, CSS in theme | Yes |
 
 No "No" answers. No rows accepted despite a Rejected tag.
 

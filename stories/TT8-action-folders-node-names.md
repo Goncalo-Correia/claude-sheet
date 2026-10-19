@@ -22,7 +22,7 @@ Measured on 2026-10-19 (live modules, after US8):
 ## Acceptance criteria
 
 - [x] A01 · Every server action in ClaudeSheet_CS and every client action in ClaudeSheet is in a folder named after its `<Entity>` prefix (Bootstrap in **Setup**; DoLogin/DoLogout stay in **Authentication**).
-- [x] A02 · Every Assign, If, Message, For Each and Switch node in every flow of both modules has a label that says what it does (the report in `checks/node-names.md` shows 0 unlabelled).
+- [x] A02 · Every Assign, If, Message, For Each and Switch node in every flow of both modules has a label that says what it does (the report in `checks/node-names.cs` shows 0 unlabelled).
 - [x] A03 · No Execute Action node name ends in a numeric suffix. Every expression that referenced a renamed node still validates.
 - [ ] A04 · Behaviour is unchanged: MySheet and the admin screens work as before (verify at runtime).
 - [x] A05 · Both modules: 0 errors and 0 warnings, and the flow layout report is no worse than before.
@@ -43,7 +43,7 @@ Dependencies: none (folders and node names don't change the public interface of 
 
 ### Repository
 
-5. P05 · Add `checks/node-names.md`, a throw-probe report: per module, actions without a folder, unlabelled nodes per flow and suffixed Execute nodes. Document it in `checks/README.md` and in `docs/conventions.md` › Node names.
+5. P05 · Add `checks/node-names.cs`, a throw-probe report: per module, actions without a folder, unlabelled nodes per flow and suffixed Execute nodes. Document it in `checks/README.md` and in `docs/conventions.md` › Node names.
 
 ## Implementation notes
 
@@ -55,7 +55,7 @@ Dependencies: none (folders and node names don't change the public interface of 
   - 84 nodes labelled (Assign and For Each nodes). Each label was written from what the node does, e.g. `Trim name`, `Return Id`, `Each fixed holiday`, `Count copied`, `Classify day`. The lambda matches every label to its node by position and checks it, and the dry run confirmed all 84.
   - 17 Execute nodes renamed. In Bootstrap, `Holiday_CreateIfMissing` … `Holiday_CreateIfMissing13` became `CreateHoliday_NewYear`, `_GoodFriday`, `_Easter`, `_FreedomDay`, `_LabourDay`, `_CorpusChristi`, `_PortugalDay`, `_Assumption`, `_RepublicDay`, `_AllSaints`, `_IndependenceDay`, `_ImmaculateConception` and `_Christmas`; the first one has no suffix but was renamed for consistency, hence 17 rather than 16. `GrantSheetUserRole2` became `GrantSheetUserRole_Admin`. In ProjectHours_GetWeekly, `ListAppend2/3/4` became `AppendDayTotal`, `AppendCell` and `AppendRow`.
   - None of the renamed nodes' outputs is used in an expression, and validation stays at 0 messages.
-- **P05** (done first, as the gate for this module): `checks/node-names.md` added and documented in `checks/README.md` and `docs/conventions.md` › Node names. On the mutated module it reports 29 flows: 0 actions without folder, 0 unlabelled nodes, 0 suffixed Execute nodes.
+- **P05** (done first, as the gate for this module): `checks/node-names.cs` added and documented in `checks/README.md` and `docs/conventions.md` › Node names. On the mutated module it reports 29 flows: 0 actions without folder, 0 unlabelled nodes, 0 suffixed Execute nodes.
 - Folders and node names don't change ClaudeSheet_CS's public interface, so ClaudeSheet needs no dependency change.
 - **Flow layout:** no node was moved; the flows keep their layout.
 - **Merge:** `omlMerge` returned `merged: true`; live module re-checked with the report (all 0), 0 validation messages. Plan check round 1 approved and review round 1 approved (`reviews/ClaudeSheet_CS/TT8.md`).
@@ -77,7 +77,7 @@ Dependencies: none (folders and node names don't change the public interface of 
     - `ListAppend2` → `AppendMinuteOption`
     - `ListAppend` → `AppendHourOption` (not suffixed, but renamed for consistency, as in ClaudeSheet_CS)
   - ListAppend has no outputs, so no expression referenced either node.
-- **Report** (`checks/node-names.md`) on the mutated module:
+- **Report** (`checks/node-names.cs`) on the mutated module:
   - 102 flows
   - 0 actions without folder
   - 0 unlabelled nodes

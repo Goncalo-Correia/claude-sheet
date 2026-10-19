@@ -129,7 +129,7 @@ TT0; US2 for real data (can be tested with seed data)
   - **Empty state:** If `HasRows` (`Rows.Length > 0 or not IsDataFetched`) is false, it shows "No projects assigned for this week".
   - **P19:** the table sits in an OutSystems UI `ScrollableArea` (horizontal by default). Below 1024px the table gets `min-width: 960px` and the project column is `position: sticky`.
   - **P20:** role="table" (with an aria-label naming the week), "row", "columnheader", "rowheader" and "cell"; arrows have aria-labels; the root has `aria-busy` while loading. Verify with a screen reader.
-- **Flow layout gate:** `ProjectHours_GetWeekly` was laid out with `checks/layout-flow.md`, and the block's actions were built vertically with one End per branch. The report on all 7 US4 flows shows 0 other diagonals, 0 crossings and 0 overlaps. Not touched: the 3 For Each layouts from TT2's follow-up (TT3).
+- **Flow layout gate:** `ProjectHours_GetWeekly` was laid out with `checks/layout-flow.cs`, and the block's actions were built vertically with one End per branch. The report on all 7 US4 flows shows 0 other diagonals, 0 crossings and 0 overlaps. Not touched: the 3 For Each layouts from TT2's follow-up (TT3).
 - **Theme edit:** the expected `InvalidIconLibrary` sidecar error is ignored as documented. Warnings: "RefreshKey never used", as on the other blocks.
 - **P21 (publish and test)** is not done here.
 

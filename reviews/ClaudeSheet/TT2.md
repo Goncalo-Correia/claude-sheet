@@ -2,12 +2,12 @@
 
 ## Implementation plan check — round 1 — 2026-10-15 16:22
 
-Implemented in 3 `applyModelApiCode` saves. The `omlMerge` tool call showed as rejected in the conversation, but the merge reached Service Studio: the out files were deleted (a successful merge deletes them) and the live module shows exactly the validated state (checks/flow-layout.md: 64 flows, 0 other diagonals, 1 crossing, 3 merges, 0 overlaps; 0 validation errors). A retry was refused because no working copy was tracked any more.
+Implemented in 3 `applyModelApiCode` saves. The `omlMerge` tool call showed as rejected in the conversation, but the merge reached Service Studio: the out files were deleted (a successful merge deletes them) and the live module shows exactly the validated state (checks/flow-layout.cs: 64 flows, 0 other diagonals, 1 crossing, 3 merges, 0 overlaps; 0 validation errors). A retry was refused because no working copy was tracked any more.
 
 | ID | Step | Tag | Reason / evidence | Answer |
 |---|---|---|---|---|
-| P01 | Run flow-layout.md, confirm the 15 flows | Approved | 64 flows, 41 other diagonals, 8 crossings, same 15 flows as the card | Yes |
-| P02 | Run layout-flow.md on the 15 flows | Approved | 3 saves; tool improved during the work (taller branch down, optional steps right, loops clear, range-aware columns, through-node check); 7 new End nodes | Yes |
+| P01 | Run flow-layout.cs, confirm the 15 flows | Approved | 64 flows, 41 other diagonals, 8 crossings, same 15 flows as the card | Yes |
+| P02 | Run layout-flow.cs on the 15 flows | Approved | 3 saves; tool improved during the work (taller branch down, optional steps right, loops clear, range-aware columns, through-node check); 7 new End nodes | Yes |
 | P03 | Same connectors except End redirects | Approved | Checked inside every save; only 7 End → new End redirects | Yes |
 | P04 | Fix the DaySheet_Save crossing | Approved | 8 → 0 crossings; main path in column 0 | Yes |
 | P05 | Merge diagonals horizontal or justified | Approved | 3 merges justified in implementation notes (DaySheet_Save 1, Bootstrap 2) | Yes |
@@ -28,7 +28,7 @@ Plan check approved earlier the same day (P06, P07 accepted despite Rejected tag
 
 | ID | Criterion | Tag | Reason / evidence | Answer |
 |---|---|---|---|---|
-| A01 | AC2.1 flow-layout.md: 0 other diagonals, 0 crossings, 0 overlaps | Rejected | 1 justified crossing in DaySheet_FillPending (two loop-back branches); rest clean | Yes |
+| A01 | AC2.1 flow-layout.cs: 0 other diagonals, 0 crossings, 0 overlaps | Rejected | 1 justified crossing in DaySheet_FillPending (two loop-back branches); rest clean | Yes |
 | A02 | AC2.2 Main path down, If False / Switch branches horizontal | Rejected | Documented deviation: the shorter branch leaves (not always False); all 45 side branches on the same row | Yes |
 | A03 | AC2.3 Ending branches on their own End | Approved | 0 shared End nodes; 7 added | Yes |
 | A04 | AC2.4 For Each body right, continuation below | Rejected | 17/20 comply; GetKPIs, OnClick_SaveDay, OpenDayEditor (untouched) have the continuation on the last body row | Yes |
@@ -54,7 +54,7 @@ Plan check approved earlier the same day (P06, P07 accepted despite Rejected tag
 | C11 | Modified | Interface › UI Flows › SheetBlocks › HoursCalendar | New | Yes |
 | C12 | Modified | Interface › UI Flows › SheetBlocks › TotalHoursMonth | New | Yes |
 | C13 | Modified | Interface › UI Flows › SheetBlocks › DayStatusKPIs | New | Yes |
-| C14 | Modified | Other › checks/layout-flow.md, checks/flow-layout.md, docs/conventions.md | New | Yes |
+| C14 | Modified | Other › checks/layout-flow.cs, checks/flow-layout.cs, docs/conventions.md | New | Yes |
 
 ### Conventions
 

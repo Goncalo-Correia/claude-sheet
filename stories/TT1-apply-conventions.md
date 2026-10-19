@@ -19,7 +19,7 @@ Bring the existing ClaudeSheet code in line with the new rules in `docs/conventi
 - **Reusable server and client actions**: `<Entity>_<Verb>[<Qualifier>]`, e.g. `Item_GetById`, `Item_CreateOrUpdate`, `Item_GetNewest`.
 - **Screen and block actions bound to an event**: `<Event>_<Target>`, e.g. `OnClick_Item`, `OnChange_Item`, `OnAfterFetch_GetItem`. Lifecycle handlers take the event name (`OnInitialize`, `OnReady`, `OnParametersChanged`). A handler shared by several widgets is `<Event>_<Purpose>`.
 - **Helpers** (screen/block actions not bound to an event): verb + noun. An action is never both an event handler and called from other actions.
-- **No overlapping nodes** in any action flow (closer than 900 units on both axes). Checked with `queries/overlapping-nodes.cs` at the time; the overlap check is now part of `checks/flow-layout.md`.
+- **No overlapping nodes** in any action flow (closer than 900 units on both axes). Checked with `queries/overlapping-nodes.cs` at the time; the overlap check is now part of `checks/flow-layout.cs`.
 
 ### Scope (proposed names, confirm during implementation)
 

@@ -2,7 +2,7 @@
 
 TODO: describe the project
 
-This is an OutSystems 11 project built with Claude Code through the Service Studio MCP. OutSystems keeps the modules in the platform as binary `.oml` files. This repository is the text record around them: what was asked for, what changed, what the model looked like after each publish, and why. Everything in it is Markdown.
+This is an OutSystems 11 project built with Claude Code through the Service Studio MCP. OutSystems keeps the modules in the platform as binary `.oml` files. This repository is the text record around them: what was asked for, what changed, what the model looked like after each publish, and why.
 
 The repository map, the modules and the workflow are in [CLAUDE.md](CLAUDE.md).
 

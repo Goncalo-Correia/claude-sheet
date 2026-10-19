@@ -92,6 +92,6 @@ TT0 (GetMonthSummary, FormatMinutes)
 
 ## Trail
 
-- Changes: not auto-logged to `changes/`. The publish was a manual 1-Click Publish after a `blocked` MCP attempt, and the publish hook only fires on an MCP publish. The first implementation (3 saves) ran in an earlier session; the P07 fix (1 save) is described in the implementation notes. The final module code is in `snapshots/ClaudeSheet/` (`server-actions/GetMonthSummary.md`, `web-blocks/TotalHoursMonth.md`, `themes/ClaudeSheet.md`).
+- Changes: not auto-logged to `changes/`. The publish was a manual 1-Click Publish after a `blocked` MCP attempt, and the publish hook only fires on an MCP publish. The first implementation (3 saves) ran in an earlier session; the P07 fix (1 save) is described in the implementation notes. The final module code is in `snapshots/ClaudeSheet/` (`server-actions/GetMonthSummary.cs`, `web-blocks/TotalHoursMonth.cs`, `themes/ClaudeSheet.cs`).
 - Review: `reviews/ClaudeSheet/US1.md` (plan check rounds 1–2, review round 1: all approved)
 - Published: see `PUBLISHES.md` (2026-10-14 17:01, success (manual))
