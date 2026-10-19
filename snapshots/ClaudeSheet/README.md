@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US6 (Admin › Clients and ClientDetail, Menu GetMenuAccess and ClientsLink)
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US7 (Admin › Projects and ProjectDetail, Menu ProjectsLink)
 
 ## Own elements (references excluded)
 
@@ -11,7 +11,7 @@
 | Entities, static entities, structures | 0 | In ClaudeSheet_CS |
 | Server actions | 2 | DoLogin, DoLogout (login template) |
 | Client actions | 1 | Minutes_Format |
-| Screens | 5 | Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
+| Screens | 7 | Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
 | Blocks | 13 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
 | Roles | 2 | Anonymous, Registered. Referenced from ClaudeSheet_CS: SheetUser, SheetAdmin, SheetManager |
 | Timers, user exceptions | 0 | In ClaudeSheet_CS |
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- US7 (2026-10-19), targeted mode: `names/screens.json`, `web-blocks/Menu.cs` (ProjectsLink) and the new `screens/Projects.cs` and `screens/ProjectDetail.cs`. Both screens were too large for the transcript and were rebuilt from the saved tool output in the same format. Other files are as of the US6 refresh (unchanged by US7).
+
+### US6 refresh (2026-10-19)
 
 - US6 (2026-10-19, targeted): new `screens/Clients.cs` and `screens/ClientDetail.cs`; `web-blocks/Menu.cs` now has the server data action GetMenuAccess and the link ClientsLink (Visible = GetMenuAccess.IsSheetAdmin); `names/screens.json` lists the two Admin screens. Only `getScreenNames` was re-read of the module-wide lists; the others are unchanged by US6. `screens/ClientDetail.cs` was too large for the transcript, so it was rebuilt from the saved tool output (no fences, LF). References to ClaudeSheet_CS now include Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive, ClientSummary and ClientValidation.
 

@@ -1067,6 +1067,253 @@
     label4.Length = null; // default value
     label4.NameInJSON = null; // default value
     
+    /*** creating IStructure 'ProjectAssignmentSummary' ***/
+    var projectAssignmentSummary = eSpace.CreateStructure("ProjectAssignmentSummary");
+    projectAssignmentSummary.Description = "One assignment with project, client and user names and its Status (Active, Upcoming, Ended, Inactive) on today\'s date (ProjectAssignment_GetList).";
+    projectAssignmentSummary.Folder = null; // default value
+    projectAssignmentSummary.Public = true;
+    projectAssignmentSummary.Shareable = true;
+    
+    var id8 = projectAssignmentSummary.CreateAttribute("Id");
+    id8.SetDefaultValue(null); // default value
+    id8.Description = null; // default value
+    id8.IsMandatory = false; // default value
+    id8.Label = "Id";
+    id8.NameInJSON = null; // default value
+    
+    /*** creating IServerEntity 'ProjectAssignment' ***/
+    var projectAssignment = eSpace.CreateServerEntity("ProjectAssignment");
+    projectAssignment.Description = "A user\'s assignment to a project for a date range. A user can have several periods on the same project (one per StartDate); periods are not expected to overlap.";
+    projectAssignment.ExposeProcessEvents = false; // default value
+    projectAssignment.ExposeReadOnly = true; // default value
+    projectAssignment.Folder = null; // default value
+    projectAssignment.IsActiveAttribute = null; // default value
+    projectAssignment.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
+    projectAssignment.IsRestrictedInQueries = false; // default value
+    projectAssignment.Label = "Project Assignment";
+    projectAssignment.LabelAttribute = null; // default value
+    projectAssignment.LabelPlural = "Project Assignments";
+    projectAssignment.OrderByAttribute = null; // default value
+    projectAssignment.Public = true;
+    projectAssignment.Shareable = true;
+    projectAssignment.TableNameOverride = null; // default value
+    projectAssignment.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Full; // default value
+    projectAssignment.UseTranslations = false; // default value
+    projectAssignment.ViewNameOverride = null; // default value
+    
+    var id9 = projectAssignment.CreateAttribute("Id");
+    id9.DataType = eSpace.LongIntegerType;
+    id9.SetDefaultValue(null); // default value
+    id9.Description = null; // default value
+    id9.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id9.IsSearchable = false; // default value
+    id9.Label = "Id";
+    id9.OriginalName = null; // default value
+    id9.OriginalType = null; // default value
+    
+    var userId2 = projectAssignment.CreateAttribute("UserId");
+    userId2.DataType = user.IdentifierType;
+    userId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    userId2.Description = null; // default value
+    userId2.IsMandatory = true;
+    userId2.IsSearchable = false; // default value
+    userId2.Label = "User";
+    userId2.OriginalName = null; // default value
+    userId2.OriginalType = null; // default value
+    
+    var projectId4 = projectAssignment.CreateAttribute("ProjectId");
+    projectId4.DataType = project.IdentifierType;
+    projectId4.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    projectId4.Description = null; // default value
+    projectId4.IsMandatory = true;
+    projectId4.IsSearchable = false; // default value
+    projectId4.Label = "Project";
+    projectId4.OriginalName = null; // default value
+    projectId4.OriginalType = null; // default value
+    
+    var startDate = projectAssignment.CreateAttribute("StartDate");
+    startDate.DataType = eSpace.DateType;
+    startDate.SetDefaultValue(null); // default value
+    startDate.Description = null; // default value
+    startDate.IsMandatory = true;
+    startDate.IsSearchable = false; // default value
+    startDate.Label = "Start Date";
+    startDate.OriginalName = null; // default value
+    startDate.OriginalType = null; // default value
+    
+    var endDate = projectAssignment.CreateAttribute("EndDate");
+    endDate.DataType = eSpace.DateType;
+    endDate.SetDefaultValue(null); // default value
+    endDate.Description = null; // default value
+    endDate.IsMandatory = false; // default value
+    endDate.IsSearchable = false; // default value
+    endDate.Label = "End Date";
+    endDate.OriginalName = null; // default value
+    endDate.OriginalType = null; // default value
+    
+    var isActive4 = projectAssignment.CreateAttribute("IsActive");
+    isActive4.DataType = eSpace.BooleanType;
+    isActive4.SetDefaultValue("True");
+    isActive4.Description = null; // default value
+    isActive4.IsMandatory = true;
+    isActive4.IsSearchable = false; // default value
+    isActive4.Label = "Is Active";
+    isActive4.OriginalName = null; // default value
+    isActive4.OriginalType = null; // default value
+    projectAssignment.IdentifierAttribute = id9;
+    
+    var projectId5 = projectAssignmentSummary.CreateAttribute("ProjectId");
+    projectId5.DataType = project.IdentifierType;
+    projectId5.SetDefaultValue(null); // default value
+    projectId5.Description = null; // default value
+    projectId5.IsMandatory = false; // default value
+    projectId5.Label = "Project";
+    projectId5.NameInJSON = null; // default value
+    id8.DataType = projectAssignment.IdentifierType;
+    
+    var projectCode3 = projectAssignmentSummary.CreateAttribute("ProjectCode");
+    projectCode3.DataType = eSpace.TextType;
+    projectCode3.SetDefaultValue(null); // default value
+    projectCode3.Description = null; // default value
+    projectCode3.IsMandatory = false; // default value
+    projectCode3.Label = "Project Code";
+    projectCode3.Length = 30;
+    projectCode3.NameInJSON = null; // default value
+    
+    var projectName3 = projectAssignmentSummary.CreateAttribute("ProjectName");
+    projectName3.DataType = eSpace.TextType;
+    projectName3.SetDefaultValue(null); // default value
+    projectName3.Description = null; // default value
+    projectName3.IsMandatory = false; // default value
+    projectName3.Label = "Project Name";
+    projectName3.Length = 100;
+    projectName3.NameInJSON = null; // default value
+    
+    var clientName3 = projectAssignmentSummary.CreateAttribute("ClientName");
+    clientName3.DataType = eSpace.TextType;
+    clientName3.SetDefaultValue(null); // default value
+    clientName3.Description = null; // default value
+    clientName3.IsMandatory = false; // default value
+    clientName3.Label = "Client Name";
+    clientName3.Length = 100;
+    clientName3.NameInJSON = null; // default value
+    
+    var userId3 = projectAssignmentSummary.CreateAttribute("UserId");
+    userId3.DataType = user.IdentifierType;
+    userId3.SetDefaultValue(null); // default value
+    userId3.Description = null; // default value
+    userId3.IsMandatory = false; // default value
+    userId3.Label = "User";
+    userId3.NameInJSON = null; // default value
+    
+    var userName = projectAssignmentSummary.CreateAttribute("UserName");
+    userName.DataType = eSpace.TextType;
+    userName.SetDefaultValue(null); // default value
+    userName.Description = null; // default value
+    userName.IsMandatory = false; // default value
+    userName.Label = "User Name";
+    userName.Length = 250;
+    userName.NameInJSON = null; // default value
+    
+    var startDate2 = projectAssignmentSummary.CreateAttribute("StartDate");
+    startDate2.DataType = eSpace.DateType;
+    startDate2.SetDefaultValue(null); // default value
+    startDate2.Description = null; // default value
+    startDate2.IsMandatory = false; // default value
+    startDate2.Label = "Start Date";
+    startDate2.NameInJSON = null; // default value
+    
+    var endDate2 = projectAssignmentSummary.CreateAttribute("EndDate");
+    endDate2.DataType = eSpace.DateType;
+    endDate2.SetDefaultValue(null); // default value
+    endDate2.Description = null; // default value
+    endDate2.IsMandatory = false; // default value
+    endDate2.Label = "End Date";
+    endDate2.NameInJSON = null; // default value
+    
+    var isActive5 = projectAssignmentSummary.CreateAttribute("IsActive");
+    isActive5.DataType = eSpace.BooleanType;
+    isActive5.SetDefaultValue(null); // default value
+    isActive5.Description = null; // default value
+    isActive5.IsMandatory = false; // default value
+    isActive5.Label = "Is Active";
+    isActive5.NameInJSON = null; // default value
+    
+    var status = projectAssignmentSummary.CreateAttribute("Status");
+    status.DataType = eSpace.TextType;
+    status.SetDefaultValue(null); // default value
+    status.Description = null; // default value
+    status.IsMandatory = false; // default value
+    status.Label = "Status";
+    status.Length = 20;
+    status.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'ProjectSummary' ***/
+    var projectSummary = eSpace.CreateStructure("ProjectSummary");
+    projectSummary.Description = "One project in the admin list, with its client and the number of users assigned now or later (Project_GetList).";
+    projectSummary.Folder = null; // default value
+    projectSummary.Public = true;
+    projectSummary.Shareable = true;
+    
+    var id10 = projectSummary.CreateAttribute("Id");
+    id10.DataType = project.IdentifierType;
+    id10.SetDefaultValue(null); // default value
+    id10.Description = null; // default value
+    id10.IsMandatory = false; // default value
+    id10.Label = "Id";
+    id10.NameInJSON = null; // default value
+    
+    var clientId2 = projectSummary.CreateAttribute("ClientId");
+    clientId2.DataType = client.IdentifierType;
+    clientId2.SetDefaultValue(null); // default value
+    clientId2.Description = null; // default value
+    clientId2.IsMandatory = false; // default value
+    clientId2.Label = "Client";
+    clientId2.NameInJSON = null; // default value
+    
+    var clientName4 = projectSummary.CreateAttribute("ClientName");
+    clientName4.DataType = eSpace.TextType;
+    clientName4.SetDefaultValue(null); // default value
+    clientName4.Description = null; // default value
+    clientName4.IsMandatory = false; // default value
+    clientName4.Label = "Client Name";
+    clientName4.Length = 100;
+    clientName4.NameInJSON = null; // default value
+    
+    var code2 = projectSummary.CreateAttribute("Code");
+    code2.DataType = eSpace.TextType;
+    code2.SetDefaultValue(null); // default value
+    code2.Description = null; // default value
+    code2.IsMandatory = false; // default value
+    code2.Label = "Code";
+    code2.Length = 30;
+    code2.NameInJSON = null; // default value
+    
+    var name4 = projectSummary.CreateAttribute("Name");
+    name4.DataType = eSpace.TextType;
+    name4.SetDefaultValue(null); // default value
+    name4.Description = null; // default value
+    name4.IsMandatory = false; // default value
+    name4.Label = "Name";
+    name4.Length = 100;
+    name4.NameInJSON = null; // default value
+    
+    var isActive6 = projectSummary.CreateAttribute("IsActive");
+    isActive6.DataType = eSpace.BooleanType;
+    isActive6.SetDefaultValue(null); // default value
+    isActive6.Description = null; // default value
+    isActive6.IsMandatory = false; // default value
+    isActive6.Label = "Is Active";
+    isActive6.NameInJSON = null; // default value
+    
+    var assignedUsers = projectSummary.CreateAttribute("AssignedUsers");
+    assignedUsers.DataType = eSpace.IntegerType;
+    assignedUsers.SetDefaultValue(null); // default value
+    assignedUsers.Description = null; // default value
+    assignedUsers.IsMandatory = false; // default value
+    assignedUsers.Label = "Assigned Users";
+    assignedUsers.NameInJSON = null; // default value
+    
     /*** creating IStructure 'TimeEntryInput' ***/
     var timeEntryInput = eSpace.CreateStructure("TimeEntryInput");
     timeEntryInput.Description = "Minutes and description entered for one project on one day.";
@@ -1074,13 +1321,13 @@
     timeEntryInput.Public = true;
     timeEntryInput.Shareable = true;
     
-    var projectId4 = timeEntryInput.CreateAttribute("ProjectId");
-    projectId4.DataType = project.IdentifierType;
-    projectId4.SetDefaultValue(null); // default value
-    projectId4.Description = null; // default value
-    projectId4.IsMandatory = false; // default value
-    projectId4.Label = "Project";
-    projectId4.NameInJSON = null; // default value
+    var projectId6 = timeEntryInput.CreateAttribute("ProjectId");
+    projectId6.DataType = project.IdentifierType;
+    projectId6.SetDefaultValue(null); // default value
+    projectId6.Description = null; // default value
+    projectId6.IsMandatory = false; // default value
+    projectId6.Label = "Project";
+    projectId6.NameInJSON = null; // default value
     
     var minutes3 = timeEntryInput.CreateAttribute("Minutes");
     minutes3.DataType = eSpace.IntegerType;
@@ -1098,6 +1345,39 @@
     description4.Label = "Description";
     description4.Length = 250;
     description4.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'UserOption' ***/
+    var userOption = eSpace.CreateStructure("UserOption");
+    userOption.Description = "A user for a dropdown: Id, name and username (User_GetActive).";
+    userOption.Folder = null; // default value
+    userOption.Public = true;
+    userOption.Shareable = true;
+    
+    var userId4 = userOption.CreateAttribute("UserId");
+    userId4.DataType = user.IdentifierType;
+    userId4.SetDefaultValue(null); // default value
+    userId4.Description = null; // default value
+    userId4.IsMandatory = false; // default value
+    userId4.Label = "User";
+    userId4.NameInJSON = null; // default value
+    
+    var name5 = userOption.CreateAttribute("Name");
+    name5.DataType = eSpace.TextType;
+    name5.SetDefaultValue(null); // default value
+    name5.Description = null; // default value
+    name5.IsMandatory = false; // default value
+    name5.Label = "Name";
+    name5.Length = 250;
+    name5.NameInJSON = null; // default value
+    
+    var username = userOption.CreateAttribute("Username");
+    username.DataType = eSpace.TextType;
+    username.SetDefaultValue(null); // default value
+    username.Description = null; // default value
+    username.IsMandatory = false; // default value
+    username.Label = "Username";
+    username.Length = 250;
+    username.NameInJSON = null; // default value
     
     /*** creating IStructure 'WeekDayHeader' ***/
     var weekDayHeader = eSpace.CreateStructure("WeekDayHeader");
@@ -1286,41 +1566,41 @@
     weeklyProjectRow.Public = true;
     weeklyProjectRow.Shareable = true;
     
-    var projectId5 = weeklyProjectRow.CreateAttribute("ProjectId");
-    projectId5.DataType = project.IdentifierType;
-    projectId5.SetDefaultValue(null); // default value
-    projectId5.Description = null; // default value
-    projectId5.IsMandatory = false; // default value
-    projectId5.Label = "Project";
-    projectId5.NameInJSON = null; // default value
+    var projectId7 = weeklyProjectRow.CreateAttribute("ProjectId");
+    projectId7.DataType = project.IdentifierType;
+    projectId7.SetDefaultValue(null); // default value
+    projectId7.Description = null; // default value
+    projectId7.IsMandatory = false; // default value
+    projectId7.Label = "Project";
+    projectId7.NameInJSON = null; // default value
     rows.DataType = eSpace.GetOrCreateListType(weeklyProjectRow);
     
-    var clientName3 = weeklyProjectRow.CreateAttribute("ClientName");
-    clientName3.DataType = eSpace.TextType;
-    clientName3.SetDefaultValue(null); // default value
-    clientName3.Description = null; // default value
-    clientName3.IsMandatory = false; // default value
-    clientName3.Label = "Client Name";
-    clientName3.Length = 100;
-    clientName3.NameInJSON = null; // default value
+    var clientName5 = weeklyProjectRow.CreateAttribute("ClientName");
+    clientName5.DataType = eSpace.TextType;
+    clientName5.SetDefaultValue(null); // default value
+    clientName5.Description = null; // default value
+    clientName5.IsMandatory = false; // default value
+    clientName5.Label = "Client Name";
+    clientName5.Length = 100;
+    clientName5.NameInJSON = null; // default value
     
-    var projectName3 = weeklyProjectRow.CreateAttribute("ProjectName");
-    projectName3.DataType = eSpace.TextType;
-    projectName3.SetDefaultValue(null); // default value
-    projectName3.Description = null; // default value
-    projectName3.IsMandatory = false; // default value
-    projectName3.Label = "Project Name";
-    projectName3.Length = 100;
-    projectName3.NameInJSON = null; // default value
+    var projectName4 = weeklyProjectRow.CreateAttribute("ProjectName");
+    projectName4.DataType = eSpace.TextType;
+    projectName4.SetDefaultValue(null); // default value
+    projectName4.Description = null; // default value
+    projectName4.IsMandatory = false; // default value
+    projectName4.Label = "Project Name";
+    projectName4.Length = 100;
+    projectName4.NameInJSON = null; // default value
     
-    var projectCode3 = weeklyProjectRow.CreateAttribute("ProjectCode");
-    projectCode3.DataType = eSpace.TextType;
-    projectCode3.SetDefaultValue(null); // default value
-    projectCode3.Description = null; // default value
-    projectCode3.IsMandatory = false; // default value
-    projectCode3.Label = "Project Code";
-    projectCode3.Length = 30;
-    projectCode3.NameInJSON = null; // default value
+    var projectCode4 = weeklyProjectRow.CreateAttribute("ProjectCode");
+    projectCode4.DataType = eSpace.TextType;
+    projectCode4.SetDefaultValue(null); // default value
+    projectCode4.Description = null; // default value
+    projectCode4.IsMandatory = false; // default value
+    projectCode4.Label = "Project Code";
+    projectCode4.Length = 30;
+    projectCode4.NameInJSON = null; // default value
     
     var cells = weeklyProjectRow.CreateAttribute("Cells");
     cells.DataType = eSpace.GetOrCreateListType(weeklyCell);

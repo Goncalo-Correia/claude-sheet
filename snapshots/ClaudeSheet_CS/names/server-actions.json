@@ -135,8 +135,48 @@
     "IsReferenced": true
   },
   {
+    "Name": "Project_CreateOrUpdate",
+    "Description": "Creates or updates a project (SheetAdmin only). Name and Code are trimmed and required, the client must exist and be active, and Code is unique per client (case-insensitive by the database collation). Raises ProjectValidation with a user-facing message otherwise. Returns the project's Id.",
+    "IsReferenced": false
+  },
+  {
     "Name": "Project_GetAssignedToUser",
     "Description": "Active projects (with active client) the current user is assigned to on ForDate, sorted by client and project name.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_GetById",
+    "Description": "One project (ProjectRecord) for the admin detail screen (SheetAdmin only). Raises ProjectValidation when the project doesn't exist.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_GetList",
+    "Description": "Projects for the admin list (SheetAdmin only), with client name and the number of distinct users with an active assignment that hasn't ended, sorted by client and project name. ClientId filters by client (empty = all); IncludeInactive also returns deactivated projects.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_SetActive",
+    "Description": "Activates or deactivates a project (SheetAdmin only); projects are deactivated instead of deleted (ProjectAssignment.ProjectId and TimeEntry.ProjectId are Protect). Inactive projects are no longer offered to users (Project_GetAssignedToUser filters on Project.IsActive).",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ProjectAssignment_CreateOrUpdate",
+    "Description": "Creates or updates an assignment (SheetAdmin only): user and start date required; EndDate empty (open end) or not before StartDate; project and its client active; no overlap with another active period of the same user and project, nor the same start date (ADR 0002). Raises AssignmentValidation with a user-facing message otherwise. Saves the assignment as active and returns its Id.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ProjectAssignment_Delete",
+    "Description": "Deletes an assignment (SheetAdmin only), only when its user has no TimeEntry on its project between StartDate and EndDate (open end = no limit). Otherwise raises AssignmentValidation asking to end it instead (ProjectAssignment_End).",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ProjectAssignment_End",
+    "Description": "Ends an assignment on EndDate (SheetAdmin only): EndDate required and not before the assignment's StartDate. Raises AssignmentValidation otherwise. Use it instead of ProjectAssignment_Delete once the user has time entries.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "ProjectAssignment_GetList",
+    "Description": "Assignments of a project (ProjectId) or of a user (UserId), or both, with project, client and user names and Status on today's date (Inactive, Upcoming, Ended, Active), sorted by client, project, user and start date (SheetAdmin only). Raises AssignmentValidation when both are empty.",
     "IsReferenced": false
   },
   {
@@ -152,6 +192,11 @@
   {
     "Name": "Settings_GetDailyExpectedMinutes",
     "Description": "Returns the DailyExpectedMinutes site property (minutes a user is expected to record per working day), for modules that can't read the site property directly.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "User_GetActive",
+    "Description": "Active users for a dropdown (SheetAdmin only): UserId, name and username, sorted by name. Used by the assignment popup in ClaudeSheet.",
     "IsReferenced": false
   }
 ]

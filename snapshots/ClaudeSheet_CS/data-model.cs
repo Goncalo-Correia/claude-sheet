@@ -575,7 +575,7 @@
     
     var projectId = projectAssignment.CreateAttribute("ProjectId");
     projectId.DataType = project.IdentifierType;
-    projectId.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    projectId.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
     projectId.Description = null; // default value
     projectId.IsMandatory = true;
     projectId.IsSearchable = false; // default value
