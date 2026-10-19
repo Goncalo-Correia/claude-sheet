@@ -25,7 +25,7 @@ Bring every action flow of ClaudeSheet in line with the new **Flow layout** rule
 - Allowed diagonals: For Each loop-backs, and merges into a non-End node (noted in the implementation notes).
 - **No crossings** (only in very exceptional, documented cases) and **no overlaps**.
 
-### Current state (queries/flow-layout.cs, 2026-10-15)
+### Current state (checks/flow-layout.md, 2026-10-15)
 
 64 flows: 292 vertical, 48 horizontal, 18 loop-back, 4 merge, **41 other diagonal**, **8 crossings**, 0 overlaps. **15 flows break the rules:**
 
@@ -37,7 +37,7 @@ Bring every action flow of ClaudeSheet in line with the new **Flow layout** rule
 - HoursCalendar: OnInitialize (2 other diagonals), OnClick_ConfirmFillButton (1), OnClick_DayCell (1)
 - DayStatusKPIs OnAfterFetch_GetKPIs (1), TotalHoursMonth OnAfterFetch_GetSummary (1)
 
-### Expected result (dry run of queries/layout-flow.cs on all 64 flows)
+### Expected result (dry run of checks/layout-flow.md on all 64 flows)
 
 - other diagonals 41 → 0, crossings 8 → 1, overlaps 0 → 0, merges 4 (allowed), loop-backs 18 (allowed)
 - 7 new End nodes
@@ -55,7 +55,7 @@ Bring every action flow of ClaudeSheet in line with the new **Flow layout** rule
 
 ## Acceptance criteria
 
-- [ ] A01 · AC2.1 Given the module after TT2, When queries/flow-layout.cs runs, Then every flow shows 0 other diagonals, 0 crossings and 0 overlaps
+- [ ] A01 · AC2.1 Given the module after TT2, When checks/flow-layout.md runs, Then every flow shows 0 other diagonals, 0 crossings and 0 overlaps
 - [ ] A02 · AC2.2 Given any flow, Then the main path runs straight down from Start to End and If False / Switch branches leave horizontally on the same row
 - [ ] A03 · AC2.3 Given any If or Switch branch that ends the flow, Then it ends on its own End node (no connector into a shared End)
 - [ ] A04 · AC2.4 Given any For Each, Then its body is to the right and the flow after the loop continues below the body; the loop-back is the only diagonal
@@ -66,20 +66,20 @@ Bring every action flow of ClaudeSheet in line with the new **Flow layout** rule
 
 ## Implementation plan
 
-1. P01 · Run queries/flow-layout.cs on the live module and confirm the list of flows that break the rules (15 expected)
-2. P02 · Run queries/layout-flow.cs with the 15 flows as targets: DaySheet_Save, Bootstrap, DaySheet_FillPending, DaySheet_Clear, Calendar_GetMonth, DoLogout, Holiday_CreateIfMissing, DaySheet_GetDetail, Calendar_GetMonthSummary, Project_GetAssignedToUser, HoursCalendar OnInitialize, OnClick_ConfirmFillButton, OnClick_DayCell, DayStatusKPIs OnAfterFetch_GetKPIs, TotalHoursMonth OnAfterFetch_GetSummary
+1. P01 · Run checks/flow-layout.md on the live module and confirm the list of flows that break the rules (15 expected)
+2. P02 · Run checks/layout-flow.md with the 15 flows as targets: DaySheet_Save, Bootstrap, DaySheet_FillPending, DaySheet_Clear, Calendar_GetMonth, DoLogout, Holiday_CreateIfMissing, DaySheet_GetDetail, Calendar_GetMonthSummary, Project_GetAssignedToUser, HoursCalendar OnInitialize, OnClick_ConfirmFillButton, OnClick_DayCell, DayStatusKPIs OnAfterFetch_GetKPIs, TotalHoursMonth OnAfterFetch_GetSummary
 3. P03 · Verify each re-laid-out flow keeps the same connectors (same source → target pairs, apart from branches redirected to their new End nodes)
 4. P04 · Fix by hand the remaining DaySheet_Save crossing (re-route the merge so it rejoins horizontally, or add an End node if the branch can finish there)
 5. P05 · Review the merge diagonals in DaySheet_Save and Bootstrap: make the merge connector horizontal where possible, otherwise note why in the implementation notes
-6. P06 · Run queries/flow-layout.cs again: every flow shows 0 other diagonals, 0 crossings and 0 overlaps; getValidationMessages returns 0 errors; merge
+6. P06 · Run checks/flow-layout.md again: every flow shows 0 other diagonals, 0 crossings and 0 overlaps; getValidationMessages returns 0 errors; merge
 7. P07 · Review with outsystems-mcp-code-review (Conventions section: all flows pass), publish with outsystems-mcp-publish and refresh the snapshots
 
 ## Implementation notes
 
 - Implemented 2026-10-15 in **3 `applyModelApiCode` saves**, all on the same 15 flows (P02). Each save is a layout lambda that also checks the connectors (P03): every connector keeps its target, and the only allowed change is a connector moved from an End node to a newly created End. A failed check aborts the save. Calls went over raw HTTP, as in US3 and TT1.
 - **P01:** the live report matched the card exactly: 64 flows, 41 other diagonals, 8 crossings, 15 flows breaking the rules.
-- **Save 1** (`queries/layout-flow.cs` as committed, rule-for-rule): other diagonals 41 → 0, crossings 8 → 1, and 7 new End nodes. One End each in DaySheet_Clear, DoLogout, Holiday_CreateIfMissing, DaySheet_Save, HoursCalendar OnClick_DayCell, TotalHoursMonth OnAfterFetch_GetSummary and DayStatusKPIs OnAfterFetch_GetKPIs.
-- **The layout tool was improved during the work** (saves 2 and 3), because a grid dump showed problems the counters didn't measure. `queries/layout-flow.cs` and `queries/flow-layout.cs` now hold the final version:
+- **Save 1** (`checks/layout-flow.md` as committed, rule-for-rule): other diagonals 41 → 0, crossings 8 → 1, and 7 new End nodes. One End each in DaySheet_Clear, DoLogout, Holiday_CreateIfMissing, DaySheet_Save, HoursCalendar OnClick_DayCell, TotalHoursMonth OnAfterFetch_GetSummary and DayStatusKPIs OnAfterFetch_GetKPIs.
+- **The layout tool was improved during the work** (saves 2 and 3), because a grid dump showed problems the counters didn't measure. `checks/layout-flow.md` and `checks/flow-layout.md` now hold the final version:
   - **Staircase main path:** DaySheet_Save's validation Ifs sent the Raise Exception down and the real continuation right, so the main path drifted 6 columns. Now the taller branch goes down and the error branch goes right.
   - **Far-right side branches:** a side branch was placed right of *everything* below it (the first error was at column 10). Now it takes the first column that is free in the rows it uses.
   - **Connectors through nodes:** the report now counts a connector passing within 400 units of a node it doesn't connect as an overlap. There were 8 after save 2. Fixed with two changes: an optional step that rejoins goes right (Bootstrap 'Has SheetUser?'); and loop bodies (For Each, or an If branch that leads back to its If, like HoursCalendar.OnInitialize) go far enough right that the loop-back clears them.
@@ -96,7 +96,7 @@ Bring every action flow of ClaudeSheet in line with the new **Flow layout** rule
 
 ## Trail
 
-- Changes: `changes/2026-10-15/160952-ClaudeSheet-TT2.cs` (first layout of the 15 flows), `161209` (taller branch down, range-aware columns), `161841` (final layout: optional steps, loops clear). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
+- Changes: `changes/TT2-ClaudeSheet.md`: save 1 (first layout of the 15 flows), 2 (taller branch down, range-aware columns), 3 (final layout: optional steps, loops clear). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
 - Review: `reviews/ClaudeSheet/TT2.md` (plan check round 1, review round 1: all approved; A01, A02, A04, N01–N03 accepted despite Rejected tag)
 - Published: see `PUBLISHES.md` (2026-10-15 16:33, success (manual))
 - Snapshots: `snapshots/ClaudeSheet/` refreshed 2026-10-15 (targeted)

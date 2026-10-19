@@ -90,7 +90,7 @@ TT0 (GetMonthSummary, CalendarDayType)
 
 ## Trail
 
-- Changes: `changes/2026-10-15/141529-ClaudeSheet-US3.cs` (static data, structure, block logic), `141603-ClaudeSheet-US3.cs` (widgets), `141633-ClaudeSheet-US3.cs` (theme CSS). Written by Claude from the applied lambdas: the publish was manual and the MCP calls went over raw HTTP, so the publish hook didn't fire.
+- Changes: `changes/US3-ClaudeSheet.md`: save 1 (static data, structure, block logic), 2 (widgets), 3 (theme CSS). Written by Claude from the applied lambdas: the publish was manual and the MCP calls went over raw HTTP, so the publish hook didn't fire.
 - Review: `reviews/ClaudeSheet/US3.md` (plan check round 1 and review round 1: all approved)
 - Published: see `PUBLISHES.md` (2026-10-15 14:34, success (manual))
 - Snapshots: `snapshots/ClaudeSheet/` refreshed 2026-10-15 (targeted)

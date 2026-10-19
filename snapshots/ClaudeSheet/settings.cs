@@ -1,2 +1,0 @@
-(OutSystems.Model.IESpace eSpace) => {
-}

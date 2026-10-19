@@ -6,7 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-19
 - **Depends on:** TT5 (SheetAdmin role, Admin UI flow)
-- **Source:** investigation `investigations/2026-10-16-full-app-gaps.md` (findings F02, F09), approved 2026-10-19
+- **Source:** gap analysis of 2026-10-16, findings F02, F09, approved 2026-10-19 (the analysis file is in commit 5bb59c3)
 - **Trello:** https://trello.com/c/LNT15Ag2
 
 ## Story
@@ -78,7 +78,7 @@ Decisions before building (2026-10-19): the list returns a public structure **Cl
 
 ## Trail
 
-- Changes: `changes/2026-10-19/115432-ClaudeSheet_CS-US6.cs` (ClientValidation, ClientSummary, 4 Client actions), `changes/2026-10-19/132839-ClaudeSheet-US6.cs` (Clients, ClientDetail, Menu). Written by Claude from the applied code (manual publishes).
+- Changes: `changes/US6-ClaudeSheet_CS.md` (ClientValidation, ClientSummary, 4 Client actions), `changes/US6-ClaudeSheet.md` (Clients, ClientDetail, Menu). Written by Claude from the applied code (manual publishes).
 - Review: `reviews/ClaudeSheet_CS/US6.md` (plan check + review round 1 approved, P01 accepted despite Rejected), `reviews/ClaudeSheet/US6.md` (plan check + review round 1 approved, P04 and P05 accepted despite Rejected)
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS 13:13, ClaudeSheet 13:45; the MCP attempts were blocked)
 - Snapshots: `snapshots/ClaudeSheet_CS/` and `snapshots/ClaudeSheet/` refreshed 2026-10-19 (targeted)

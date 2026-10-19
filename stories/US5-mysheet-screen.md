@@ -123,7 +123,7 @@ Decisions agreed before building (2026-10-16): layout LayoutTopMenu; Login and I
 
 ## Trail
 
-- Changes: `changes/2026-10-16/111154-ClaudeSheet-US5.cs` (role reference + Everyone on Login / InvalidPermissions), `111502` (MySheet screen, menu link, default screen), `111649` (warning cleanup in the blocks). Written by Claude from the applied code (manual publish, so the hook logged nothing).
+- Changes: `changes/US5-ClaudeSheet.md`: save 1 (role reference + Everyone on Login / InvalidPermissions), 2 (MySheet screen, menu link, default screen), 3 (warning cleanup in the blocks). Written by Claude from the applied code (manual publish, so the hook logged nothing).
 - Review: `reviews/ClaudeSheet/US5.md` (plan check round 1: all approved; P15 and P16 accepted despite Rejected tag)
 - Review: round 1 approved all 26 rows.
 - Published: see `PUBLISHES.md` (2026-10-16 11:38, success (manual); the 11:36 MCP attempt was blocked)

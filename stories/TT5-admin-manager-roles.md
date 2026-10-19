@@ -5,7 +5,7 @@
 - **Modules:** ClaudeSheet_CS, ClaudeSheet (producer first)
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-19
-- **Source:** investigation `investigations/2026-10-16-full-app-gaps.md` (findings F01, F07, F12, F15), approved 2026-10-19
+- **Source:** gap analysis of 2026-10-16, findings F01, F07, F12, F15, approved 2026-10-19 (the analysis file is in commit 5bb59c3)
 - **Trello:** https://trello.com/c/kzWSgkuL
 
 ## Story
@@ -40,7 +40,7 @@ Dependencies to add in Service Studio › Manage Dependencies › ClaudeSheet_CS
 
 - Implemented 2026-10-19 in **2 `applyModelApiCode` saves**:
   1. the roles, the site property, the Bootstrap admin loop and the deletion of Minutes_Format;
-  2. the layout of Bootstrap with `queries/layout-flow.cs`.
+  2. the layout of Bootstrap with `checks/layout-flow.md`.
 - Service Studio had restarted since the last session (the old token was rejected and the module keys changed); a new session token was issued. ClaudeSheet_CS was confirmed to be the same module (key `Hff6YxyWCUWs0l+vxIrNNw`).
 - **Roles (P01):** SheetAdmin and SheetManager, both public, with descriptions. The platform creates their Check/Grant/Revoke actions.
 - **Seed admin (P02):**
@@ -48,7 +48,7 @@ Dependencies to add in Service Studio › Manage Dependencies › ClaudeSheet_CS
   - Bootstrap: after the SeedTestUsernames loop, `Admin seed list` (SeedList = ",<names>,") → aggregate GetSeedAdmins (active users whose username is in the list) → For Each. Its body: `Has SheetUser?` (false → GrantSheetUserRole2) → `Has SheetAdmin?` (false → GrantSheetAdminRole) → back to the For Each. The existing End follows the loop.
   - Checks before granting, as in the existing user loop, so the action stays safe to run more than once. The description now mentions the admin seed.
 - **P02b:** deleted the unused, non-public server action Minutes_Format (agreed 2026-10-19); ClaudeSheet keeps its own client action. ClaudeSheet_CS now has 0 validation messages.
-- **Flow layout gate:** Bootstrap was laid out with `queries/layout-flow.cs`. Report: 36 vertical, 6 horizontal, 6 loop-backs, 2 merges, 0 other diagonals, 0 crossings, 0 overlaps. The 2 merge diagonals were there before TT5: "Client missing?" / "Project missing?" rejoin the main path after the optional Create step (the Assign at the right rejoins GetSeedProject and the first Holiday_CreateIfMissing).
+- **Flow layout gate:** Bootstrap was laid out with `checks/layout-flow.md`. Report: 36 vertical, 6 horizontal, 6 loop-backs, 2 merges, 0 other diagonals, 0 crossings, 0 overlaps. The 2 merge diagonals were there before TT5: "Client missing?" / "Project missing?" rejoin the main path after the optional Create step (the Assign at the right rejoins GetSeedProject and the first Holiday_CreateIfMissing).
 
 ### ClaudeSheet
 
@@ -60,7 +60,7 @@ Dependencies to add in Service Studio › Manage Dependencies › ClaudeSheet_CS
 
 ## Trail
 
-- Changes: `changes/2026-10-19/112014-ClaudeSheet_CS-TT5.cs` (roles, site property, Bootstrap admin seed, Minutes_Format deleted), `112108` (Bootstrap layout); ClaudeSheet: `113630-ClaudeSheet-TT5.cs` (UI flow Admin). Written by Claude from the applied code (manual publishes).
+- Changes: `changes/TT5-ClaudeSheet_CS.md`: save 1 (roles, site property, Bootstrap admin seed, Minutes_Format deleted), 2 (Bootstrap layout); `changes/TT5-ClaudeSheet.md` (UI flow Admin). Written by Claude from the applied code (manual publishes).
 - Review: `reviews/ClaudeSheet_CS/TT5.md` (plan check + review round 1 approved, N01 accepted despite Rejected), `reviews/ClaudeSheet/TT5.md` (plan check + review round 1 approved)
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS 11:32, ClaudeSheet 11:45; the MCP attempts were blocked)
 - Snapshots: `snapshots/ClaudeSheet_CS/` (targeted) and `snapshots/ClaudeSheet/` (light) refreshed 2026-10-19

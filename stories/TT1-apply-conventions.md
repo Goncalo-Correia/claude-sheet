@@ -19,7 +19,7 @@ Bring the existing ClaudeSheet code in line with the new rules in `docs/conventi
 - **Reusable server and client actions**: `<Entity>_<Verb>[<Qualifier>]`, e.g. `Item_GetById`, `Item_CreateOrUpdate`, `Item_GetNewest`.
 - **Screen and block actions bound to an event**: `<Event>_<Target>`, e.g. `OnClick_Item`, `OnChange_Item`, `OnAfterFetch_GetItem`. Lifecycle handlers take the event name (`OnInitialize`, `OnReady`, `OnParametersChanged`). A handler shared by several widgets is `<Event>_<Purpose>`.
 - **Helpers** (screen/block actions not bound to an event): verb + noun. An action is never both an event handler and called from other actions.
-- **No overlapping nodes** in any action flow (closer than 900 units on both axes). Checked with `queries/overlapping-nodes.cs`.
+- **No overlapping nodes** in any action flow (closer than 900 units on both axes). Checked with `queries/overlapping-nodes.cs` at the time; the overlap check is now part of `checks/flow-layout.md`.
 
 ### Scope (proposed names, confirm during implementation)
 
@@ -115,7 +115,7 @@ Bring the existing ClaudeSheet code in line with the new rules in `docs/conventi
 
 ## Trail
 
-- Changes: `changes/2026-10-15/150201-ClaudeSheet-TT1.cs` (server renames), `150225` (client renames), `150244` (On After Fetch renames), `150306` (HoursCalendar renames), `150341` (RecalcEditorTotal split), `150418` (flow layout). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
+- Changes: `changes/TT1-ClaudeSheet.md`: save 1 (server renames), 2 (client renames), 3 (On After Fetch renames), 4 (HoursCalendar renames), 5 (RecalcEditorTotal split), 6 (flow layout). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
 - Review: `reviews/ClaudeSheet/TT1.md` (plan check round 1, review round 1: all approved; A03, A07, A10 accepted despite Rejected tag)
 - Published: see `PUBLISHES.md` (2026-10-15 15:37, success (manual))
 - Snapshots: `snapshots/ClaudeSheet/` refreshed 2026-10-15 (targeted); old-name files removed

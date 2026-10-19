@@ -6,7 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-19
 - **Depends on:** TT5 (SheetAdmin role, Admin UI flow), TT7 (admin CSS in the theme)
-- **Source:** investigation `investigations/2026-10-16-full-app-gaps.md` (findings F05, F10), approved 2026-10-19
+- **Source:** gap analysis of 2026-10-16, findings F05, F10, approved 2026-10-19 (the analysis file is in commit 5bb59c3)
 - **Trello:** https://trello.com/c/PIuqB7g0 (moved to Done 2026-10-19)
 
 ## Story
@@ -81,7 +81,7 @@ Decisions before building (2026-10-19): the Holiday entity can't tell fixed-date
 
 ## Trail
 
-- Changes: `changes/2026-10-19/154917-ClaudeSheet_CS-US8.cs`, `changes/2026-10-19/160753-ClaudeSheet-US8.cs`
+- Changes: `changes/US8-ClaudeSheet_CS.md`, `changes/US8-ClaudeSheet.md`
 - Review: `reviews/ClaudeSheet_CS/US8.md` (plan check + review round 1 approved, P01 accepted despite Rejected), `reviews/ClaudeSheet/US8.md` (plan check + review round 1 approved)
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS 16:00, ClaudeSheet 16:13; the MCP attempts were blocked)
 - Snapshots: `snapshots/ClaudeSheet_CS/` and `snapshots/ClaudeSheet/` refreshed 2026-10-19 (targeted)

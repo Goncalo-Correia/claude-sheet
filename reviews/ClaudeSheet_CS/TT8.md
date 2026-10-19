@@ -6,7 +6,7 @@
 |---|---|---|---|---|
 | P01 | 11 server-action folders, 29 actions moved | Approved | Logic › Server Actions folders Calendar, Client, Date, DaySheet, Holiday, Project, ProjectAssignment, ProjectHours, Settings, User, Setup; report 0 without folder | Yes |
 | P02 | Label 84 nodes, rename suffixed Execute nodes | Approved | report 0 unlabelled, 0 suffixed; 17 renames (incl. CreateHoliday_NewYear for consistency); 0 validation messages | Yes |
-| P05 | queries/node-names.cs + docs | Approved | file added; queries/README.md and docs/conventions.md › Node names updated | Yes |
+| P05 | checks/node-names.md + docs | Approved | file added; checks/README.md and docs/conventions.md › Node names updated | Yes |
 
 No reasons (no No answers).
 

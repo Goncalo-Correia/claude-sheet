@@ -31,7 +31,7 @@ Split ClaudeSheet into two modules, as decided in **ADR 0004** (`docs/decisions/
 
 ### How
 
-- The Model API can't move an element between modules. Each element is **recreated** in ClaudeSheet_CS from its creation code in `snapshots/ClaudeSheet/` (data-model.cs, structures.cs, server-actions/*.cs, settings.cs, timers.cs, user-exceptions.cs, roles/). `AddDependency` lines are replaced by `eSpace.References.Named(...)`.
+- The Model API can't move an element between modules. Each element is **recreated** in ClaudeSheet_CS from its creation code in `snapshots/ClaudeSheet/` (data-model.md, structures.md, server-actions/*.cs, settings.md, timers.md, user-exceptions.md, roles/). `AddDependency` lines are replaced by `eSpace.References.Named(...)`.
 - ClaudeSheet then **rebinds** every use to the CS element: Execute Server Action nodes, structure data types, Entities.X expressions, role checks, the exception handler for DaySheetValidation, and Site.DailyExpectedMinutes. Only after that are the local copies deleted. Each rebind is checked with a throw-probe before it's saved.
 - It's a multi-module story (CLAUDE.md › Multi-module stories): a ClaudeSheet_CS subagent goes first; then the CS review and publish; then **the user adds the CS dependencies in Manage Dependencies**; then the ClaudeSheet subagent runs after `omlRefreshReferences`.
 
@@ -55,7 +55,7 @@ TT1, TT2, US4 (current state of the module). TT3 is independent.
 - [ ] A02 · AC-TT4.2 Given ClaudeSheet after TT4, Then it has no entities, static entities, structures, timers, processes, site properties, user exceptions or roles of its own, and no server actions except DoLogin and DoLogout
 - [ ] A03 · AC-TT4.3 Given the references, Then ClaudeSheet references ClaudeSheet_CS and ClaudeSheet_CS does not reference ClaudeSheet
 - [ ] A04 · AC-TT4.4 Given ClaudeSheet_CS, Then its entities are public with Read Only = Yes, and only elements used by ClaudeSheet are public
-- [ ] A05 · AC-TT4.5 Given both modules, Then getValidationMessages returns 0 errors and queries/flow-layout.cs reports no rule violations beyond the ones already accepted
+- [ ] A05 · AC-TT4.5 Given both modules, Then getValidationMessages returns 0 errors and checks/flow-layout.md reports no rule violations beyond the ones already accepted
 - [ ] A06 · AC-TT4.6 Given both modules published and Timer_Bootstrap run, Then the seed clients, projects, holidays and assignments exist in the ClaudeSheet_CS tables and the seed users have the SheetUser role
 - [ ] A07 · AC-TT4.7 Given the mockup scenario (October 2026), When I use TotalHoursMonth, HoursCalendar, DayStatusKPIs and WeeklyProjectHours, Then they behave exactly as before (totals, colours, KPI counts, day editor, fill pending days, weekly grid)
 - [ ] A08 · AC-TT4.8 Given a user without SheetUser, When a block calls a ClaudeSheet_CS server action, Then the role exception is raised and no data is returned
@@ -134,13 +134,13 @@ Dependencies to add in Service Studio › Manage Dependencies (ClaudeSheet → C
 - **Site.DailyExpectedMinutes → Settings_GetDailyExpectedMinutes:** in HoursCalendar › GetCalendar, an Execute Server Action node goes between Calendar_GetMonthSummary2 and the Assign, and `DailyExpectedMinutes = Settings_GetDailyExpectedMinutes.Minutes`. The nodes below moved down one row, so the main column stays vertical.
 - **Deleted (P11):** Timer_Bootstrap; the 12 server actions (all except DoLogin and DoLogout, including the server Minutes_Format and Date_GetWeekStart); the 12 structures; the 8 entities and static entities; DaySheetValidation; the site properties DailyExpectedMinutes and SeedTestUsernames; and the SheetUser role. No screen or block used the role: Login and InvalidPermissions have empty Roles, and a dry run with and without the delete gave the same error count.
 - **Kept:** the client actions Minutes_Format and Date_GetWeekStart, DoLogin and DoLogout, and the template site properties (TenantName, TenantId).
-- **Verified by the main session** on the mutated module: no structures, entities, timers, roles or user exceptions left. The blocks call only ClaudeSheet_CS actions: HoursCalendar (8, including Settings_GetDailyExpectedMinutes), TotalHoursMonth and DayStatusKPIs (Calendar_GetMonthSummary2), and WeeklyProjectHours (ProjectHours_GetWeekly2). 0 validation errors, and flow-layout.cs passes on all 59 flows.
+- **Verified by the main session** on the mutated module: no structures, entities, timers, roles or user exceptions left. The blocks call only ClaudeSheet_CS actions: HoursCalendar (8, including Settings_GetDailyExpectedMinutes), TotalHoursMonth and DayStatusKPIs (Calendar_GetMonthSummary2), and WeeklyProjectHours (ProjectHours_GetWeekly2). 0 validation errors, and flow-layout.md passes on all 59 flows.
 - **Merge:** my HTTP client timed out after 15 minutes while the Compare-and-Merge window was open. The merge still went through when the user finished it: the out file was deleted, and the live module shows the validated state. A retry was refused because there was no working copy left to merge.
 - **The "2" suffix, solved without manual steps.** `omlRefreshReferences` after the merge didn't drop it ("No references needed refreshing"). However, the consumer's local name of a referenced element can be renamed through the Model API (`ReferenceAction.Name = …`, and likewise for structures and entities). One extra save renamed the 28 suffixed references back to their CS names. The Execute nodes and every expression followed automatically (e.g. `Calendar_GetMonthSummary.Summary`, `Entities.CalendarDayType.Pending`), with 0 errors and all 59 flows passing the layout report. The user didn't need to remove and re-add dependencies.
 
 ## Trail
 
-- Changes: `changes/2026-10-15/175023…175635-ClaudeSheet_CS-TT4.cs` (6, by the CS subagent), `183159-ClaudeSheet-TT4.cs` and `183436-ClaudeSheet-TT4.cs` (by the ClaudeSheet subagent), `201539-ClaudeSheet-TT4.cs` (suffix cleanup, main session). Written by Claude: the publishes were manual and subagent calls aren't in the main transcript.
+- Changes: `changes/TT4-ClaudeSheet_CS.md` (6 saves, by the CS subagent); `changes/TT4-ClaudeSheet.md`: saves 1 and 2 (by the ClaudeSheet subagent), 3 (suffix cleanup, main session). Written by Claude: the publishes were manual and subagent calls aren't in the main transcript.
 - Reviews: `reviews/ClaudeSheet_CS/TT4.md`, `reviews/ClaudeSheet/TT4.md` (plan checks and reviews, round 1, all approved)
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS 18:13, ClaudeSheet 21:59)
 - Snapshots: `snapshots/ClaudeSheet_CS/` (first, full), `snapshots/ClaudeSheet/` (targeted; moved elements' files removed)

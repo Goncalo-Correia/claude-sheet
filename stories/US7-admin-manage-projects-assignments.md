@@ -6,7 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-19
 - **Depends on:** TT5 (SheetAdmin role, Admin UI flow), US6 (Client_GetList for the client dropdown and filter)
-- **Source:** investigation `investigations/2026-10-16-full-app-gaps.md` (findings F03, F04, F08, F23), approved 2026-10-19
+- **Source:** gap analysis of 2026-10-16, findings F03, F04, F08, F23, approved 2026-10-19 (the analysis file is in commit 5bb59c3)
 - **Trello:** https://trello.com/c/qfGFuwQ0 (moved to Done 2026-10-19)
 
 ## Story
@@ -68,7 +68,7 @@ Decisions before building (2026-10-19): the popup's user dropdown needs a user l
 - **Flow layout gate:** the 9 actions are vertical with horizontal raise branches: 0 diagonals, 0 crossings, 0 overlaps. No other flow touched.
 - **Merge:** `omlMerge` returned `merged: true`; the live module was re-checked afterwards. Plan check round 1 approved (P01 accepted despite Rejected), see `reviews/ClaudeSheet_CS/US7.md`.
 - **Review:** round 1 approved, all Yes (`reviews/ClaudeSheet_CS/US7.md`). ProjectValidation and AssignmentValidation › Public = Yes set by the user.
-- **Published** 2026-10-19 14:06 by the user (1-Click Publish; the MCP publish was blocked). Change log `changes/2026-10-19/135822-ClaudeSheet_CS-US7.cs`; snapshots refreshed (targeted).
+- **Published** 2026-10-19 14:06 by the user (1-Click Publish; the MCP publish was blocked). Change log `changes/US7-ClaudeSheet_CS.md`; snapshots refreshed (targeted).
 
 ### ClaudeSheet
 
@@ -106,7 +106,7 @@ Decisions before building (2026-10-19): the popup's user dropdown needs a user l
 
 ## Trail
 
-- Changes: `changes/2026-10-19/135822-ClaudeSheet_CS-US7.cs`, `changes/2026-10-19/142335-ClaudeSheet-US7.cs` (screens, menu), `changes/2026-10-19/152218-ClaudeSheet-US7.cs` (dropdown options fix)
+- Changes: `changes/US7-ClaudeSheet_CS.md`; `changes/US7-ClaudeSheet.md`: save 1 (screens, menu), 2 (dropdown options fix)
 - Review: `reviews/ClaudeSheet_CS/US7.md` (plan check + review round 1 approved), `reviews/ClaudeSheet/US7.md` (plan check + review round 1 approved, N02 accepted despite Rejected)
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS 14:06, ClaudeSheet 15:32; the MCP attempts were blocked)
 - Snapshots: `snapshots/ClaudeSheet_CS/` and `snapshots/ClaudeSheet/` refreshed 2026-10-19 (targeted)

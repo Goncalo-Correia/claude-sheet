@@ -26,13 +26,13 @@ Architecture, references, layer rules and what goes where: [docs/architecture.md
 | Path | What it holds | Who writes it |
 |---|---|---|
 | `stories/` | One file per user story or technical task: what to build, acceptance criteria, status | Claude + team |
-| `changes/<date>/` | Every `applyModelApiCode` lambda that saved an OML and was then published, with module, story and outcome | `outsystems-mcp-publish` skill |
-| `snapshots/<Module>/` | Model API code of each module as of the last publish | `outsystems-mcp-publish` skill |
+| `changes/<story>-<Module>.md` | Every `applyModelApiCode` lambda that saved an OML and was then published, one section per save with its date and outcome | `outsystems-mcp-publish` skill |
+| `snapshots/<Module>/` | One `.md` per element: its Model API code as of the last publish (lines that only set a default are left out) | `outsystems-mcp-publish` skill |
 | `reviews/<Module>/` | Review rounds from `outsystems-mcp-code-review` | Claude |
-| `PUBLISHES.md` | Every `omlPublish` call and its result | `outsystems-mcp-publish` skill |
+| `PUBLISHES.md` | Every publish and its result (blocked MCP calls are not recorded) | `outsystems-mcp-publish` skill |
 | `docs/` | Architecture, conventions, decisions (ADRs) | Claude + team |
-| `queries/` | Reusable ModelQL queries for `runQuery` | Claude + team |
-| `.claude/` | Settings and project skills | Setup |
+| `checks/` | Model API checks and fixes for the conventions (flow layout, node names), each with how to run it and what passing means | Claude + team |
+| `.claude/` | Settings, project skills, and `state/current-story` | Setup |
 
 ## Workflow for every story or task
 
@@ -41,7 +41,8 @@ Architecture, references, layer rules and what goes where: [docs/architecture.md
 3. **Implement** with `applyModelApiCode`, following the `servicestudio-mcp-oml` skill. Don't write to `changes/` yourself: the lambdas are logged when the module is published (step 6).
 4. **Merge** with `omlMerge` once the last mutation is clean.
 5. **Review** with the `outsystems-mcp-code-review` skill. Save review logs to `reviews/<Module>/<story-id>.md` in this repo, not in `~/.claude/outsystems-reviews/`.
-6. **Publish** with the `outsystems-mcp-publish` skill, and only after the review approves everything. `omlPublish` always asks for confirmation. After a successful publish, the skill's hook records the publish in `PUBLISHES.md` and writes this session's lambdas for the module to `changes/<date>/`.
+6. **Publish** with the `outsystems-mcp-publish` skill, and only after the review approves everything. `omlPublish` always asks for confirmation. After a successful publish, the skill's hook records the publish in `PUBLISHES.md` and appends this session's lambdas for the module to `changes/<story>-<Module>.md`.
+   If the MCP publish is blocked and the user publishes by hand, add the `PUBLISHES.md` row and the `changes/` sections yourself, in the same format.
 7. **Snapshot.** After a successful publish, the `outsystems-mcp-publish` skill refreshes the published module's snapshots. To refresh them without publishing, ask for it ("refresh the snapshot"); the same skill handles it.
 8. **Close out.** Update the story's status and implementation notes. If a design choice was made, add a decision in `docs/decisions/`. Offer to commit; don't commit without asking.
 
@@ -50,7 +51,7 @@ Architecture, references, layer rules and what goes where: [docs/architecture.md
 When a story's plan has steps in more than one module (`## Implementation plan` grouped per module):
 
 1. **Producer first.** ClaudeSheet_CS before ClaudeSheet. ClaudeSheet can only use what ClaudeSheet_CS has **published**.
-2. **One module at a time, in this session.** No subagents. For each module, in order: implement and check it with `applyModelApiCode` (read calls one at a time, its `eSpaceName` on every call), run the conventions gate, then the plan check form + `omlMerge`, the review (`reviews/<Module>/<story>.md`), the publish (the hook logs the lambdas to `changes/`) and the snapshots. Finish one module's chain before starting the next.
+2. **One module at a time, in this session.** No subagents. For each module, in order: implement and check it with `applyModelApiCode` (read calls one at a time, its `eSpaceName` on every call), run the conventions gate, then the plan check form + `omlMerge`, the review (`reviews/<Module>/<story>.md`), the publish (the hook logs the lambdas to `changes/<story>-<Module>.md`) and the snapshots. Finish one module's chain before starting the next.
 3. **Hand-off between modules** (the Model API can't add dependencies, so the user does that one step):
    1. Publish ClaudeSheet_CS.
    2. **Dependency checklist.** From the consumer's plan steps, list every producer element the consumer will use, grouped by type (Entities, Static Entities, Structures, Server Actions, Roles, Exceptions). Show it as a blocking question: *"In **ClaudeSheet** → Manage Dependencies → **ClaudeSheet_CS**, tick: …"* with the answers **Done** / **Not yet**. Also write the list into the story's plan (`Dependencies to add`).

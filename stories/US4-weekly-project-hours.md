@@ -129,13 +129,13 @@ TT0; US2 for real data (can be tested with seed data)
   - **Empty state:** If `HasRows` (`Rows.Length > 0 or not IsDataFetched`) is false, it shows "No projects assigned for this week".
   - **P19:** the table sits in an OutSystems UI `ScrollableArea` (horizontal by default). Below 1024px the table gets `min-width: 960px` and the project column is `position: sticky`.
   - **P20:** role="table" (with an aria-label naming the week), "row", "columnheader", "rowheader" and "cell"; arrows have aria-labels; the root has `aria-busy` while loading. Verify with a screen reader.
-- **Flow layout gate:** `ProjectHours_GetWeekly` was laid out with `queries/layout-flow.cs`, and the block's actions were built vertically with one End per branch. The report on all 7 US4 flows shows 0 other diagonals, 0 crossings and 0 overlaps. Not touched: the 3 For Each layouts from TT2's follow-up (TT3).
+- **Flow layout gate:** `ProjectHours_GetWeekly` was laid out with `checks/layout-flow.md`, and the block's actions were built vertically with one End per branch. The report on all 7 US4 flows shows 0 other diagonals, 0 crossings and 0 overlaps. Not touched: the 3 For Each layouts from TT2's follow-up (TT3).
 - **Theme edit:** the expected `InvalidIconLibrary` sidecar error is ignored as documented. Warnings: "RefreshKey never used", as on the other blocks.
 - **P21 (publish and test)** is not done here.
 
 ## Trail
 
-- Changes: `changes/2026-10-15/165252-ClaudeSheet-US4.cs` (structures + ProjectHours_GetWeekly), `165333` (DayName back to Text), `165354` (layout of ProjectHours_GetWeekly), `165720` (WeeklyProjectHours block), `165753` (theme CSS). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
+- Changes: `changes/US4-ClaudeSheet.md`: save 1 (structures + ProjectHours_GetWeekly), 2 (DayName back to Text), 3 (layout of ProjectHours_GetWeekly), 4 (WeeklyProjectHours block), 5 (theme CSS). Written by Claude from the applied lambdas (manual publish, MCP over raw HTTP).
 - Review: `reviews/ClaudeSheet/US4.md` (plan check round 1, review round 1: all approved; P05 and P21 accepted despite Rejected tag)
 - Published: see `PUBLISHES.md` (2026-10-15 17:09, success (manual))
 - Snapshots: `snapshots/ClaudeSheet/` refreshed 2026-10-15 (targeted)

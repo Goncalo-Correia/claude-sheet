@@ -43,7 +43,7 @@
 
 ## Trail
 
-- Changes: `changes/2026-10-19/153702-ClaudeSheet-TT7.cs`
+- Changes: `changes/TT7-ClaudeSheet.md`
 - Review: `reviews/ClaudeSheet/TT7.md` (plan check + review round 1 approved)
 - Published: see `PUBLISHES.md` (ClaudeSheet 15:42; the MCP attempt was blocked)
 - Snapshots: `snapshots/ClaudeSheet/` refreshed 2026-10-19 (targeted: theme and the four admin screens)

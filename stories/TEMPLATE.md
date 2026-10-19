@@ -34,6 +34,6 @@ What was actually done, per module, deviations from the plan, and anything the n
 
 ## Trail
 
-- Changes: `changes/<date>/…-ClaudeSheet_CS-US-000.cs`, `changes/<date>/…-ClaudeSheet-US-000.cs`
+- Changes: `changes/US-000-ClaudeSheet_CS.md`, `changes/US-000-ClaudeSheet.md`
 - Review: `reviews/ClaudeSheet_CS/US-000.md`, `reviews/ClaudeSheet/US-000.md`
 - Published: see `PUBLISHES.md` (ClaudeSheet_CS first, then ClaudeSheet)
