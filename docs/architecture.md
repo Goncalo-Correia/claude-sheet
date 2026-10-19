@@ -20,12 +20,12 @@ Status: the split is done (TT4, published 2026-10-15). ClaudeSheet_CS holds the 
 | Processes (BPT) | ClaudeSheet_CS | None yet. |
 | Server actions | ClaudeSheet_CS | Public when ClaudeSheet calls them; each starts with the role check. |
 | Structures | ClaudeSheet_CS | Public when ClaudeSheet uses them, including the structures that only feed blocks. |
-| Roles | ClaudeSheet_CS | `SheetUser` is checked by the CS server actions, so it lives there (public); screens in ClaudeSheet reference it. |
+| Roles | ClaudeSheet_CS | Public: `SheetUser` (consultants), `SheetManager` (team view, approvals, reports), `SheetAdmin` (back office). CS server actions check them; screens in ClaudeSheet reference them (Admin screens live in the Admin UI flow, see `conventions.md` › Roles and the menu). |
 | User exceptions | ClaudeSheet_CS | Raised by CS server actions (e.g. `DaySheetValidation`), public so ClaudeSheet can catch them. |
 | Site properties | ClaudeSheet_CS | Read by CS server actions. Site properties can't be shared across modules: ClaudeSheet reads them through a public CS server action (e.g. `Settings_GetDailyExpectedMinutes`). |
 | Screens, blocks, UI flows | ClaudeSheet | |
 | Data actions, screen and block actions | ClaudeSheet | Data actions call CS server actions. |
-| Client actions | ClaudeSheet | Run in the browser; e.g. `Minutes_Format`, `Date_GetWeekStart` (their server versions live in CS). |
+| Client actions | ClaudeSheet | Run in the browser; e.g. `Minutes_Format`. Server-side helpers stay in CS (e.g. `Date_GetWeekStart`); a helper isn't duplicated in the other module unless both sides use it. |
 | Theme, CSS, images, scripts | ClaudeSheet | |
 | Client variables | ClaudeSheet | |
 | Login template (`DoLogin`, `DoLogout`, Common flow) | ClaudeSheet | OutSystems template login flow, kept with the screens that use it. |

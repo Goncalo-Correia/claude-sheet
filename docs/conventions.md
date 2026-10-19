@@ -73,6 +73,18 @@ Which module each element belongs in. The full table and the reasons are in [`ar
 - App-wide CSS goes in the theme. Screen-specific CSS stays on the screen.
 - Every screen has an explicit role check, or is marked Anonymous on purpose.
 
+### Roles and the menu
+
+| Role (ClaudeSheet_CS) | Who | Screens |
+|---|---|---|
+| SheetUser | Consultants who record their time | MainFlow (MySheet) |
+| SheetManager | Team leads: team view, approvals, reports | MainFlow manager screens |
+| SheetAdmin | Back office: clients, projects, assignments, holidays, users, settings | UI flow **Admin** |
+
+- Admin screens go in the UI flow **Admin**, and their Roles list is **SheetAdmin** only. Manager screens list **SheetManager** (plus SheetAdmin when admins need them too).
+- The server actions behind a screen check the same role first (`CheckSheetAdminRole()` / `CheckSheetManagerRole()`); the screen's role is not the security boundary.
+- **Role-gated menu links.** Every link in Common › Menu › PageLinks that opens a role-restricted screen sets **Visible** to the role check of that screen, for example `CheckSheetAdminRole()` for Admin › Projects, or `CheckSheetManagerRole() or CheckSheetAdminRole()` for a report shared by both. A user never sees a link they can't open. The Menu link of each new screen is added by the story that creates the screen.
+
 ## Changes through the MCP
 
 - One story per change set. Don't mix unrelated changes in a single review.

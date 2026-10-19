@@ -10,6 +10,16 @@
     "IsReferenced": false
   },
   {
+    "Name": "SheetAdmin",
+    "Description": "Manages clients, projects, assignments, holidays, users and settings.",
+    "IsReferenced": true
+  },
+  {
+    "Name": "SheetManager",
+    "Description": "Sees and approves the team's sheets and runs reports.",
+    "IsReferenced": true
+  },
+  {
     "Name": "SheetUser",
     "Description": "Users who record their time in MySheet.",
     "IsReferenced": true

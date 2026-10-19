@@ -6,7 +6,7 @@
   },
   {
     "Name": "Bootstrap",
-    "Description": "Seeds reference data when missing: client ICNF, project RUBUS, Portuguese 2026 holidays, and SheetUser + RUBUS assignment for the users in Site.SeedTestUsernames. Safe to run more than once. Run by Timer_Bootstrap.",
+    "Description": "Seeds reference data when missing: client ICNF, project RUBUS, Portuguese 2026 holidays, SheetUser + RUBUS assignment for the users in Site.SeedTestUsernames, and SheetAdmin + SheetUser for the users in Site.SeedAdminUsernames. Safe to run more than once. Run by Timer_Bootstrap.",
     "IsReferenced": false
   },
   {
@@ -113,11 +113,6 @@
     "Name": "LogMessage",
     "Description": "Registers information that can be presented in Service Center in the module general log.",
     "IsReferenced": true
-  },
-  {
-    "Name": "Minutes_Format",
-    "Description": "Formats a number of minutes as hours and minutes, e.g. 2250 -> \"37h30\" (Separator \"h\") or \"37:30\" (Separator \":\"). Minutes always have 2 digits.",
-    "IsReferenced": false
   },
   {
     "Name": "Project_GetAssignedToUser",

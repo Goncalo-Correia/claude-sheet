@@ -3,7 +3,7 @@
     /*** creating IServerAction 'Bootstrap' ***/
     var bootstrap = eSpace.CreateServerAction("Bootstrap");
     bootstrap.CacheInMinutes = null; // default value
-    bootstrap.Description = "Seeds reference data when missing: client ICNF, project RUBUS, Portuguese 2026 holidays, and SheetUser + RUBUS assignment for the users in Site.SeedTestUsernames. Safe to run more than once. Run by Timer_Bootstrap.";
+    bootstrap.Description = "Seeds reference data when missing: client ICNF, project RUBUS, Portuguese 2026 holidays, SheetUser + RUBUS assignment for the users in Site.SeedTestUsernames, and SheetAdmin + SheetUser for the users in Site.SeedAdminUsernames. Safe to run more than once. Run by Timer_Bootstrap.";
     bootstrap.Folder = null; // default value
     bootstrap.Function = false; // default value
     bootstrap.Icon = null; // default value
@@ -292,9 +292,12 @@
     ifNode3.Label = "Has SheetUser?";
     forEachNode.CycleTarget = ifNode3;
     
-    var endNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 6855);
-    endNode.IsDisabled = false; // default value
-    forEachNode.Target = endNode;
+    var assignNode8 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(forEachNode, 6855);
+    assignNode8.IsDisabled = false; // default value
+    assignNode8.Label = "Admin seed list";
+    
+    var assignment12 = assignNode8.CreateAssignment("SeedList", "\",\" + Replace(Site.SeedAdminUsernames, \" \", \"\") + \",\"");
+    forEachNode.Target = assignNode8;
     
     var grantSheetUserRole = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GrantSheetUserRole").ToTheRightOf(ifNode3, 1828);
     var sheetUser = eSpace.Roles.Named("SheetUser");
@@ -319,6 +322,18 @@
     getSeedAssignment.AsDatabaseAggregate.CreateFilter("ProjectAssignment.ProjectId = ProjectId");
     
     ifNode3.TrueTarget = getSeedAssignment;
+    
+    var getSeedAdmins = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetSeedAdmins").ConnectedBelow(assignNode8, 1371);
+    getSeedAdmins.CacheInMinutes = null; // default value
+    getSeedAdmins.Description = null; // default value
+    getSeedAdmins.IsDisabled = false; // default value
+    getSeedAdmins.SetMaxRecords(null); // default value
+    getSeedAdmins.SetStartIndex(null); // default value
+    getSeedAdmins.Timeout = null; // default value
+    var user3 = getSeedAdmins.AsDatabaseAggregate.CreateSource(user2);
+    getSeedAdmins.AsDatabaseAggregate.CreateFilter("User.Is_Active");
+    getSeedAdmins.AsDatabaseAggregate.CreateFilter("Index(SeedList, \",\" + User.Username + \",\") >= 0");
+    
     grantSheetUserRole.Target = getSeedAssignment;
     
     var ifNode4 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(getSeedAssignment, 1371);
@@ -327,22 +342,39 @@
     ifNode4.IsDisabled = false; // default value
     ifNode4.Label = "Assignment missing?";
     
-    var assignNode8 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
-    assignNode8.IsDisabled = false; // default value
-    assignNode8.Label = null; // default value
+    var forEachNode2 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getSeedAdmins, 1371);
+    forEachNode2.IsDisabled = false; // default value
+    forEachNode2.Label = null; // default value
+    forEachNode2.SetMaximumIterations(null); // default value
+    forEachNode2.SetRecordList("GetSeedAdmins.List");
+    forEachNode2.SetStartIndex(null); // default value
     
-    var assignment12 = assignNode8.CreateAssignment("NewAssignment.UserId", "GetSeedUsers.List.Current.User.Id");
+    var assignNode9 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode4, 1371);
+    assignNode9.IsDisabled = false; // default value
+    assignNode9.Label = null; // default value
     
-    var assignment13 = assignNode8.CreateAssignment("NewAssignment.ProjectId", "ProjectId");
+    var assignment13 = assignNode9.CreateAssignment("NewAssignment.UserId", "GetSeedUsers.List.Current.User.Id");
     
-    var assignment14 = assignNode8.CreateAssignment("NewAssignment.StartDate", "NewDate(2026, 1, 1)");
+    var assignment14 = assignNode9.CreateAssignment("NewAssignment.ProjectId", "ProjectId");
     
-    var assignment15 = assignNode8.CreateAssignment("NewAssignment.EndDate", "NullDate()");
+    var assignment15 = assignNode9.CreateAssignment("NewAssignment.StartDate", "NewDate(2026, 1, 1)");
     
-    var assignment16 = assignNode8.CreateAssignment("NewAssignment.IsActive", "True");
-    ifNode4.TrueTarget = assignNode8;
+    var assignment16 = assignNode9.CreateAssignment("NewAssignment.EndDate", "NullDate()");
     
-    var createProjectAssignment = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateProjectAssignment").ConnectedBelow(assignNode8, 1371);
+    var assignment17 = assignNode9.CreateAssignment("NewAssignment.IsActive", "True");
+    ifNode4.TrueTarget = assignNode9;
+    
+    var ifNode5 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ToTheRightOf(forEachNode2, 1828);
+    ifNode5.SetCondition("CheckSheetUserRole(GetSeedAdmins.List.Current.User.Id)");
+    ifNode5.IsDisabled = false; // default value
+    ifNode5.Label = "Has SheetUser?";
+    forEachNode2.CycleTarget = ifNode5;
+    
+    var endNode = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode2, 4113);
+    endNode.IsDisabled = false; // default value
+    forEachNode2.Target = endNode;
+    
+    var createProjectAssignment = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("CreateProjectAssignment").ConnectedBelow(assignNode9, 1371);
     createProjectAssignment.Action = projectAssignment.CreateAction;
     createProjectAssignment.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     createProjectAssignment.IsDisabled = false; // default value
@@ -351,4 +383,32 @@
     var createProjectAssignment2 = projectAssignment.CreateAction;
     var source3 = createProjectAssignment2.InputParameters.Named("Source");
     createProjectAssignment.SetArgumentValue(source3, "NewAssignment");
+    
+    var grantSheetUserRole22 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GrantSheetUserRole2").ToTheRightOf(ifNode5, 1828);
+    grantSheetUserRole22.Action = grantSheetUserRole2;
+    grantSheetUserRole22.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    grantSheetUserRole22.IsDisabled = false; // default value
+    grantSheetUserRole22.ServerRequestTimeout = null; // default value
+    grantSheetUserRole22.SetArgumentValue(userId, "GetSeedAdmins.List.Current.User.Id");
+    ifNode5.FalseTarget = grantSheetUserRole22;
+    
+    var ifNode6 = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().Below(ifNode5, 1371);
+    ifNode6.SetCondition("CheckSheetAdminRole(GetSeedAdmins.List.Current.User.Id)");
+    ifNode6.IsDisabled = false; // default value
+    ifNode6.Label = "Has SheetAdmin?";
+    ifNode6.TrueTarget = forEachNode2;
+    ifNode5.TrueTarget = ifNode6;
+    grantSheetUserRole22.Target = ifNode6;
+    
+    var grantSheetAdminRole = bootstrap.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GrantSheetAdminRole").Below(ifNode6, 1371);
+    var sheetAdmin = eSpace.Roles.Named("SheetAdmin");
+    var grantSheetAdminRole2 = sheetAdmin.RoleActions.Named("GrantSheetAdminRole");
+    grantSheetAdminRole.Action = grantSheetAdminRole2;
+    grantSheetAdminRole.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    grantSheetAdminRole.IsDisabled = false; // default value
+    grantSheetAdminRole.ServerRequestTimeout = null; // default value
+    grantSheetAdminRole.Target = forEachNode2;
+    var userId2 = grantSheetAdminRole2.InputParameters.Named("UserId");
+    grantSheetAdminRole.SetArgumentValue(userId2, "GetSeedAdmins.List.Current.User.Id");
+    ifNode6.FalseTarget = grantSheetAdminRole;
 }

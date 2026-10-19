@@ -9,6 +9,15 @@
     dailyExpectedMinutes.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
     dailyExpectedMinutes.IsSecret = false; // default value
     
+    /*** creating ISiteProperty 'SeedAdminUsernames' ***/
+    var seedAdminUsernames = eSpace.CreateSiteProperty(false, "SeedAdminUsernames");
+    seedAdminUsernames.DataType = eSpace.TextType;
+    seedAdminUsernames.SetDefaultValue("\"\"");
+    seedAdminUsernames.Description = "Comma-separated usernames that the Bootstrap timer grants SheetAdmin and SheetUser, so a first admin exists. Leave empty once admins are managed in the app.";
+    seedAdminUsernames.Folder = null; // default value
+    seedAdminUsernames.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
+    seedAdminUsernames.IsSecret = false; // default value
+    
     /*** creating ISiteProperty 'SeedTestUsernames' ***/
     var seedTestUsernames = eSpace.CreateSiteProperty(false, "SeedTestUsernames");
     seedTestUsernames.DataType = eSpace.TextType;
