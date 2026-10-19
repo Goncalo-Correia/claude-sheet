@@ -18,7 +18,7 @@
     projectDetail.PageName = null; // default value
     projectDetail.Public = false; // default value
     projectDetail.Shareable = false; // default value
-    projectDetail.StyleSheet = "/* Admin screens (US6, US7): toolbar, simple tables, forms, assignment popup. Same rules on every admin screen; move to the theme when more admin screens use them. */\n.admin-page { display: flex; flex-direction: column; gap: 16px; }\n.admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }\n.admin-toolbar__filter { flex: 0 1 280px; }\n.admin-toolbar__check { display: flex; align-items: center; gap: 6px; }\n.admin-table { display: flex; flex-direction: column; border: 1px solid var(--color-neutral-4); border-radius: var(--border-radius-soft); overflow: hidden; }\n.admin-table__row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 12px 16px; border-top: 1px solid var(--color-neutral-3); color: inherit; text-decoration: none; align-items: center; }\n.admin-table__head { border-top: 0; background-color: var(--color-neutral-2); font-weight: 600; }\na.admin-table__row:hover { background-color: var(--color-neutral-1); }\n.admin-table__cell { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.admin-table__cell.is-inactive, .admin-table__cell.is-ended { color: var(--color-neutral-7); }\n.admin-table__actions { display: flex; flex-wrap: wrap; gap: 12px; }\n.admin-table__empty { padding: 16px; color: var(--color-neutral-7); }\n.admin-section__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }\n.admin-form { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }\n.admin-form__actions { display: flex; flex-wrap: wrap; gap: 8px; }\n.admin-form__hint { font-size: var(--font-size-xs); color: var(--color-neutral-7); }\n.admin-popup { display: flex; flex-direction: column; gap: 12px; min-width: min(420px, 90vw); }\n.admin-error { padding: 12px 16px; border-radius: var(--border-radius-soft); background-color: var(--color-error-lightest, #fdecea); color: var(--color-error, #c62828); }";
+    projectDetail.StyleSheet = null; // default value
     projectDetail.SetTitle("\"Project\"");
     projectDetail.URLStructure = OutSystems.Model.Enumerations.URLStructure.QueryString; // default value
     projectDetail.VerticalPosition = 1400;
@@ -1381,7 +1381,7 @@
     assignmentsTable.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
     assignmentsTable.RowGap = null; // default value
     assignmentsTable.RowSpan = null; // default value
-    assignmentsTable.SetStyle("\"admin-table\"");
+    assignmentsTable.SetStyle("\"admin-table admin-table--5\"");
     assignmentsTable.SetVisible("True"); // default value
     assignmentsTable.VisibleWasExpression = false; // default value
     assignmentsTable.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value

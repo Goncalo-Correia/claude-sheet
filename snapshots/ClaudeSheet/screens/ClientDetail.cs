@@ -18,7 +18,7 @@
     clientDetail.PageName = null; // default value
     clientDetail.Public = false; // default value
     clientDetail.Shareable = false; // default value
-    clientDetail.StyleSheet = "/* Admin screens (US6): toolbar and a simple table. Same rules on Clients and ClientDetail; move to the theme when more admin screens use them. */\n.admin-page { display: flex; flex-direction: column; gap: 16px; }\n.admin-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }\n.admin-toolbar__search { flex: 1 1 240px; max-width: 360px; }\n.admin-toolbar__check { display: flex; align-items: center; gap: 6px; }\n.admin-table { display: flex; flex-direction: column; border: 1px solid var(--color-neutral-4); border-radius: var(--border-radius-soft); overflow: hidden; }\n.admin-table__row { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 12px 16px; border-top: 1px solid var(--color-neutral-3); color: inherit; text-decoration: none; }\n.admin-table__head { border-top: 0; background-color: var(--color-neutral-2); font-weight: 600; }\na.admin-table__row:hover { background-color: var(--color-neutral-1); }\n.admin-table__cell { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n.admin-table__cell.is-inactive { color: var(--color-neutral-7); }\n.admin-table__empty { padding: 16px; color: var(--color-neutral-7); }\n.admin-form { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }\n.admin-form__actions { display: flex; flex-wrap: wrap; gap: 8px; }\n.admin-error { padding: 12px 16px; border-radius: var(--border-radius-soft); background-color: var(--color-error-lightest, #fdecea); color: var(--color-error, #c62828); }";
+    clientDetail.StyleSheet = null; // default value
     clientDetail.SetTitle("\"Client\"");
     clientDetail.URLStructure = OutSystems.Model.Enumerations.URLStructure.QueryString; // default value
     clientDetail.VerticalPosition = 400;
@@ -673,7 +673,7 @@
     projectsTable.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
     projectsTable.RowGap = null; // default value
     projectsTable.RowSpan = null; // default value
-    projectsTable.SetStyle("\"admin-table\"");
+    projectsTable.SetStyle("\"admin-table admin-table--3\"");
     projectsTable.SetVisible("True"); // default value
     projectsTable.VisibleWasExpression = false; // default value
     projectsTable.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value

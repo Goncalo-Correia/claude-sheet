@@ -71,6 +71,7 @@ Which module each element belongs in. The full table and the reasons are in [`ar
 
 - Use OutSystems UI patterns and blocks before custom HTML and CSS.
 - App-wide CSS goes in the theme. Screen-specific CSS stays on the screen.
+- **Admin screens** use the theme's "Admin screens" section (`.admin-page`, `.admin-toolbar*`, `.admin-table*`, `.admin-form*`, `.admin-section__head`, `.admin-popup`, `.admin-error`). Don't copy CSS onto admin screens. Tables pick their columns with a modifier: `admin-table admin-table--3` or `admin-table--5`. When a new layout needs another column template, add a modifier to the theme. (TT7)
 - Every screen has an explicit role check, or is marked Anonymous on purpose.
 
 ### Roles and the menu

@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of US7 (Admin › Projects and ProjectDetail, Menu ProjectsLink)
+- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT7 (admin CSS moved into the theme)
 
 ## Own elements (references excluded)
 
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- TT7 (2026-10-19), targeted mode: `themes/ClaudeSheet.cs` (new "Admin screens" section) and the four admin screens (`screens/Clients.cs`, `ClientDetail.cs`, `Projects.cs`, `ProjectDetail.cs`: stylesheet emptied, table modifier class). Three screens were rebuilt from the saved tool output (too large for the transcript).
+
+### US7 refresh (2026-10-19)
 
 - US7 (2026-10-19), targeted mode: `names/screens.json`, `web-blocks/Menu.cs` (ProjectsLink) and the new `screens/Projects.cs` and `screens/ProjectDetail.cs`. Both screens were too large for the transcript and were rebuilt from the saved tool output in the same format. Other files are as of the US6 refresh (unchanged by US7).
 
