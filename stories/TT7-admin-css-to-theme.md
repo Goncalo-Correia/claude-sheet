@@ -6,6 +6,7 @@
 - **Requested by:** goncalo.c@bool.pt
 - **Created:** 2026-10-19
 - **Source:** US7 review, convention item N02 (accepted 2026-10-19 with this follow-up)
+- **Trello:** https://trello.com/c/07cGUJhu (created in Done 2026-10-19)
 
 ## Story
 

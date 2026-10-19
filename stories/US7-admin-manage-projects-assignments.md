@@ -7,7 +7,7 @@
 - **Created:** 2026-10-19
 - **Depends on:** TT5 (SheetAdmin role, Admin UI flow), US6 (Client_GetList for the client dropdown and filter)
 - **Source:** investigation `investigations/2026-10-16-full-app-gaps.md` (findings F03, F04, F08, F23), approved 2026-10-19
-- **Trello:** https://trello.com/c/qfGFuwQ0
+- **Trello:** https://trello.com/c/qfGFuwQ0 (moved to Done 2026-10-19)
 
 ## Story
 
