@@ -42,6 +42,20 @@ These are common OutSystems 11 defaults. Adjust them to the team's standard; Cla
 
 Screen and block actions that are not bound to an event (helpers called from other actions) use verb + noun: `OpenDayEditor`, `RecalcEditorTotal`. If an action is both bound to an event and called from other actions, name it for the event and move the shared logic into a helper.
 
+### Action folders
+
+Every reusable server and client action lives in a folder under Logic › Server Actions / Client Actions, never at the root. The folder is the action's `<Entity>` prefix: `Holiday_CopyYear` goes in **Holiday**, `ProjectAssignment_End` in **ProjectAssignment**, `Minutes_Format` in **Minutes**. Actions without a prefix go in **Setup** (`Bootstrap`). Template actions (`DoLogin`, `DoLogout`) go in **Authentication**. A new action goes in its folder when it's created; create the folder if it doesn't exist. Through the Model API: `eSpace.CreateFolder(ESpaceTreeFolder.ServerActions, "Holiday")`, then `action.Folder = folder`. (Added 2026-10-19.)
+
+### Node names
+
+Every node in an action flow (server, client, screen/block and data actions) that can carry a name has one that says what it does, so the flow reads without opening each node:
+
+- **Label** on Assign, If, Message, For Each and Switch nodes. An If is a yes/no question (`Is SheetAdmin?`, `Date taken?`). An Assign says what it sets (`Copy fields`, `Count copied`, `Close popup`). A Message says what it reports (`Saved`, `Show error`). A For Each names what it loops over (`Each fixed holiday`).
+- **Name** on Execute Action, Aggregate, SQL, JavaScript and Exception Handler nodes. Aggregates and SQL nodes are `Get<What>` (`GetSameDate`). An Execute node keeps the action's name, but a numeric suffix (`Holiday_CreateIfMissing13`) is replaced by what that call does (`CreateHoliday_Christmas`). Exception handlers are named after the exception they catch.
+- Start, End, Raise Exception, Refresh Data and Destination nodes have no name in the model. They're described by their target and message.
+
+(Added 2026-10-19.)
+
 ## Module placement
 
 Which module each element belongs in. The full table and the reasons are in [`architecture.md`](architecture.md#what-goes-where) and [ADR 0004](decisions/0004-split-end-user-and-core.md).
@@ -93,6 +107,7 @@ Which module each element belongs in. The full table and the reasons are in [`ar
 - Read before you write. Confirm an element's current state with the live read tools, not only with `snapshots/`.
 - Every new or edited action flow follows [Flow layout](#flow-layout) before merging.
 - Name every new action following [Action names](#action-names). A rename of an existing action is its own technical task, not part of an unrelated story.
+- Put every new or changed server and client action in its [folder](#action-folders), and give every node of a new or edited flow its [name or label](#node-names), before merging.
 
 ## Flow layout
 
