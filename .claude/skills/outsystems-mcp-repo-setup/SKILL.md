@@ -1,13 +1,13 @@
 ---
 name: outsystems-mcp-repo-setup
-description: Sets up (or upgrades) a git repository as the working home of an OutSystems 11 project developed through the Service Studio MCP. Scaffolds CLAUDE.md, README, docs (architecture, conventions, decisions), stories, a change log of every applyModelApiCode lambda, text snapshots of each module, publish history, review logs, .mcp.json and permissions, then takes a first snapshot of the open module(s). Use when the user wants to "set up a repo for my OutSystems project", "prepare this repository for OutSystems MCP", "initialize the OutSystems repo", "add source control to my OutSystems app", "bootstrap the project repo", or names outsystems-mcp-repo-setup. Also use when re-running on an already set-up repo to add what is missing. Safe to re-run; it never overwrites existing files. It installs no hooks: publishing and the change log belong to the outsystems-mcp-publish skill.
+description: Sets up (or upgrades) a git repository as the working home of an OutSystems 11 project developed through the Service Studio MCP. Scaffolds CLAUDE.md, README, docs (architecture, conventions, decisions), stories, a change log of every applyModelApiCode lambda, text snapshots of each module, publish history, review logs, .mcp.json and permissions, then takes a first snapshot of the open module(s). Use when the user wants to "set up a repo for my OutSystems project", "prepare this repository for OutSystems MCP", "initialize the OutSystems repo", "add source control to my OutSystems app", "bootstrap the project repo", or names outsystems-mcp-repo-setup. Also use when re-running on an already set-up repo to add what is missing. Safe to re-run; it never overwrites existing files. It also registers the outsystems-mcp-publish hook in .claude/settings.json, so every MCP publish is logged to PUBLISHES.md and changes/.
 ---
 
 # OutSystems MCP repo setup
 
 OutSystems 11 keeps the app in the platform as binary `.oml` files, so a normal repository can't show what changed. When the work happens through the Service Studio MCP, three text artifacts can stand in for source control:
 
-1. **The Model API lambdas** sent to `applyModelApiCode`: the exact record of every change. The `outsystems-mcp-publish` skill writes them to `changes/` when the module is published.
+1. **The Model API saves** sent to `applyModelApiCode`: the record of every change. The `outsystems-mcp-publish` hook summarises them in `changes/` each time the module is published.
 2. **Snapshots** of each module: the read tools (`getDataModel`, `getServerAction`, `getScreen`, …) return C# Model API code, which is saved to `snapshots/<Module>/` and diffs cleanly in git.
 3. **Context for Claude and the team**: CLAUDE.md, architecture, conventions, stories, review logs and publish history.
 
@@ -18,7 +18,7 @@ This skill creates that structure in a target repository, then fills it with rea
 - `scripts/scaffold.mjs`: copies `templates/` into the target, merges config files, and never overwrites. Run it with Node 18+.
 - `templates/`: everything the target repo gets. It contains no skills.
 
-This skill only sets up the repository. It installs **no hooks**. The publish step, the `PUBLISHES.md` row, the `changes/` log and snapshot refreshes come from the separate `outsystems-mcp-publish` skill, which registers its own hook when it is invoked.
+This skill only sets up the repository. The one hook it installs is the `outsystems-mcp-publish` hook in `.claude/settings.json` (`PostToolUse` on `mcp__servicestudio__omlPublish`, running that skill's `scripts/log-publish.mjs`): it adds the `PUBLISHES.md` row and the `changes/` sections after every MCP publish, whichever skill publishes. Its command uses a vendored copy of the skill in the repo when there is one, otherwise `~/.claude/skills/outsystems-mcp-publish`. Closing a story and refreshing snapshots belong to the `outsystems-mcp-publish` skill.
 - `references/config-schema.md`: the config JSON the scaffold script reads.
 
 ## Rules
@@ -36,7 +36,7 @@ This skill only sets up the repository. It installs **no hooks**. The publish st
 - Not a git repo: ask whether to run `git init`.
 - Check what already exists: `CLAUDE.md`, `README.md`, `.claude/`, `.mcp.json`, `.gitignore`. A repo that already has `snapshots/` and `changes/` is already set up. Say you're running in **update mode**: only missing pieces get added.
 - Check `node --version`. Node 18+ is needed for the scaffold script and for the `outsystems-mcp-publish` hook. If Node is missing, stop and tell the user.
-- Check that `~/.claude/skills/outsystems-mcp-publish/SKILL.md` exists. If it doesn't, say that publishing won't be logged until it is installed.
+- Check that `outsystems-mcp-publish` exists, in `~/.claude/skills/` or in the target's `.claude/skills/`. If it doesn't, say that publishing won't be logged until it is installed: the hook is registered either way and finds the script once it is there.
 
 ### 2. Discover the project from the MCP
 
@@ -57,7 +57,7 @@ Use AskUserQuestion, at most 4 questions in one call, and skip anything already 
 
 - **Project**: name and one-line description. Suggest a name based on the module and app.
 - **Modules**: confirm the list of modules and the architecture layer of each: End-user, Core, Foundation, or Library. Suggest layers from the suffixes.
-- **Vendored skills**: copy `servicestudio-mcp-oml` and `outsystems-mcp-code-review` from `~/.claude/skills/` into the repo's `.claude/skills/`?
+- **Vendored skills**: copy `servicestudio-mcp-oml`, `outsystems-mcp-implementation`, `outsystems-mcp-code-review` and `outsystems-mcp-publish` from `~/.claude/skills/` into the repo's `.claude/skills/`?
   - Recommend this when teammates don't have these skills installed.
   - Recommend against it when they already get them from a plugin, because copies drift out of date.
   - Only offer skills that actually exist in `~/.claude/skills/`.
@@ -81,6 +81,7 @@ The script also merges:
 - `.claude/settings.json`:
   - Allows the read-only Service Studio tools without a prompt.
   - Puts `omlPublish` and `omlReset` behind a confirmation prompt.
+  - Adds the `outsystems-mcp-publish` hook under `hooks.PostToolUse`, unless a hook on `mcp__servicestudio__omlPublish` running `log-publish.mjs` is already there.
 
 ### 5. Take the first snapshot
 
@@ -99,7 +100,7 @@ Use what you learned. Don't invent anything: mark unknowns as `TODO`.
 
 ### 7. Verify
 
-- Check that no `.claude/hooks/` folder and no `hooks` key in `.claude/settings.json` were created.
+- Check that `.claude/settings.json` has exactly one `PostToolUse` hook on `mcp__servicestudio__omlPublish` (the publish hook) and no other hooks were added, and that no `.claude/hooks/` folder was created.
 - Check that `.claude/settings.json` and `.mcp.json` parse as JSON.
 - Run `git status` to show what was added.
 
@@ -109,6 +110,6 @@ Tell the user:
 
 - What was created, kept and merged, and what is still `TODO`.
 - **Restart Claude Code in this repo.** Permissions and `.mcp.json` load at startup. Claude Code will also ask them to approve the project MCP server once.
-- The day-to-day workflow is in the new `CLAUDE.md`: stories, then change, merge, review, publish (with `outsystems-mcp-publish`, which logs the lambdas to `changes/`), then snapshot refresh.
+- The day-to-day workflow is in the new `CLAUDE.md`: `outsystems-mcp-implementation` (define, implement, plan check, publish to Development), then `outsystems-mcp-code-review` (test in the browser and Service Studio, fixes republished), then `outsystems-mcp-publish` (update the repository, story Done). The hook logs every publish to `PUBLISHES.md` and `changes/`.
 - Offer to make the first commit.
 

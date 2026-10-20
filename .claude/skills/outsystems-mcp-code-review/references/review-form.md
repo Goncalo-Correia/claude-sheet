@@ -7,7 +7,7 @@ How it works:
 - One form, sections in this order: Acceptance criteria (`A01`…), Changes (`C01`…), Conventions (`N01`…, when the repository has `docs/conventions.md`), then Implementation plan (`P01`…) only when the plan check wasn't already approved by `outsystems-mcp-implementation`. Each section starts with a small heading div showing its row count.
 - One `.elicit-group` per row. `data-name` = the row ID, so the payload reads `A01: Yes`, `A02: No`, `A02 (other): <reason>`.
 - The "No" pill carries `data-other`, so selecting it reveals the paired `.elicit-other` reason box.
-- Criteria and plan rows carry Claude's tag badge next to the ID: Approved = `var(--bg-success)` / `var(--text-success)`; Rejected = `var(--bg-danger)` / `var(--text-danger)`. Under it: the reason (Rejected) or the evidence (Approved), plus "Verify at runtime." when it applies. Never pre-select a pill from the tag.
+- Criteria and plan rows carry Claude's tag badge next to the ID: Approved = `var(--bg-success)` / `var(--text-success)`; Rejected = `var(--bg-danger)` / `var(--text-danger)`. Under it: the reason (Rejected) or the evidence (Approved), plus "Test in the browser: <screen, user, steps>." when it applies. Never pre-select a pill from the tag.
 - Change rows have no tag. Change-type badges: Created = success colours, Modified = accent colours, Deleted / Validation error = danger colours.
 - Rows fixed in this round use the yellow style shown on A02: background `var(--bg-warning)`, border `var(--border-warning)` and a "Fixed in round N" note.
 - The header SVG is fixed chrome from the elicitation guide: copy it byte-for-byte.
@@ -34,7 +34,7 @@ The conventions section and the plan section, when included, use the same row ma
       </label>
       <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:4px 0 8px;">
         The progress circle is 160px on desktop and 120px on phone.<br>
-        <span>Evidence: .sheet-total__circle sets 160px, with a phone media query setting 120px. Verify at runtime.</span><br>
+        <span>Evidence: .sheet-total__circle sets 160px, with a phone media query setting 120px. Test in the browser: MySheet at phone width.</span><br>
         <span style="color:var(--text-muted);">Unchanged</span>
       </div>
       <div class="elicit-pills" data-name="A01" data-multi="false">

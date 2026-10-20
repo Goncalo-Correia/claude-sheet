@@ -1,13 +1,13 @@
 ---
 name: outsystems-mcp-implementation
-description: Implements an OutSystems 11 user story through the Service Studio MCP from a complete definition. Triggered by "implement US X" (or "implement US-012", "implement story X"), it first asks, one at a time, for the story's description, its implementation plan and its acceptance criteria, writes them to the story file, then implements the plan with applyModelApiCode. Before merging it validates every implementation plan step against the mutated module, tags each Approved or Rejected with the reason, shows the list as a Yes/No form in the conversation and then calls omlMerge right away, so the user reviews the plan check while reviewing the merge in Service Studio; the user's answer is final, and it fixes only what the user answers No to. It never publishes; acceptance criteria are reviewed afterwards with outsystems-mcp-code-review. Use whenever the user says "implement US X", "implement story X", "build US X", "start US X", or names outsystems-mcp-implementation.
+description: Implements an OutSystems 11 user story through the Service Studio MCP from a complete definition. Triggered by "implement US X" (or "implement US-012", "implement story X"), it first asks, one at a time, for the story's description, its implementation plan and its acceptance criteria, writes them to the story file, then implements the plan with applyModelApiCode. Before merging it validates every implementation plan step against the mutated module, tags each Approved or Rejected with the reason, shows the list as a Yes/No form in the conversation and then calls omlMerge right away, so the user reviews the plan check while reviewing the merge in Service Studio; the user's answer is final, and it fixes only what the user answers No to. When every plan step is Yes and the module has no validation errors, it publishes the module to Development, because an OutSystems app can only be tested in the browser once it is published; the acceptance criteria are then validated by the user, in the browser and in Service Studio, with outsystems-mcp-code-review. Use whenever the user says "implement US X", "implement story X", "build US X", "start US X", or names outsystems-mcp-implementation.
 ---
 
 # OutSystems MCP implementation
 
 The purpose is to turn a user story into a working change in the open OutSystems module, starting from a **complete definition** (description, implementation plan, acceptance criteria), and to let the developer confirm, step by step, that the implementation follows the plan.
 
-This skill covers definition → implementation → plan check. It does **not** review the acceptance criteria and never publishes: that's the job of `outsystems-mcp-code-review`, which the user calls afterwards.
+This skill covers definition → implementation → plan check → publish to Development. It does **not** review the acceptance criteria: an OutSystems app can only be tested in the browser once it is published, so the user validates them afterwards, on the published app and in Service Studio, with `outsystems-mcp-code-review`. Recording the story in the repository (snapshots, story Done) comes last, with `outsystems-mcp-publish`.
 
 ```
 "implement US X"
@@ -20,7 +20,7 @@ This skill covers definition → implementation → plan check. It does **not** 
   -> 7. show the plan check form AND call omlMerge right after it, same turn
         (the user answers the form while reviewing the Compare-and-Merge window)
   -> 8. read the merge result, then the answers (the user's Yes / No is final)
-        all Yes -> 9. close out, point to outsystems-mcp-code-review
+        all Yes -> 9. validate, publish to Development, point to outsystems-mcp-code-review
         any No  -> fix only those -> back to 6 (full list, fixed rows in yellow, form + merge together)
 ```
 
@@ -84,7 +84,7 @@ Follow the `servicestudio-mcp-oml` skill for the Model API contract (load it if 
   - adding End nodes so each branch ends on its own is a layout change, not a logic change.
 - If a step can't be done as written (the platform doesn't allow it, an element it relies on doesn't exist), choose the closest correct implementation, and record the deviation and its reason. Don't silently skip a step. If no reasonable alternative exists, stop and ask.
 - When the last mutation is clean, keep its `mutatedOmlPath`, but **don't merge yet**: the merge is called in step 7, right after the form is shown.
-- **Never call `omlPublish`.**
+- **Don't publish while implementing.** The only publish is in step 9, after the plan check is all Yes.
 
 Write what was actually done to the story's `## Implementation notes`: the number of saves, deviations from the plan and why, assumptions, and anything the reviewer should know.
 
@@ -94,7 +94,7 @@ When the plan has steps in more than one module (the story's `## Implementation 
 
 1. **Order the modules producer first** (Foundation, then Core, then End-user; e.g. `ClaudeSheet_CS` before `ClaudeSheet`). A consumer can only use what its producer has **published**.
 2. **One module at a time, in this session.** Don't start subagents. For each module, in order: step 5 for that module's plan steps only (pass its `eSpaceName` on every call, run the conventions gate for it), then steps 6 and 7 (plan check form for that module's steps + `omlMerge` of its `mutatedOmlPath`) and step 8. Finish one module's chain before starting the next.
-3. **Hand-off to the consumer module.** The producer is reviewed (`outsystems-mcp-code-review`) and published (`outsystems-mcp-publish`) first. The Model API can't add a dependency, so the user ticks them, guided by a checklist:
+3. **Hand-off to the consumer module.** The producer is published at the end of its own chain (step 9). The review comes later, once every module is published. The Model API can't add a dependency, so the user ticks them, guided by a checklist:
    1. **Build the checklist** from the consumer's plan steps: every producer element they use, grouped by type (Entities, Static Entities, Structures, Server Actions, Service Actions, Roles, Exceptions, Blocks). Write it into the story's plan under the consumer (`Dependencies to add`).
    2. **Ask** with AskUserQuestion, as the only call in the message: *"In **<Consumer>** → Manage Dependencies → **<Producer>**, tick: Server Actions: …; Structures: …; …"*, with the options **Done** and **Not yet** (Done first). Keep the list in the question text so the user can work from it.
    3. **On Done**, run `omlRefreshReferences` on the consumer (before its first `applyModelApiCode`: it drops the consumer's session pointer). Then verify with a throw-probe on the consumer: for each listed element, look it up in `eSpace.References.Named("<Producer>")` (`ServerActions`, `Structures`, `Entities`, `Roles`, …) and report the ones not found. If any are missing, ask again with only the missing ones. If all are found, start the consumer's chain (step 2).
@@ -169,15 +169,21 @@ A fix round starts a new chain off the live module (the previous merge cleared t
 
 If the same step is answered No 3 rounds in a row, stop and talk it through in chat instead of trying a fourth fix.
 
-## 9. Close out
+## 9. Publish to Development
 
 When every step has a Yes:
 
 1. Record the final round in the log, with any steps accepted despite a Rejected tag.
-2. Update the story: Status `In review`, implementation notes complete.
-3. Tell the user the story is fully defined (description, plan, acceptance criteria) and implemented, the plan check is approved, and the next step is to review the acceptance criteria with `outsystems-mcp-code-review` (the changes are merged in Service Studio, not published).
+2. Call `getValidationMessages` with filter `["error"]`. **Errors > 0**: don't publish. Fix them with `applyModelApiCode`, then go back to step 6 with round N+1 (the fix is code the user hasn't seen), with the error fixes as yellow rows.
+3. **0 errors**: call `mcp__servicestudio__omlPublish` with `{ "eSpaceName": "<Module>" }`. It asks for confirmation, and the user may have to grant the write permission in the Service Studio MCP dialog.
+   - The project's publish hook (`.claude/settings.json`, see `outsystems-mcp-publish`) adds the `PUBLISHES.md` row and the `changes/<story>-<Module>.md` sections. Replace each new `SUMMARY:` line with one or two plain-words sentences on what that save changed (no code).
+   - `blocked`: say so and ask the user to grant the permission, or to publish with 1-Click Publish in Service Studio; in that case add the `PUBLISHES.md` row and the `changes/` sections yourself (see `outsystems-mcp-publish` › Manual publish).
+   - Failure: report the messages verbatim, fix the cause and go back to step 6 with round N+1.
+4. **Multi-module stories:** after publishing the producer, continue with the hand-off in step 5b. Only the last module's publish ends the skill.
+5. Update the story: Status `In review`, implementation notes complete.
+6. Tell the user the story is implemented and published to Development, with the app URL (the Development environment in `CLAUDE.md`, plus the module's path, for example `https://<env>/ClaudeSheet/`), and that the next step is `outsystems-mcp-code-review`: they test the acceptance criteria in the browser and check the changes in Service Studio.
 
-Don't start the review or publish on your own.
+Don't start the review on your own.
 
 ## Log
 

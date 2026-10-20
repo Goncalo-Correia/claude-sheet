@@ -29,6 +29,19 @@ const READ_TOOLS = [
 
 const ASK_TOOLS = ['omlPublish', 'omlReset'].map(t => `mcp__servicestudio__${t}`);
 
+// The outsystems-mcp-publish hook: logs every MCP publish to PUBLISHES.md and changes/, whichever skill
+// publishes. Uses a vendored copy of the skill in the repo when there is one, otherwise the user-level skill.
+const PUBLISH_MATCHER = 'mcp__servicestudio__omlPublish';
+const PUBLISH_SCRIPT = 'outsystems-mcp-publish/scripts/log-publish.mjs';
+const PUBLISH_HOOK = {
+  matcher: PUBLISH_MATCHER,
+  hooks: [{
+    type: 'command',
+    command: `node "$([ -f "$CLAUDE_PROJECT_DIR/.claude/skills/${PUBLISH_SCRIPT}" ] && echo "$CLAUDE_PROJECT_DIR/.claude/skills" || echo "$HOME/.claude/skills")/${PUBLISH_SCRIPT}"`,
+    timeout: 30,
+  }],
+};
+
 const GITIGNORE = [
   '# Claude Code local state',
   '.claude/state/',
@@ -206,6 +219,11 @@ mergeJson('.claude/settings.json', s => {
   s.permissions.ask ??= [];
   addUnique(s.permissions.allow, READ_TOOLS);
   addUnique(s.permissions.ask, ASK_TOOLS);
+  s.hooks ??= {};
+  s.hooks.PostToolUse ??= [];
+  const hasPublishHook = s.hooks.PostToolUse.some(h =>
+    h.matcher === PUBLISH_MATCHER && (h.hooks ?? []).some(c => String(c.command ?? '').includes('log-publish.mjs')));
+  if (!hasPublishHook) s.hooks.PostToolUse.push(PUBLISH_HOOK);
 });
 
 vendorSkills();

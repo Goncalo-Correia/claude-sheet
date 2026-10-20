@@ -66,7 +66,7 @@ ClaudeSheet_CS must never reference ClaudeSheet.
 
 ## Working across modules
 
-- **Producer first.** ClaudeSheet only sees what ClaudeSheet_CS has **published**. A story that touches both is a pipeline: CS change → review → publish CS → add new dependencies in ClaudeSheet → refresh references → ClaudeSheet change → review → publish ClaudeSheet.
+- **Producer first.** ClaudeSheet only sees what ClaudeSheet_CS has **published**. A story that touches both is a pipeline: CS change → plan check → publish CS → add new dependencies in ClaudeSheet → refresh references → ClaudeSheet change → plan check → publish ClaudeSheet → review both (testing in the browser) → record in the repository.
 - **Refreshing references can be automated, adding them can't.** `omlRefreshReferences` refreshes the existing references of ClaudeSheet to the latest published CS. A new CS element (a new public action, entity or structure) has to be ticked once by hand in Service Studio › Manage Dependencies: the Model API can't add a dependency.
 - **Public contract.** Renaming or removing a public CS element breaks ClaudeSheet. Do it in the same story as the consumer change, and publish CS and ClaudeSheet together.
 - **One module at a time, in the main session** (no subagents) for multi-module stories; see `CLAUDE.md` › Multi-module stories.

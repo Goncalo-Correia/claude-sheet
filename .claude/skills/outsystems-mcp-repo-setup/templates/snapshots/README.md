@@ -1,6 +1,6 @@
 # Snapshots
 
-The state of each module as Model API code, as returned by the Service Studio read tools. Refreshed after every publish by the `outsystems-mcp-publish` skill, which can also refresh them on request.
+The state of each module as Model API code, as returned by the Service Studio read tools. Refreshed by the `outsystems-mcp-publish` skill when a story is closed (after the review approves it), and on request ("refresh the snapshot").
 
 ```
 snapshots/<Module>/
@@ -17,7 +17,7 @@ snapshots/<Module>/
   …
 ```
 
-To see what changed in a module between publishes:
+To see what changed in a module between stories:
 
 ```bash
 git log -p -- snapshots/<Module>/

@@ -11,8 +11,8 @@
 
 This repository is the record around the platform:
 
-- every Model API lambda applied to a module is saved in `changes/` when the module is published, by the `outsystems-mcp-publish` skill;
-- the state of each module after a publish is saved as Model API code in `snapshots/`;
+- every Model API save applied to a module is summarised in `changes/` when the module is published, by the `outsystems-mcp-publish` hook;
+- the state of each module after a story is closed is saved as Model API code in `snapshots/`;
 - stories, reviews, publishes and decisions are kept as Markdown.
 
 The OutSystems platform stays the source of truth for the running app. The repository is the source of truth for **why** and **how** it changed.
@@ -20,5 +20,5 @@ The OutSystems platform stays the source of truth for the running app. The repos
 ## Consequences
 
 - Any change can be traced to a story, a review and a publish.
-- Snapshots must be refreshed after every publish, or they go out of date.
+- Snapshots must be refreshed when each story is closed, or they go out of date.
 - Changes made directly in Service Studio, outside the MCP, show up only in the next snapshot diff, not in `changes/`.

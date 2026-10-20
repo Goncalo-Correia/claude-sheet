@@ -58,5 +58,19 @@
       "mcp__servicestudio__omlPublish",
       "mcp__servicestudio__omlReset"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "mcp__servicestudio__omlPublish",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/skills/outsystems-mcp-publish/scripts/log-publish.mjs\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }

@@ -4,7 +4,7 @@
 
 Use this procedure:
 
-- after every successful publish (step *After publishing* in `SKILL.md`);
+- when a story is closed (step 4 in `SKILL.md`), for each module it touched;
 - for the first snapshot when `outsystems-mcp-repo-setup` sets up a repository;
 - when the user asks to refresh or take a snapshot without publishing, for example after hand edits in Service Studio.
 
@@ -30,7 +30,7 @@ Module-wide reads, one call each:
 - `getActionNames` with `objectType` `server`, then `client`, then `service`
 - `getRoleNames`, `getScreenNames`, `getWebBlockNames`, `getThemeNames`, `getResourceNames`, `getScriptNames`. For Traditional modules, use the `*NamesTraditional` variants.
 
-### Targeted (after publishing a story)
+### Targeted (when closing a story)
 
 Light mode, plus a single-object read (`getServerAction`, `getClientAction`, `getScreen`, `getWebBlock`, `getRole`, `getTheme`, …) for every element the story created or changed. The story file and its `changes/` files list them.
 

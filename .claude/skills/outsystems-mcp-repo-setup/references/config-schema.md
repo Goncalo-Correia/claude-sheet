@@ -17,7 +17,7 @@
   ],
   "references": ["OutSystemsUI", "Users"],       // platform/external modules the project depends on; default []
   "mcpUrl": "http://127.0.0.1:41820/mcp",        // default
-  "vendorSkills": ["servicestudio-mcp-oml", "outsystems-mcp-code-review"], // copied from ~/.claude/skills; default []
+  "vendorSkills": ["servicestudio-mcp-oml", "outsystems-mcp-implementation", "outsystems-mcp-code-review", "outsystems-mcp-publish"], // copied from ~/.claude/skills; default []
   "skillsSource": "C:/Users/me/.claude/skills"   // optional override of where vendorSkills come from
 }
 ```

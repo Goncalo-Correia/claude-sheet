@@ -8,8 +8,8 @@ This is an {{PLATFORM}} project built with Claude Code through the Service Studi
 
 - Service Studio 11 with the MCP server enabled. The repo expects it at `{{MCP_URL}}`.
 - Claude Code.
-- Node.js 18 or later, for the publish hook of the `outsystems-mcp-publish` skill.
-- The user-level skills `servicestudio-mcp-oml`, `outsystems-mcp-code-review` and `outsystems-mcp-publish` in `~/.claude/skills/`. This repo ships no skills of its own.
+- Node.js 18 or later, for the publish hook (`.claude/settings.json` runs the `outsystems-mcp-publish` skill's `log-publish.mjs` after every MCP publish).
+- The skills `servicestudio-mcp-oml`, `outsystems-mcp-implementation`, `outsystems-mcp-code-review` and `outsystems-mcp-publish`, in `~/.claude/skills/` or vendored in this repo's `.claude/skills/`.
 - The modules ({{MODULE_NAMES}}) open in Service Studio when you work on them.
 
 ## Getting started
@@ -29,15 +29,15 @@ This is an {{PLATFORM}} project built with Claude Code through the Service Studi
 | [docs/decisions/](docs/decisions/) | Architecture decision records |
 | [stories/](stories/) | User stories and technical tasks |
 | [changes/](changes/) | Every Model API change applied to a module |
-| [snapshots/](snapshots/) | Module state after each publish, as Model API code |
-| [reviews/](reviews/) | Code review rounds before each publish |
+| [snapshots/](snapshots/) | Module state after each closed story, as Model API code |
+| [reviews/](reviews/) | Plan checks and review rounds (tested on Development) per story |
 | [PUBLISHES.md](PUBLISHES.md) | Publish history |
 | [checks/](checks/) | Model API checks for the conventions |
 
 ## What changed?
 
 - **In a story:** read the story file, then the files in `changes/` tagged with its ID.
-- **Between two publishes:** `git log -p snapshots/<Module>/`.
+- **Between two stories:** `git log -p snapshots/<Module>/`.
 - **Who approved it:** `reviews/<Module>/<story-id>.md`.
 
 Set up on {{DATE}} with the `outsystems-mcp-repo-setup` skill.

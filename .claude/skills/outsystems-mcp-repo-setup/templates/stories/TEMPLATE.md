@@ -1,6 +1,6 @@
 # US-000: Title
 
-- **Status:** To do | In progress | In review | Published | Done
+- **Status:** To do | In progress | In review (published to Development, being tested) | Done
 - **Modules:** ModuleName
 - **Requested by:**
 - **Created:** yyyy-mm-dd
