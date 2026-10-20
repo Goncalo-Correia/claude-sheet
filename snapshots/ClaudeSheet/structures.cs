@@ -20,6 +20,8 @@
     var chartLegendOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Iw63OPxQEEeAzzaCqdyZig*paF_yF+UTUuPIOKkkmyixg"));
     // IStructureSignature OutSystemsCharts/ChartLegendStyling
     var chartLegendStyling = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Iw63OPxQEEeAzzaCqdyZig*W+QAg3aYgUegoRHmRXQsig"));
+    // IStructureSignature ClaudeSheet_CS/ClientSummary
+    var clientSummary = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*UuNRIqwpJ0WA8pzp14NssQ"));
     // IStructureSignature OutSystemsMaps/Coordinates
     var coordinates = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("0TG7lXnw1k+rLlyDJoVaqg*WZx1aHJQ0UWsUfXtv2pX2w"));
     // IStructureSignature OutSystemsCharts/DataPoint
@@ -92,6 +94,10 @@
     var progressBarOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*yr_QLdz3gUSapQFUagrtsQ"));
     // IStructureSignature OutSystemsUI/ProgressCircleOptionalConfigs
     var progressCircleOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*IX4mK1jQ+kaQWhxlHnzoMA"));
+    // IStructureSignature ClaudeSheet_CS/ProjectAssignmentSummary
+    var projectAssignmentSummary = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*3K5NJn6vz0qKhpByQWFhSQ"));
+    // IStructureSignature ClaudeSheet_CS/ProjectSummary
+    var projectSummary = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*QXFb9cwozEK+aSo6pDi+1w"));
     // IStructureSignature OutSystemsCharts/PropertyValue
     var propertyValue = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Iw63OPxQEEeAzzaCqdyZig*HwYhgBgvAUKeq0C5fagyDg"));
     // IStructureSignature OutSystemsUI/RangeSliderOptionalConfigs
@@ -116,6 +122,10 @@
     var timeEntryInput = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*WdOz4O+NLE+vs1eiZnJ7xg"));
     // IStructureSignature OutSystemsUI/TimePickerOptionalConfigs
     var timePickerOptionalConfigs = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*S86ifK4baUy+ZoPeWdAqqQ"));
+    // IStructureSignature ClaudeSheet_CS/UserAccess
+    var userAccess = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*z3Ht2aSQkEO6Af+sJSs08Q"));
+    // IStructureSignature ClaudeSheet_CS/UserOption
+    var userOption = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*M9P+15pfekac0DCj0ysqcQ"));
     // IStructureSignature OutSystemsUI/VideoCaptions
     var videoCaptions = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*+3w9d276xkuitQeiG1EGag"));
     // IStructureSignature OutSystemsUI/VideoOptionalConfigs

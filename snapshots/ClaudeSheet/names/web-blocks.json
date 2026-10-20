@@ -60,6 +60,12 @@
     "IsReferenced": true
   },
   {
+    "Name": "AssignmentEditor",
+    "Description": "Assignments of a project (ProjectId) or of a user (UserId): table with Add, Edit, End and Delete, and the assignment popup. Pass exactly one of the two inputs. Used by ProjectDetail and UserDetail.",
+    "UIFlow": "Admin",
+    "IsReferenced": false
+  },
+  {
     "Name": "Badge",
     "Description": "Displays a number as notification, a nice way to notify a user about new messages or tasks.",
     "UIFlow": "Numbers",

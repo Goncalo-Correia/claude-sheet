@@ -46,5 +46,17 @@
     "Description": "Admin list of projects (SheetAdmin): filter by client, show inactive, assigned users; opens ProjectDetail.",
     "UIFlow": "Admin",
     "IsReferenced": false
+  },
+  {
+    "Name": "UserDetail",
+    "Description": "Admin detail of a user (SheetAdmin): ClaudeSheet roles (SheetUser, SheetAdmin, SheetManager) with Save, and the user's project assignments (AssignmentEditor).",
+    "UIFlow": "Admin",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Users",
+    "Description": "Admin list of users (SheetAdmin): search, only users with access, roles as tags, active assignments; opens UserDetail.",
+    "UIFlow": "Admin",
+    "IsReferenced": false
   }
 ]

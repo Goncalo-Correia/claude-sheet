@@ -46,6 +46,8 @@
     var direction = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*hoBiZ4t_hE+peKnT9UeWnA"));
     // IServerEntitySignature (System)/Espace
     var espace = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*Peat6jeAoS7k0hgUWu_7Nw"));
+    // IServerEntitySignature (System)/Extension
+    var extension = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*MfHEVS2SpvBBQMceN5FCnA"));
     // IStaticEntitySignature OutSystemsUI/FloatingPosition
     var floatingPosition = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*KotrkgYJb06O9eGP3OS1rw"));
     // IStaticEntitySignature OutSystemsUI/Gradient
@@ -72,6 +74,10 @@
     var menuAction = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*gyjBnKsG8EyZl+3nxsAtZw"));
     // IStaticEntitySignature OutSystemsUI/MessageStatus
     var messageStatus = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*wF8BwRzIzECgRr+ZzyGigA"));
+    // IServerEntitySignature (System)/Module
+    var module = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*jl+1IWdCzE+ML23BgvvArQ"));
+    // IStaticEntitySignature (System)/Module_Kind
+    var module_Kind = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*fM3cEBCfP0CDak8z0p2_SA"));
     // IStaticEntitySignature OutSystemsUI/Month
     var month = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*JLfZM7GgCkuR+ychQ8RKhQ"));
     // IStaticEntitySignature OutSystemsUI/Orientation

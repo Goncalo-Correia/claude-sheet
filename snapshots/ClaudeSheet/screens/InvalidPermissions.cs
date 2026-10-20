@@ -9,8 +9,12 @@
     var anonymous = eSpace.SystemRoles.OfType<OutSystems.Model.Logic.ISystemRole>().Named("Anonymous");
     invalidPermissions.Roles.Add(anonymous);
     var claudeSheet_CS = eSpace.References.Named("ClaudeSheet_CS");
+    var sheetManager = claudeSheet_CS.Roles.Named("SheetManager");
+    invalidPermissions.Roles.Add(sheetManager);
     var sheetUser = claudeSheet_CS.Roles.Named("SheetUser");
     invalidPermissions.Roles.Add(sheetUser);
+    var sheetAdmin = claudeSheet_CS.Roles.Named("SheetAdmin");
+    invalidPermissions.Roles.Add(sheetAdmin);
     var registered = eSpace.SystemRoles.OfType<OutSystems.Model.Logic.ISystemRole>().Named("Registered");
     invalidPermissions.Roles.Add(registered);
     invalidPermissions.AnonymousAccess = false; // default value
@@ -104,7 +108,7 @@
     var textWidget = container.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
     textWidget.CustomStyle = null; // default value
     textWidget.SetStyleClasses("\"heading6\"");
-    textWidget.Text = "You don\'t have permissions to view this screen.";
+    textWidget.Text = "You don\'t have access to ClaudeSheet yet.";
     
     var container2 = placeholderContentWidget4.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container2.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -133,7 +137,7 @@
     var textWidget2 = container2.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
     textWidget2.CustomStyle = null; // default value
     textWidget2.SetStyleClasses(null); // default value
-    textWidget2.Text = "Please contact your system administrator.";
+    textWidget2.Text = "Ask an administrator to give you access.";
     
     var placeholderContentWidget5 = blankSlateInstance.PlaceholdersContent.FirstOrDefault(p => p.Placeholder?.Name == "Actions");
     var button = placeholderContentWidget5.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>();

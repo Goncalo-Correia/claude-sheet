@@ -218,5 +218,15 @@
     "Name": "User_GetActive",
     "Description": "Active users for a dropdown (SheetAdmin only): UserId, name and username, sorted by name. Used by the assignment popup in ClaudeSheet.",
     "IsReferenced": false
+  },
+  {
+    "Name": "User_GetList",
+    "Description": "Users with their ClaudeSheet roles and active assignment count (SheetAdmin only). Search matches name, username or email; OnlyWithAccess keeps users with at least one of SheetUser, SheetAdmin, SheetManager. Sorted by name.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "User_SetRoles",
+    "Description": "Grants or revokes SheetUser, SheetAdmin and SheetManager for a user (SheetAdmin only). An admin can't remove their own SheetAdmin. Role changes apply from the user's next login.",
+    "IsReferenced": false
   }
 ]

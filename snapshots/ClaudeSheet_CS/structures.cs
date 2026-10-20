@@ -1346,14 +1346,14 @@
     description4.Length = 250;
     description4.NameInJSON = null; // default value
     
-    /*** creating IStructure 'UserOption' ***/
-    var userOption = eSpace.CreateStructure("UserOption");
-    userOption.Description = "A user for a dropdown: Id, name and username (User_GetActive).";
-    userOption.Folder = null; // default value
-    userOption.Public = true;
-    userOption.Shareable = true;
+    /*** creating IStructure 'UserAccess' ***/
+    var userAccess = eSpace.CreateStructure("UserAccess");
+    userAccess.Description = "A user and their ClaudeSheet access for the Users admin screen: roles and the number of active project assignments (User_GetList).";
+    userAccess.Folder = null; // default value
+    userAccess.Public = true;
+    userAccess.Shareable = true;
     
-    var userId4 = userOption.CreateAttribute("UserId");
+    var userId4 = userAccess.CreateAttribute("UserId");
     userId4.DataType = user.IdentifierType;
     userId4.SetDefaultValue(null); // default value
     userId4.Description = null; // default value
@@ -1361,7 +1361,7 @@
     userId4.Label = "User";
     userId4.NameInJSON = null; // default value
     
-    var name5 = userOption.CreateAttribute("Name");
+    var name5 = userAccess.CreateAttribute("Name");
     name5.DataType = eSpace.TextType;
     name5.SetDefaultValue(null); // default value
     name5.Description = null; // default value
@@ -1370,7 +1370,7 @@
     name5.Length = 250;
     name5.NameInJSON = null; // default value
     
-    var username = userOption.CreateAttribute("Username");
+    var username = userAccess.CreateAttribute("Username");
     username.DataType = eSpace.TextType;
     username.SetDefaultValue(null); // default value
     username.Description = null; // default value
@@ -1378,6 +1378,88 @@
     username.Label = "Username";
     username.Length = 250;
     username.NameInJSON = null; // default value
+    
+    var email = userAccess.CreateAttribute("Email");
+    email.DataType = eSpace.TextType;
+    email.SetDefaultValue(null); // default value
+    email.Description = null; // default value
+    email.IsMandatory = false; // default value
+    email.Label = "Email";
+    email.Length = 250;
+    email.NameInJSON = null; // default value
+    
+    var isActive7 = userAccess.CreateAttribute("IsActive");
+    isActive7.DataType = eSpace.BooleanType;
+    isActive7.SetDefaultValue(null); // default value
+    isActive7.Description = null; // default value
+    isActive7.IsMandatory = false; // default value
+    isActive7.Label = "Is Active";
+    isActive7.NameInJSON = null; // default value
+    
+    var isSheetUser = userAccess.CreateAttribute("IsSheetUser");
+    isSheetUser.DataType = eSpace.BooleanType;
+    isSheetUser.SetDefaultValue(null); // default value
+    isSheetUser.Description = null; // default value
+    isSheetUser.IsMandatory = false; // default value
+    isSheetUser.Label = "Is SheetUser";
+    isSheetUser.NameInJSON = null; // default value
+    
+    var isSheetAdmin = userAccess.CreateAttribute("IsSheetAdmin");
+    isSheetAdmin.DataType = eSpace.BooleanType;
+    isSheetAdmin.SetDefaultValue(null); // default value
+    isSheetAdmin.Description = null; // default value
+    isSheetAdmin.IsMandatory = false; // default value
+    isSheetAdmin.Label = "Is SheetAdmin";
+    isSheetAdmin.NameInJSON = null; // default value
+    
+    var isSheetManager = userAccess.CreateAttribute("IsSheetManager");
+    isSheetManager.DataType = eSpace.BooleanType;
+    isSheetManager.SetDefaultValue(null); // default value
+    isSheetManager.Description = null; // default value
+    isSheetManager.IsMandatory = false; // default value
+    isSheetManager.Label = "Is SheetManager";
+    isSheetManager.NameInJSON = null; // default value
+    
+    var activeAssignments = userAccess.CreateAttribute("ActiveAssignments");
+    activeAssignments.DataType = eSpace.IntegerType;
+    activeAssignments.SetDefaultValue(null); // default value
+    activeAssignments.Description = null; // default value
+    activeAssignments.IsMandatory = false; // default value
+    activeAssignments.Label = "Active Assignments";
+    activeAssignments.NameInJSON = null; // default value
+    
+    /*** creating IStructure 'UserOption' ***/
+    var userOption = eSpace.CreateStructure("UserOption");
+    userOption.Description = "A user for a dropdown: Id, name and username (User_GetActive).";
+    userOption.Folder = null; // default value
+    userOption.Public = true;
+    userOption.Shareable = true;
+    
+    var userId5 = userOption.CreateAttribute("UserId");
+    userId5.DataType = user.IdentifierType;
+    userId5.SetDefaultValue(null); // default value
+    userId5.Description = null; // default value
+    userId5.IsMandatory = false; // default value
+    userId5.Label = "User";
+    userId5.NameInJSON = null; // default value
+    
+    var name6 = userOption.CreateAttribute("Name");
+    name6.DataType = eSpace.TextType;
+    name6.SetDefaultValue(null); // default value
+    name6.Description = null; // default value
+    name6.IsMandatory = false; // default value
+    name6.Label = "Name";
+    name6.Length = 250;
+    name6.NameInJSON = null; // default value
+    
+    var username2 = userOption.CreateAttribute("Username");
+    username2.DataType = eSpace.TextType;
+    username2.SetDefaultValue(null); // default value
+    username2.Description = null; // default value
+    username2.IsMandatory = false; // default value
+    username2.Label = "Username";
+    username2.Length = 250;
+    username2.NameInJSON = null; // default value
     
     /*** creating IStructure 'WeekDayHeader' ***/
     var weekDayHeader = eSpace.CreateStructure("WeekDayHeader");
