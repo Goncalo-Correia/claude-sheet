@@ -1,0 +1,7 @@
+{
+  "host": "thirtytech.outsystemscloud.com",
+  "modules": {
+    "ClaudeSheet_CS": "63faf71d-961c-4509-acd2-5fafc48acd37",
+    "ClaudeSheet": "82758948-e0a9-41e2-bac0-7f28ff3fb44c"
+  }
+}

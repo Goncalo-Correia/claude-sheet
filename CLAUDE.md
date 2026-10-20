@@ -8,7 +8,7 @@ Platform: OutSystems 11. The app is built through the **Service Studio MCP** (`m
 
 | Environment | URL |
 |---|---|
-| Development | TODO |
+| Development | https://thirtytech.outsystemscloud.com/ |
 
 ## Modules
 
@@ -65,6 +65,6 @@ When a story's plan has steps in more than one module (`## Implementation plan` 
 - Never write session tokens, passwords or LifeTime credentials to any file in this repo.
 - Call `createSessionToken` once per session and reuse the token.
 - Make Service Studio read calls one at a time. Parallel reads fail with "OML not found".
-- Every module a story touches must be open in Service Studio to be read or changed; `listApps` shows the open modules and their references. Pass the right `eSpaceName` on every call: each module has its own session pointer.
+- Every module a story touches must be open in Service Studio to be read or changed; `listApps` shows the open modules and their references. Pass the right `eSpaceName` on every call: each module has its own session pointer. To open a module that isn't open, use the `outsystems-open-module` skill (eSpaceKeys in its `modules.json`).
 - `omlPublish` publishes the live module in Service Studio, not an unmerged chain, so merge first.
 - `docs/conventions.md` is the naming and design standard. If the user asks for something that contradicts it, point that out before doing it.
