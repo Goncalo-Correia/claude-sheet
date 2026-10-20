@@ -125,7 +125,7 @@ Before showing the form, check yourself: every plan step has exactly one row, an
 
 Send a short text intro: module, story, round number, number of steps, how many are Approved and Rejected, the number of fixed rows, and that the Compare-and-Merge window is opening now so they can check both side by side.
 
-Render the form **in the conversation** with `mcp__visualize__show_widget` (call `mcp__visualize__read_me` with modules `["elicitation"]` once beforehand if it hasn't been read in this conversation). Use the markup in `references/plan-check-form.md`. One row per plan step: the ID, the step text, Claude's tag badge, the reason or evidence, and Yes/No pills with a reason box on No. One Submit button.
+Render the form **in the conversation** with `mcp__visualize__show_widget` (call `mcp__visualize__read_me` with modules `["elicitation"]` once beforehand if it hasn't been read in this conversation). Use the markup in `references/plan-check-form.md`. One row per plan step: the ID, the step text, Claude's tag badge, the reason or evidence, and Yes/No pills with a reason box on No. One Submit button, with "Yes to all" and "No to all" next to it (wired by the `<script>` in the markup).
 
 - Header title: `"<Module> · <story> · implementation plan check · round N"`.
 - The tag never pre-selects an answer: the user answers every row.

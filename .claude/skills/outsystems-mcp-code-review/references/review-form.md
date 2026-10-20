@@ -11,7 +11,7 @@ How it works:
 - Change rows have no tag. Change-type badges: Created = success colours, Modified = accent colours, Deleted / Validation error = danger colours.
 - Rows fixed in this round use the yellow style shown on A02: background `var(--bg-warning)`, border `var(--border-warning)` and a "Fixed in round N" note.
 - The header SVG is fixed chrome from the elicitation guide: copy it byte-for-byte.
-- Footer: keep the Skip button (required by the shell); label the submit button "Submit review".
+- Footer, left to right: Skip (required by the shell), "Yes to all", "No to all", then the submit button labelled "Submit review". The bulk buttons carry `data-bulk="Yes"` / `data-bulk="No"` (the pill `data-value` they select) and are wired by the `<script>` after the form: copy it as is. It clicks the matching pill in every row that isn't already on it, so the shell's own selection runs and "No to all" reveals every reason box. The user can still change single rows afterwards. The script is the one exception to the shell's no-script rule.
 - The widget rules forbid HTML comments: don't add any.
 
 The conventions section and the plan section, when included, use the same row markup as the criteria (tag badge + reason or evidence), with IDs `N01`, `N02`, … and `P01`, `P02`, ….
@@ -81,7 +81,20 @@ The conventions section and the plan section, when included, use the same row ma
   </div>
   <div class="elicit-footer">
     <button type="button" class="elicit-skip">Skip</button>
+    <button type="button" data-bulk="Yes" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">Yes to all</button>
+    <button type="button" data-bulk="No" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">No to all</button>
     <button type="button" class="elicit-submit">Submit review</button>
   </div>
 </form>
+<script>
+document.querySelectorAll('[data-bulk]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.getAttribute('data-bulk');
+    document.querySelectorAll('.elicit-pills').forEach(function (g) {
+      var p = g.querySelector('.elicit-pill[data-value="' + v + '"]');
+      if (p && p.getAttribute('aria-pressed') !== 'true') p.click();
+    });
+  });
+});
+</script>
 ```

@@ -10,7 +10,7 @@ How it works:
 - Under the step text: the reason in danger colour (Rejected), or the evidence (Approved), plus "Verify at runtime." when it applies, then the round status.
 - Rows fixed in this round use the yellow style shown on P02: background `var(--bg-warning)`, border `var(--border-warning)` and a "Fixed in round N" note with the user's reason and what was done.
 - The header SVG is fixed chrome from the elicitation guide: copy it byte-for-byte.
-- Footer: keep the Skip button (required by the shell); label the submit button "Submit plan check".
+- Footer, left to right: Skip (required by the shell), "Yes to all", "No to all", then the submit button labelled "Submit plan check". The bulk buttons carry `data-bulk="Yes"` / `data-bulk="No"` (the pill `data-value` they select) and are wired by the `<script>` after the form: copy it as is. It clicks the matching pill in every row that isn't already on it, so the shell's own selection runs and "No to all" reveals every reason box. The user can still change single rows afterwards. The script is the one exception to the shell's no-script rule.
 - The widget rules forbid HTML comments: don't add any.
 
 ```html
@@ -58,7 +58,20 @@ How it works:
   </div>
   <div class="elicit-footer">
     <button type="button" class="elicit-skip">Skip</button>
+    <button type="button" data-bulk="Yes" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">Yes to all</button>
+    <button type="button" data-bulk="No" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">No to all</button>
     <button type="button" class="elicit-submit">Submit plan check</button>
   </div>
 </form>
+<script>
+document.querySelectorAll('[data-bulk]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.getAttribute('data-bulk');
+    document.querySelectorAll('.elicit-pills').forEach(function (g) {
+      var p = g.querySelector('.elicit-pill[data-value="' + v + '"]');
+      if (p && p.getAttribute('aria-pressed') !== 'true') p.click();
+    });
+  });
+});
+</script>
 ```

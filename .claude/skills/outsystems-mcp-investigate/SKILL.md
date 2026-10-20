@@ -13,7 +13,7 @@ The purpose is to turn "look at this and tell me what's wrong or missing" into a
   -> 2. one subagent per module, read-only, each returns its findings
   -> 3. compile the findings into one checklist (F01, F02, …) and show it
   -> 4. group the checklist into proposed stories (US / TT) with plan and acceptance criteria
-  -> 5. approval form: Approve / Reject per story, one Submit
+  -> 5. approval form: Approve / Reject per story, Approve all / Reject all, one Submit
   -> 6. on submit: generate the new prompt with the approved stories only
 ```
 
@@ -118,7 +118,7 @@ Append the stories and the Not proposed list to the report, then show them in th
 
 ## 5. Approval form
 
-Render the form **inline in the conversation** with `mcp__visualize__show_widget` (call `mcp__visualize__read_me` with modules `["elicitation"]` once beforehand if it hasn't been read in this conversation). Use the markup in [references/approval-form.md](references/approval-form.md). One row per proposed story: ID, title, priority, size, modules, the description in two lines, the findings covered, and Approve / Reject pills; Reject reveals an optional reason box. One Submit button. If the widget tool isn't available, show the table and ask the user to reply with `US6 Approve`, `TT5 Reject: <reason>` lines.
+Render the form **inline in the conversation** with `mcp__visualize__show_widget` (call `mcp__visualize__read_me` with modules `["elicitation"]` once beforehand if it hasn't been read in this conversation). Use the markup in [references/approval-form.md](references/approval-form.md). One row per proposed story: ID, title, priority, size, modules, the description in two lines, the findings covered, and Approve / Reject pills; Reject reveals an optional reason box. One Submit button, with "Approve all" and "Reject all" next to it (wired by the `<script>` in the markup). If the widget tool isn't available, show the table and ask the user to reply with `US6 Approve`, `TT5 Reject: <reason>` lines.
 
 Never write the form to an `.html` file or publish it as an Artifact.
 

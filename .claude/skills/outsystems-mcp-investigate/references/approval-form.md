@@ -9,7 +9,7 @@ How it works:
 - Priority badge next to the ID: High = `var(--bg-danger)` / `var(--text-danger)`; Medium = `var(--bg-warning)` / `var(--text-warning)`; Low = `var(--bg-accent)` / `var(--text-accent)`. Never pre-select a pill.
 - Under the title: type and size, modules, the description in at most two lines, then "Covers: F03, F08" in muted text.
 - The header SVG is fixed chrome from the elicitation guide: copy it byte-for-byte. Header text: `"<scope> · investigation stories"`.
-- Footer: keep the Skip button (required by the shell); label the submit button "Submit stories".
+- Footer, left to right: Skip (required by the shell), "Approve all", "Reject all", then the submit button labelled "Submit stories". The bulk buttons carry `data-bulk="Approve"` / `data-bulk="Reject"` (the pill `data-value` they select) and are wired by the `<script>` after the form: copy it as is. It clicks the matching pill in every row that isn't already on it, so the shell's own selection runs and "Reject all" reveals every reason box. The user can still change single rows afterwards. The script is the one exception to the shell's no-script rule.
 - The widget rules forbid HTML comments: don't add any.
 
 ```html
@@ -58,7 +58,20 @@ How it works:
   </div>
   <div class="elicit-footer">
     <button type="button" class="elicit-skip">Skip</button>
+    <button type="button" data-bulk="Approve" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">Approve all</button>
+    <button type="button" data-bulk="Reject" style="background:transparent; border:0.5px solid var(--border); border-radius:var(--radius); padding:6px 12px; font-size:13px; color:var(--text-primary); cursor:pointer;">Reject all</button>
     <button type="button" class="elicit-submit">Submit stories</button>
   </div>
 </form>
+<script>
+document.querySelectorAll('[data-bulk]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var v = b.getAttribute('data-bulk');
+    document.querySelectorAll('.elicit-pills').forEach(function (g) {
+      var p = g.querySelector('.elicit-pill[data-value="' + v + '"]');
+      if (p && p.getAttribute('aria-pressed') !== 'true') p.click();
+    });
+  });
+});
+</script>
 ```
