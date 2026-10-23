@@ -4,7 +4,6 @@
 //
 // Keep the final throw for the probe (nothing is saved); remove it to apply,
 // then omlMerge the returned mutatedOmlPath.
-// Verified 2026-10-23 (O11, Reactive consumer, Service producer).
 
 eSpace => {
     var producerPath = @"C:\path\to\Producer.oml";   // copy of the producer's -in.oml
@@ -22,6 +21,10 @@ eSpace => {
     };
 
     var added = eSpace.AddDependency(si).ToList();
+    // added=[] with no error = an element uses a type from a third module.
+    // Use examples/AddReferenceWithThirdModuleType.cs instead.
+    if (added.Count == 0)
+        throw new Exception("Nothing added: a requested element probably needs a third module's signature");
 
     var r = eSpace.References.Named(producerName);
     throw new Exception("PROBE:added=" + string.Join(",", added.Select(o => o.GetType().Name + ":" + o.ToString()))
