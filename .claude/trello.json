@@ -1,0 +1,19 @@
+{
+  "board": "https://trello.com/b/FJhiUrwu/outsystems-mcp-claudesheet",
+  "boardId": "6acf6a8629d4c5bf141f40ed",
+  "boardName": "Outsystems MCP - ClaudeSheet",
+  "lists": {
+    "backlog": {
+      "id": "6acf6ec531373ef55e4aa25b",
+      "name": "Backlog"
+    },
+    "inProgress": {
+      "id": "6acfa084f2ba7737b12333eb",
+      "name": "In Progress"
+    },
+    "done": {
+      "id": "6acfa086e3dd1f1660b1a45a",
+      "name": "Done"
+    }
+  }
+}

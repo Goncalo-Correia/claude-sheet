@@ -1,6 +1,6 @@
 ---
 name: outsystems-mcp-implementation
-description: Implements an OutSystems 11 user story through the Service Studio MCP from a complete definition. Triggered by "implement US X" (or "implement US-012", "implement story X"), it first asks, one at a time, for the story's description, its implementation plan and its acceptance criteria, writes them to the story file, then implements the plan with applyModelApiCode. Before merging it validates every implementation plan step against the mutated module, tags each Approved or Rejected with the reason, shows the list as a Yes/No form in the conversation and then calls omlMerge right away, so the user reviews the plan check while reviewing the merge in Service Studio; the user's answer is final, and it fixes only what the user answers No to. When every plan step is Yes and the module has no validation errors, it publishes the module to Development, because an OutSystems app can only be tested in the browser once it is published; the acceptance criteria are then validated by the user, in the browser and in Service Studio, with outsystems-mcp-code-review. Use whenever the user says "implement US X", "implement story X", "build US X", "start US X", or names outsystems-mcp-implementation.
+description: Implements an OutSystems 11 user story through the Service Studio MCP from a complete definition. Triggered by "implement US X" (or "implement US-012", "implement story X"), it first asks, one at a time, for the story's description, its implementation plan and its acceptance criteria, writes them to the story file, moves the story's Trello card from Backlog to In Progress when the project has a board connection (and offers to configure one when it hasn't), then implements the plan with applyModelApiCode. Before merging it validates every implementation plan step against the mutated module, tags each Approved or Rejected with the reason, shows the list as a Yes/No form in the conversation and then calls omlMerge right away, so the user reviews the plan check while reviewing the merge in Service Studio; the user's answer is final, and it fixes only what the user answers No to. When every plan step is Yes and the module has no validation errors, it publishes the module to Development, because an OutSystems app can only be tested in the browser once it is published; the acceptance criteria are then validated by the user, in the browser and in Service Studio, with outsystems-mcp-code-review. Use whenever the user says "implement US X", "implement story X", "build US X", "start US X", or names outsystems-mcp-implementation.
 ---
 
 # OutSystems MCP implementation
@@ -15,6 +15,8 @@ This skill covers definition → implementation → plan check → publish to De
   -> 2. ask for the implementation plan  (wait for the answer)
   -> 3. ask for the acceptance criteria  (wait for the answer)
   -> 4. write the story file, set the current story
+  -> 4b. Trello: move the story's card from Backlog to In Progress
+         (no board connection -> ask whether to configure one)
   -> 5. implement the plan (applyModelApiCode), no merge yet
   -> 6. validate each plan step against the mutated module: Approved / Rejected + reason
   -> 7. show the plan check form AND call omlMerge right after it, same turn
@@ -68,6 +70,24 @@ In a repository with a `stories/` folder:
 Outside such a repository, keep the definition in the conversation and show it back to the user once, in full, before implementing.
 
 Then check the plan against `docs/conventions.md` (when it exists). If a step contradicts the conventions, point it out and ask before implementing it. This includes **names**: if the plan names an action, structure or other element in a way the conventions' naming rules don't allow (for example a block's On After Fetch handler not called `OnAfterFetch_<DataSource>`, or a reusable server action not called `<Entity>_<Verb>`), propose the conventional name and ask which one to use. Elements the plan doesn't name are named by the conventions. This also includes **module placement**: when the conventions or `docs/architecture.md` say which module an element belongs in (for example backend elements in a `_CS` module), check every plan step's module, point out a step that puts an element in the wrong module and ask before implementing it. Ask the user to open every module the plan touches in Service Studio (`listApps` must show each one `isOpen`).
+
+## 4b. Move the Trello card to In Progress
+
+Once the story file is written and before implementing, put the story's card in **In Progress** on the project's Trello board. Use [`scripts/trello.mjs`](scripts/trello.mjs) from the repository root (`node .claude/skills/outsystems-mcp-implementation/scripts/trello.mjs …`).
+
+- **The board connection** is `.claude/trello.json` in the project: board id and the ids of the Backlog, In Progress and Done lists. It holds no secrets. The credentials come only from the `TRELLO_KEY` and `TRELLO_TOKEN` environment variables; the script sends them in the `Authorization` header. Never write them to a file, print them or put them in a URL.
+- **Check it:** `node …/trello.mjs status`.
+  - `CONNECTED` → move the card (below).
+  - `NOT_CONFIGURED` (exit 2) → **ask** with AskUserQuestion whether to configure a Trello board for this project, with the options **Configure** and **Not now**.
+    - **Configure:** ask for the board URL in chat, then run `setup <board URL>`. It finds the lists named Backlog, In Progress and Done. On `LISTS_NOT_FOUND` it prints the board's lists; ask which ones to use and re-run with `--backlog "<name>" --in-progress "<name>" --done "<name>"`. Mention that `.claude/trello.json` can be committed so the whole team shares the connection. Then move the card.
+    - **Not now:** skip this step and carry on with step 5. Don't ask again for the same story.
+  - `NO_CREDENTIALS` (exit 3) → tell the user to set `TRELLO_KEY` and `TRELLO_TOKEN` (an API key and token from https://trello.com/power-ups/admin) and restart the session, and carry on without moving the card. Never ask them to paste the values into the chat.
+- **Move:** `node …/trello.mjs move <ID>` (e.g. `US10`). It finds the card whose name starts with the story ID and moves it from Backlog to the top of In Progress.
+  - `MOVED` → add the card's link to the story file as `- **Trello:** <link>`, under Created.
+  - `ALREADY` → nothing to do.
+  - `NOT_IN_BACKLOG` (for example a reopened story already in Done) → say where the card is and leave it there.
+  - `CARD_NOT_FOUND` / `AMBIGUOUS` → say so and carry on. Don't create a card.
+- A Trello failure never blocks the implementation: report it in one line and carry on with step 5.
 
 ## 5. Implement
 
