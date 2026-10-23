@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT8 (action folders and node names)
+- **Last refresh:** 2026-10-23, targeted mode, after the manual publish of US10's ClaudeSheet part
 
 ## Own elements (references excluded)
 
@@ -11,8 +11,8 @@
 | Entities, static entities, structures | 0 | In ClaudeSheet_CS |
 | Server actions | 2 | DoLogin, DoLogout (login template) |
 | Client actions | 1 | Minutes_Format |
-| Screens | 8 | Admin/Holidays (US8), Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
-| Blocks | 13 | ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
+| Screens | 10 | Admin/Users, Admin/UserDetail (US9), Admin/Holidays (US8), Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
+| Blocks | 14 | Admin/AssignmentEditor (US9), ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
 | Roles | 2 | Anonymous, Registered. Referenced from ClaudeSheet_CS: SheetUser, SheetAdmin, SheetManager |
 | Timers, user exceptions | 0 | In ClaudeSheet_CS |
 | Themes | 1 | ClaudeSheet |
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- US10 (2026-10-23), targeted mode: light reads plus `web-blocks/HoursCalendar.cs` (HasProjectLines + NoProjectsMessage, Save/Confirm visibility, NotesField with NotesInput, HasFillProjects + NoFillProjectsMessage, OnClick_FillPendingButton calling Project_GetAssignedInPeriod, the filled/skipped message). Written by `extract-snapshot.mjs` from the saved tool output (too large for the transcript). `names/server-actions.json` gained the referenced Project_GetAssignedInPeriod and the new FillPending description; every other module-wide file is unchanged. Counts above now include US9's screens and block.
+
+### TT8 refresh (2026-10-19)
 
 - TT8 (2026-10-19), targeted mode: `client-actions/Minutes_Format.cs` (folder Minutes), the 7 screens (ClientDetail, Clients, Holidays, Login, MySheet, ProjectDetail, Projects) and the 6 blocks (DayStatusKPIs, HoursCalendar, Menu, TotalHoursMonth, UserInfo, WeeklyProjectHours): 121 node labels, and AppendHourOption/AppendMinuteOption in HoursCalendar.OnInitialize. `web-blocks/UserInfo.cs` is new. HoursCalendar, WeeklyProjectHours, Login, ProjectDetail, Holidays, Projects and ClientDetail were rebuilt from the saved tool output (too large for the transcript). Other files are as of the US8 refresh.
 

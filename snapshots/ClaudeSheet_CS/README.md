@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet_CS (Reactive, Core): the backend of ClaudeSheet (ADR 0004)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-19, targeted mode, after the manual publish of TT8's ClaudeSheet_CS part
+- **Last refresh:** 2026-10-23, targeted mode, after the manual publish of US10's ClaudeSheet_CS part
 
 ## Own elements (references excluded)
 
@@ -10,8 +10,8 @@
 |---|---|---|
 | Entities | 6 | Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry (Public, Read Only) |
 | Static entities | 2 | DayStatus, CalendarDayType (Public) |
-| Structures | 16 | ProjectSummary, ProjectAssignmentSummary, UserOption (US7), ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
-| Server actions | 29 | Public: Holiday_GetList, Holiday_CreateOrUpdate, Holiday_SetActive, Holiday_CopyYear (US8), Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
+| Structures | 17 | UserAccess (US9), ProjectSummary, ProjectAssignmentSummary, UserOption (US7), ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
+| Server actions | 32 | Public: Project_GetAssignedInPeriod (US10), User_GetList, User_SetRoles (US9), Holiday_GetList, Holiday_CreateOrUpdate, Holiday_SetActive, Holiday_CopyYear (US8), Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
 | Roles | 3 own (+ Anonymous, Registered) | SheetUser, SheetAdmin, SheetManager (Public) |
 | User exceptions | 5 | DaySheetValidation, ClientValidation, ProjectValidation, AssignmentValidation, HolidayValidation (all Public, set by hand: the Model API can't read or set that flag) |
 | Site properties | 3 own (+ TenantName, TenantId) | DailyExpectedMinutes (480), SeedTestUsernames, SeedAdminUsernames |
@@ -19,6 +19,10 @@
 | References | | (System) only |
 
 ## Notes on this refresh
+
+- US10 (2026-10-23), targeted mode: light reads plus `server-actions/Project_GetAssignedInPeriod.cs` (new) and `server-actions/DaySheet_FillPending.cs` (SkippedCount output, GetAssignmentOnDay + Count skipped, loop body re-laid out). The diff also shows both in `names/server-actions.json`; every other module-wide file is unchanged. Counts above now include US9's UserAccess, User_GetList and User_SetRoles.
+
+### TT8 refresh (2026-10-19)
 
 - TT8 (2026-10-19), targeted mode: all 29 `server-actions/*.cs`. Every action is now in a server-action folder (Calendar, Client, Date, DaySheet, Holiday, Project, ProjectAssignment, ProjectHours, Settings, User, Setup), 84 nodes got labels and 17 Execute nodes were renamed (Bootstrap `CreateHoliday_<name>`, `GrantSheetUserRole_Admin`; ProjectHours_GetWeekly `AppendDayTotal`/`AppendCell`/`AppendRow`). Other files are as of the US8 refresh.
 

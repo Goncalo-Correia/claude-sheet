@@ -56,7 +56,7 @@
   },
   {
     "Name": "DaySheet_FillPending",
-    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.",
+    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day on which the user is assigned to ProjectId (active project and client) is saved through DaySheet_Save with one TimeEntry (ProjectId, MinutesPerDay) and confirmed; Pending days without that assignment are skipped. Runs in one request, so any other error rolls back every day. Returns the number of days filled and skipped.",
     "IsReferenced": false
   },
   {
@@ -157,6 +157,11 @@
   {
     "Name": "Project_CreateOrUpdate",
     "Description": "Creates or updates a project (SheetAdmin only). Name and Code are trimmed and required, the client must exist and be active, and Code is unique per client (case-insensitive by the database collation). Raises ProjectValidation with a user-facing message otherwise. Returns the project's Id.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "Project_GetAssignedInPeriod",
+    "Description": "Active projects (with active client) the current user is assigned to on at least one day between StartDate and EndDate, each project once, sorted by client and project name.",
     "IsReferenced": false
   },
   {

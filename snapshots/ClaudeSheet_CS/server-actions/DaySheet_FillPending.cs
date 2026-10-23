@@ -3,7 +3,7 @@
     /*** creating IServerAction 'DaySheet_FillPending' ***/
     var daySheet_FillPending = eSpace.CreateServerAction("DaySheet_FillPending");
     daySheet_FillPending.CacheInMinutes = null; // default value
-    daySheet_FillPending.Description = "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day is saved through SaveDaySheet with one TimeEntry (ProjectId, MinutesPerDay) and confirmed. Runs in one request, so any error rolls back every day. Returns the number of days filled.";
+    daySheet_FillPending.Description = "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day on which the user is assigned to ProjectId (active project and client) is saved through DaySheet_Save with one TimeEntry (ProjectId, MinutesPerDay) and confirmed; Pending days without that assignment are skipped. Runs in one request, so any other error rolls back every day. Returns the number of days filled and skipped.";
     var daySheet = eSpace.Folders.Named("DaySheet");
     daySheet_FillPending.Folder = daySheet;
     daySheet_FillPending.Function = false; // default value
@@ -85,6 +85,8 @@
     
     var assignment3 = assignNode.CreateAssignment("FilledCount", "0");
     
+    var assignment4 = assignNode.CreateAssignment("SkippedCount", "0");
+    
     var listAppend = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("ListAppend").ConnectedBelow(assignNode, 1371);
     var _System_ = eSpace.References.Named("(System)");
     var listAppend2 = _System_.ServerActions.Named("ListAppend");
@@ -111,7 +113,7 @@
     ifNode2.Label = "!Pending?";
     forEachNode.CycleTarget = ifNode2;
     
-    var endNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 8226);
+    var endNode = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 9597);
     endNode.IsDisabled = false; // default value
     forEachNode.Target = endNode;
     
@@ -121,7 +123,72 @@
     ifNode3.Label = "Draft with hours?";
     ifNode2.TrueTarget = ifNode3;
     
-    var daySheet_Save = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").ToTheRightOf(ifNode3, 1828);
+    var getAssignmentOnDay = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetAssignmentOnDay").Below(ifNode3, 1371);
+    getAssignmentOnDay.CacheInMinutes = null; // default value
+    getAssignmentOnDay.Description = null; // default value
+    getAssignmentOnDay.IsDisabled = false; // default value
+    getAssignmentOnDay.SetMaxRecords("1");
+    getAssignmentOnDay.SetStartIndex(null); // default value
+    getAssignmentOnDay.Timeout = null; // default value
+    var projectAssignment2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("ProjectAssignment");
+    var projectAssignment = getAssignmentOnDay.AsDatabaseAggregate.CreateSource(projectAssignment2);
+    var client2 = eSpace.Entities.OfType<OutSystems.Model.Data.IServerEntity>().Named("Client");
+    var client = getAssignmentOnDay.AsDatabaseAggregate.CreateSource(client2);
+    var project2 = getAssignmentOnDay.AsDatabaseAggregate.CreateSource(project);
+    var join = getAssignmentOnDay.AsDatabaseAggregate.CreateJoin();
+    join.LeftSource = projectAssignment;
+    join.RightSource = project2;
+    join.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
+    join.SetCondition("ProjectAssignment.ProjectId = Project.Id");
+    var join2 = getAssignmentOnDay.AsDatabaseAggregate.CreateJoin();
+    join2.LeftSource = project2;
+    join2.RightSource = client;
+    join2.JoinType = OutSystems.Model.Enumerations.JoinType.Inner;
+    join2.SetCondition("Project.ClientId = Client.Id");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("ProjectAssignment.UserId = GetUserId()");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("ProjectAssignment.ProjectId = ProjectId");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("ProjectAssignment.IsActive");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("ProjectAssignment.StartDate <= Calendar_GetMonth.Days.Current.Date");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("ProjectAssignment.EndDate = NullDate() or ProjectAssignment.EndDate >= Calendar_GetMonth.Days.Current.Date");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("Project.IsActive");
+    getAssignmentOnDay.AsDatabaseAggregate.CreateFilter("Client.IsActive");
+    
+    ifNode3.FalseTarget = getAssignmentOnDay;
+    
+    var getDaySheetForUpdate = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetDaySheetForUpdate").ToTheRightOf(ifNode3, 1828);
+    getDaySheetForUpdate.Action = daySheet2.GetForUpdateAction;
+    getDaySheetForUpdate.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    getDaySheetForUpdate.IsDisabled = false; // default value
+    getDaySheetForUpdate.ServerRequestTimeout = null; // default value
+    var getDaySheetForUpdate2 = daySheet2.GetForUpdateAction;
+    var id = getDaySheetForUpdate2.InputParameters.Named("Id");
+    getDaySheetForUpdate.SetArgumentValue(id, "Calendar_GetMonth.Days.Current.DaySheetId");
+    ifNode3.TrueTarget = getDaySheetForUpdate;
+    
+    var ifNode4 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(getAssignmentOnDay, 1371);
+    ifNode4.SetCondition("not GetAssignmentOnDay.List.Empty");
+    ifNode4.IsDisabled = false; // default value
+    ifNode4.Label = "Assigned on day?";
+    
+    var assignNode2 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getDaySheetForUpdate, 1371);
+    assignNode2.IsDisabled = false; // default value
+    assignNode2.Label = "Confirm draft";
+    
+    var assignment5 = assignNode2.CreateAssignment("SheetRec", "GetDaySheetForUpdate.Record");
+    
+    var assignment6 = assignNode2.CreateAssignment("SheetRec.DayStatusId", "Entities.DayStatus.Confirmed");
+    
+    var assignment7 = assignNode2.CreateAssignment("SheetRec.UpdatedOn", "CurrDateTime()");
+    
+    var assignNode3 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ToTheLeftOf(ifNode4, 1828);
+    assignNode3.IsDisabled = false; // default value
+    assignNode3.Label = "Count skipped";
+    assignNode3.Target = forEachNode;
+    
+    var assignment8 = assignNode3.CreateAssignment("SkippedCount", "SkippedCount + 1");
+    ifNode4.FalseTarget = assignNode3;
+    
+    var daySheet_Save = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").Below(ifNode4, 1371);
     var daySheet_Save2 = eSpace.ServerActions.Named("DaySheet_Save");
     daySheet_Save.Action = daySheet_Save2;
     daySheet_Save.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
@@ -137,36 +204,9 @@
     daySheet_Save.SetArgumentValue(confirm, "True");
     var entries = daySheet_Save2.InputParameters.Named("Entries");
     daySheet_Save.SetArgumentValue(entries, "OneEntry");
-    ifNode3.FalseTarget = daySheet_Save;
+    ifNode4.TrueTarget = daySheet_Save;
     
-    var getDaySheetForUpdate = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("GetDaySheetForUpdate").Below(ifNode3, 1371);
-    getDaySheetForUpdate.Action = daySheet2.GetForUpdateAction;
-    getDaySheetForUpdate.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
-    getDaySheetForUpdate.IsDisabled = false; // default value
-    getDaySheetForUpdate.ServerRequestTimeout = null; // default value
-    var getDaySheetForUpdate2 = daySheet2.GetForUpdateAction;
-    var id = getDaySheetForUpdate2.InputParameters.Named("Id");
-    getDaySheetForUpdate.SetArgumentValue(id, "Calendar_GetMonth.Days.Current.DaySheetId");
-    ifNode3.TrueTarget = getDaySheetForUpdate;
-    
-    var assignNode2 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_Save, 1371);
-    assignNode2.IsDisabled = false; // default value
-    assignNode2.Label = "Count filled";
-    assignNode2.Target = forEachNode;
-    
-    var assignment4 = assignNode2.CreateAssignment("FilledCount", "FilledCount + 1");
-    
-    var assignNode3 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(getDaySheetForUpdate, 1371);
-    assignNode3.IsDisabled = false; // default value
-    assignNode3.Label = "Confirm draft";
-    
-    var assignment5 = assignNode3.CreateAssignment("SheetRec", "GetDaySheetForUpdate.Record");
-    
-    var assignment6 = assignNode3.CreateAssignment("SheetRec.DayStatusId", "Entities.DayStatus.Confirmed");
-    
-    var assignment7 = assignNode3.CreateAssignment("SheetRec.UpdatedOn", "CurrDateTime()");
-    
-    var updateDaySheet = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateDaySheet").ConnectedBelow(assignNode3, 1371);
+    var updateDaySheet = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("UpdateDaySheet").ConnectedBelow(assignNode2, 5484);
     updateDaySheet.Action = daySheet2.UpdateAction;
     updateDaySheet.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     updateDaySheet.IsDisabled = false; // default value
@@ -175,15 +215,27 @@
     var source = updateDaySheet2.InputParameters.Named("Source");
     updateDaySheet.SetArgumentValue(source, "SheetRec");
     
-    var assignNode4 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(updateDaySheet, 1371);
+    var assignNode4 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedToTheLeftOf(daySheet_Save, 1828);
     assignNode4.IsDisabled = false; // default value
     assignNode4.Label = "Count filled";
     assignNode4.Target = forEachNode;
     
-    var assignment8 = assignNode4.CreateAssignment("FilledCount", "FilledCount + 1");
+    var assignment9 = assignNode4.CreateAssignment("FilledCount", "FilledCount + 1");
+    
+    var assignNode5 = daySheet_FillPending.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedToTheLeftOf(updateDaySheet, 3656);
+    assignNode5.IsDisabled = false; // default value
+    assignNode5.Label = "Count filled";
+    assignNode5.Target = forEachNode;
+    
+    var assignment10 = assignNode5.CreateAssignment("FilledCount", "FilledCount + 1");
     
     var filledCount = daySheet_FillPending.CreateOutputParameter("FilledCount");
     filledCount.DataType = eSpace.IntegerType;
     filledCount.SetDefaultValue(null); // default value
     filledCount.Description = null; // default value
+    
+    var skippedCount = daySheet_FillPending.CreateOutputParameter("SkippedCount");
+    skippedCount.DataType = eSpace.IntegerType;
+    skippedCount.SetDefaultValue(null); // default value
+    skippedCount.Description = null; // default value
 }
