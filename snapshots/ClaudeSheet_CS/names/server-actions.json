@@ -11,7 +11,7 @@
   },
   {
     "Name": "Calendar_GetMonth",
-    "Description": "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.",
+    "Description": "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday. IsLocked = the month is Submitted or Approved.",
     "IsReferenced": false
   },
   {
@@ -51,12 +51,12 @@
   },
   {
     "Name": "DaySheet_Clear",
-    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future.",
+    "Description": "Deletes the current user's DaySheet for Date (its TimeEntries are deleted by the Delete rule). The day goes back to Pending or Future. Refused (DaySheetValidation) when the month is Submitted or Approved.",
     "IsReferenced": false
   },
   {
     "Name": "DaySheet_FillPending",
-    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day on which the user is assigned to ProjectId (active project and client) is saved through DaySheet_Save with one TimeEntry (ProjectId, MinutesPerDay) and confirmed; Pending days without that assignment are skipped. Runs in one request, so any other error rolls back every day. Returns the number of days filled and skipped.",
+    "Description": "Fills and confirms every Pending day of the month for the current user: a Draft with a total > 0 is confirmed as is; any other Pending day on which the user is assigned to ProjectId (active project and client) is saved through DaySheet_Save with one TimeEntry (ProjectId, MinutesPerDay) and confirmed; Pending days without that assignment are skipped. Runs in one request, so any other error rolls back every day. Returns the number of days filled and skipped. Refused (DaySheetValidation) when the month is Submitted or Approved.",
     "IsReferenced": false
   },
   {
@@ -66,7 +66,7 @@
   },
   {
     "Name": "DaySheet_Save",
-    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message.",
+    "Description": "Validates and saves the current user's day: weekday, not a holiday, no hours in the future, projects assigned on Date, minutes multiple of 15, total <= 24:00, Confirm needs a total > 0. Upserts the DaySheet (DayOff / Confirmed / Draft) and its TimeEntries; IsDayOff deletes the day's entries. Raises DaySheetValidation with a user-facing message. Refused when the month is Submitted or Approved (MonthSheet_IsLocked).",
     "IsReferenced": false
   },
   {
@@ -153,6 +153,46 @@
     "Name": "LogMessage",
     "Description": "Registers information that can be presented in Service Center in the module general log.",
     "IsReferenced": true
+  },
+  {
+    "Name": "MonthSheet_Approve",
+    "Description": "Approves a Submitted month (SheetManager): status Approved, DecidedBy/DecidedOn set, comment cleared. The month stays locked. Raises PeriodValidation when the month isn't Submitted.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_GetForUser",
+    "Description": "Status of the current user's month (SheetUser): PeriodStatusId (Open when there is no MonthSheet), the manager's Comment and DecidedOn, and IsLocked (Submitted or Approved).",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_GetSubmitted",
+    "Description": "Submitted months of every user for the Approvals screen (SheetManager), newest month first, then by user name, with hours from MonthSheet_GetTotals. IncludeApproved also returns Approved months.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_GetTotals",
+    "Description": "Hours of a user's month: TotalMinutes = minutes on the user's day sheets; ExpectedMinutes = (weekdays - active holidays on weekdays - days off) * Site.DailyExpectedMinutes, as in Calendar_GetMonthSummary.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_IsLocked",
+    "Description": "True when the user's month (MonthSheet) is Submitted or Approved, so its days can't be saved, cleared or filled. No MonthSheet = not locked.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_Reject",
+    "Description": "Rejects a Submitted month with a Comment (SheetManager, Comment required): status Rejected, DecidedBy/DecidedOn set. The month is editable again and the user sees the comment. Raises PeriodValidation otherwise.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_Reopen",
+    "Description": "Reopens an Approved month (SheetManager): status Open, DecidedBy/DecidedOn set, comment cleared, so the user can change and submit it again. Raises PeriodValidation when the month isn't Approved.",
+    "IsReferenced": false
+  },
+  {
+    "Name": "MonthSheet_Submit",
+    "Description": "Submits the current user's month (SheetUser) for approval. Refused with PeriodValidation when the month hasn't ended, when it still has Pending days (the message gives how many), or when it is already Submitted or Approved. A Rejected month can be submitted again; its comment is cleared.",
+    "IsReferenced": false
   },
   {
     "Name": "Project_CreateOrUpdate",

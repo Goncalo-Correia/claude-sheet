@@ -27,9 +27,11 @@
     
     var assignNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(startNode, 1371);
     assignNode.IsDisabled = false; // default value
-    assignNode.Label = "Check admin role";
+    assignNode.Label = "Check roles";
     
     var assignment = assignNode.CreateAssignment("IsSheetAdmin", "CheckSheetAdminRole()");
+    
+    var assignment2 = assignNode.CreateAssignment("IsSheetManager", "CheckSheetManagerRole()");
     
     var endNode = getMenuAccess.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode, 1371);
     endNode.IsDisabled = false; // default value
@@ -40,6 +42,11 @@
     isSheetAdmin.DataType = eSpace.BooleanType;
     isSheetAdmin.SetDefaultValue(null); // default value
     isSheetAdmin.Description = null; // default value
+    
+    var isSheetManager = getMenuAccess.CreateOutputParameter("IsSheetManager");
+    isSheetManager.DataType = eSpace.BooleanType;
+    isSheetManager.SetDefaultValue(null); // default value
+    isSheetManager.Description = null; // default value
     
     var activeItem = menu.CreateInputParameter("ActiveItem");
     activeItem.DataType = eSpace.IntegerType;
@@ -425,9 +432,47 @@
     extendedProperty5.Property = "role";
     extendedProperty5.SetValue("\"menuitem\"");
     
-    var extendedProperty6 = pageLinks.CreateExtendedProperty();
+    var approvalsLink = pageLinks.CreateWidget<ServiceStudio.Plugin.NRWidgets.ILink>("ApprovalsLink");
+    approvalsLink.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    approvalsLink.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    approvalsLink.ColumnGap = null; // default value
+    approvalsLink.ColumnSpan = null; // default value
+    approvalsLink.SetConfirmationMessage(null); // default value
+    approvalsLink.CustomStyle = null; // default value
+    approvalsLink.SetEnabled("True");
+    approvalsLink.FlexBasis = null; // default value
+    approvalsLink.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    approvalsLink.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    approvalsLink.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    approvalsLink.Gap = null;
+    approvalsLink.GridColumns = null; // default value
+    approvalsLink.GridRows = null; // default value
+    approvalsLink.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    approvalsLink.RowGap = null; // default value
+    approvalsLink.RowSpan = null; // default value
+    approvalsLink.SetStyle(null); // default value
+    approvalsLink.SetVisible("GetMenuAccess.IsSheetManager");
+    approvalsLink.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    approvalsLink.Width = ""; // default value
+    
+    var textWidget6 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)approvalsLink.Widgets.First();
+    textWidget6.CustomStyle = null; // default value
+    textWidget6.Name = null; // default value
+    textWidget6.SetStyleClasses(null); // default value
+    textWidget6.Text = "Approvals";
+    var builtinEvent6 = approvalsLink.OnClick;
+    builtinEvent6.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    var approvals = mainFlow.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileScreen>().Named("Approvals");
+    builtinEvent6.Destination = approvals;
+    builtinEvent6.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
+    
+    var extendedProperty6 = approvalsLink.CreateExtendedProperty();
     extendedProperty6.Property = "role";
-    extendedProperty6.SetValue("\"menubar\"");
+    extendedProperty6.SetValue("\"menuitem\"");
+    
+    var extendedProperty7 = pageLinks.CreateExtendedProperty();
+    extendedProperty7.Property = "role";
+    extendedProperty7.SetValue("\"menubar\"");
     
     var loginInfo = advancedHtml.Content.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("LoginInfo");
     loginInfo.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -459,17 +504,17 @@
     var userInfo = common.Nodes.OfType<OutSystems.Model.UI.Mobile.IMobileBlock>().Named("UserInfo");
     userInfoInstance.SourceBlock = userInfo;
     
-    var extendedProperty7 = advancedHtml.CreateExtendedProperty();
-    extendedProperty7.Property = "class";
-    extendedProperty7.SetValue("\"app-menu-content display-flex\"");
-    
     var extendedProperty8 = advancedHtml.CreateExtendedProperty();
-    extendedProperty8.Property = "role";
-    extendedProperty8.SetValue("\"navigation\"");
+    extendedProperty8.Property = "class";
+    extendedProperty8.SetValue("\"app-menu-content display-flex\"");
     
     var extendedProperty9 = advancedHtml.CreateExtendedProperty();
-    extendedProperty9.Property = "aria-label";
-    extendedProperty9.SetValue("\"Main navigation\"");
+    extendedProperty9.Property = "role";
+    extendedProperty9.SetValue("\"navigation\"");
+    
+    var extendedProperty10 = advancedHtml.CreateExtendedProperty();
+    extendedProperty10.Property = "aria-label";
+    extendedProperty10.SetValue("\"Main navigation\"");
     
     var container2 = menu.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container2.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -495,9 +540,9 @@
     container2.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container2.Width = "(fill parent)"; // default value
     
-    var extendedProperty10 = container2.CreateExtendedProperty();
-    extendedProperty10.Property = "role";
-    extendedProperty10.SetValue("\"button\"");
+    var extendedProperty11 = container2.CreateExtendedProperty();
+    extendedProperty11.Property = "role";
+    extendedProperty11.SetValue("\"button\"");
     
     var event2 = container2.CreateEvent();
     event2.Event = "onclick";

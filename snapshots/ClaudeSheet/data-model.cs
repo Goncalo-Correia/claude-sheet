@@ -80,8 +80,12 @@
     var module_Kind = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*fM3cEBCfP0CDak8z0p2_SA"));
     // IStaticEntitySignature OutSystemsUI/Month
     var month = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*JLfZM7GgCkuR+ychQ8RKhQ"));
+    // IServerEntitySignature ClaudeSheet_CS/MonthSheet
+    var monthSheet = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*jb6a2nyVAEqomUTTU6IFHg"));
     // IStaticEntitySignature OutSystemsUI/Orientation
     var orientation = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*JPhxTWOlY0+MdmJuTgvd2w"));
+    // IStaticEntitySignature ClaudeSheet_CS/PeriodStatus
+    var periodStatus = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*H24Otmd7kUeITqy0Qi7KAA"));
     // IStaticEntitySignature OutSystemsUI/Position
     var position = (OutSystems.Model.Data.IStaticEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*6HPAg8K6IkGXcqpuEipdNg"));
     // IServerEntitySignature (System)/Process

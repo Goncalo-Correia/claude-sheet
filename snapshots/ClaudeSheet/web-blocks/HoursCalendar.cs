@@ -66,7 +66,18 @@
     settings_GetDailyExpectedMinutes.IsDisabled = false; // default value
     settings_GetDailyExpectedMinutes.ServerRequestTimeout = null; // default value
     
-    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(settings_GetDailyExpectedMinutes, 1371);
+    var monthSheet_GetForUser = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("MonthSheet_GetForUser").ConnectedBelow(settings_GetDailyExpectedMinutes, 1371);
+    var monthSheet_GetForUser2 = claudeSheet_CS.ServerActions.Named("MonthSheet_GetForUser");
+    monthSheet_GetForUser.Action = monthSheet_GetForUser2;
+    monthSheet_GetForUser.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    monthSheet_GetForUser.IsDisabled = false; // default value
+    monthSheet_GetForUser.ServerRequestTimeout = null; // default value
+    var year3 = monthSheet_GetForUser2.InputParameters.Named("Year");
+    monthSheet_GetForUser.SetArgumentValue(year3, "Year");
+    var month3 = monthSheet_GetForUser2.InputParameters.Named("Month");
+    monthSheet_GetForUser.SetArgumentValue(month3, "Month");
+    
+    var assignNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(monthSheet_GetForUser, 1371);
     assignNode.IsDisabled = false; // default value
     assignNode.Label = "Set outputs";
     
@@ -75,6 +86,12 @@
     var assignment2 = assignNode.CreateAssignment("DailyExpectedMinutes", "Settings_GetDailyExpectedMinutes.Minutes");
     
     var assignment3 = assignNode.CreateAssignment("LeadingBlanks", "DecimalToInteger(Mod(DayOfWeek(NewDate(Year, Month, 1)) + 6, 7))");
+    
+    var assignment4 = assignNode.CreateAssignment("PeriodStatusId", "MonthSheet_GetForUser.PeriodStatusId");
+    
+    var assignment5 = assignNode.CreateAssignment("MonthComment", "MonthSheet_GetForUser.Comment");
+    
+    var assignment6 = assignNode.CreateAssignment("IsLocked", "Calendar_GetMonth.IsLocked");
     
     var ifNode = getCalendar.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode, 1371);
     ifNode.SetCondition("Cells.Length < LeadingBlanks");
@@ -125,6 +142,22 @@
     dailyExpectedMinutes.SetDefaultValue(null); // default value
     dailyExpectedMinutes.Description = null; // default value
     
+    var periodStatusId = getCalendar.CreateOutputParameter("PeriodStatusId");
+    var periodStatus = claudeSheet_CS.Entities.OfType<OutSystems.Model.Data.IStaticEntitySignature>().Named("PeriodStatus");
+    periodStatusId.DataType = periodStatus.IdentifierType;
+    periodStatusId.SetDefaultValue(null); // default value
+    periodStatusId.Description = null; // default value
+    
+    var monthComment = getCalendar.CreateOutputParameter("MonthComment");
+    monthComment.DataType = eSpace.TextType;
+    monthComment.SetDefaultValue(null); // default value
+    monthComment.Description = null; // default value
+    
+    var isLocked = getCalendar.CreateOutputParameter("IsLocked");
+    isLocked.DataType = eSpace.BooleanType;
+    isLocked.SetDefaultValue(null); // default value
+    isLocked.Description = null; // default value
+    
     var onDaySaved = hoursCalendar.CreateEvent("OnDaySaved");
     onDaySaved.Description = "Raised after a day is saved or cleared, or after Fill all pending days.";
     onDaySaved.IsMandatory = false;
@@ -147,25 +180,25 @@
     onMonthChanged.Description = "Raised by the previous/next arrows with the new Year and Month.";
     onMonthChanged.IsMandatory = false;
     
-    var year3 = onMonthChanged.CreateInputParameter("Year");
-    year3.DataType = eSpace.IntegerType;
-    year3.Description = null; // default value
-    year3.IsMandatory = true; // default value
-    
-    var month3 = onMonthChanged.CreateInputParameter("Month");
-    month3.DataType = eSpace.IntegerType;
-    month3.Description = null; // default value
-    month3.IsMandatory = true; // default value
-    
-    var year4 = hoursCalendar.CreateInputParameter("Year");
+    var year4 = onMonthChanged.CreateInputParameter("Year");
     year4.DataType = eSpace.IntegerType;
     year4.Description = null; // default value
     year4.IsMandatory = true; // default value
     
-    var month4 = hoursCalendar.CreateInputParameter("Month");
+    var month4 = onMonthChanged.CreateInputParameter("Month");
     month4.DataType = eSpace.IntegerType;
     month4.Description = null; // default value
     month4.IsMandatory = true; // default value
+    
+    var year5 = hoursCalendar.CreateInputParameter("Year");
+    year5.DataType = eSpace.IntegerType;
+    year5.Description = null; // default value
+    year5.IsMandatory = true; // default value
+    
+    var month5 = hoursCalendar.CreateInputParameter("Month");
+    month5.DataType = eSpace.IntegerType;
+    month5.Description = null; // default value
+    month5.IsMandatory = true; // default value
     
     var refreshKey = hoursCalendar.CreateInputParameter("RefreshKey");
     refreshKey.DataType = eSpace.IntegerType;
@@ -294,7 +327,7 @@
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = "Start hours at 0";
     
-    var assignment4 = assignNode2.CreateAssignment("I", "0");
+    var assignment7 = assignNode2.CreateAssignment("I", "0");
     
     var ifNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode2, 1371);
     ifNode2.SetCondition("I <= 12");
@@ -305,9 +338,9 @@
     assignNode3.IsDisabled = false; // default value
     assignNode3.Label = "Hour option";
     
-    var assignment5 = assignNode3.CreateAssignment("Option.Value", "I");
+    var assignment8 = assignNode3.CreateAssignment("Option.Value", "I");
     
-    var assignment6 = assignNode3.CreateAssignment("Option.Label", "I");
+    var assignment9 = assignNode3.CreateAssignment("Option.Label", "I");
     
     var appendHourOption = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("AppendHourOption").ConnectedBelow(assignNode3, 1371);
     var listAppend3 = _System_.ClientActions.Named("ListAppend");
@@ -323,13 +356,13 @@
     assignNode4.Label = "Next hour";
     assignNode4.Target = ifNode2;
     
-    var assignment7 = assignNode4.CreateAssignment("I", "I + 1");
+    var assignment10 = assignNode4.CreateAssignment("I", "I + 1");
     
     var assignNode5 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().Below(ifNode2, 4113);
     assignNode5.IsDisabled = false; // default value
     assignNode5.Label = "Start minutes at 0";
     
-    var assignment8 = assignNode5.CreateAssignment("I", "0");
+    var assignment11 = assignNode5.CreateAssignment("I", "0");
     
     var ifNode3 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode5, 1371);
     ifNode3.SetCondition("I <= 45");
@@ -340,9 +373,9 @@
     assignNode6.IsDisabled = false; // default value
     assignNode6.Label = "Minute option";
     
-    var assignment9 = assignNode6.CreateAssignment("Option.Value", "I");
+    var assignment12 = assignNode6.CreateAssignment("Option.Value", "I");
     
-    var assignment10 = assignNode6.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
+    var assignment13 = assignNode6.CreateAssignment("Option.Label", "If(I < 10, \"0\", \"\") + I");
     
     var appendMinuteOption = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("AppendMinuteOption").ConnectedBelow(assignNode6, 1371);
     appendMinuteOption.Action = listAppend3;
@@ -355,7 +388,7 @@
     assignNode7.Label = "Next quarter";
     assignNode7.Target = ifNode3;
     
-    var assignment11 = assignNode7.CreateAssignment("I", "I + 15");
+    var assignment14 = assignNode7.CreateAssignment("I", "I + 15");
     
     var endNode2 = onInitialize.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(ifNode3, 4113);
     endNode2.IsDisabled = false; // default value
@@ -407,7 +440,7 @@
     assignNode8.IsDisabled = false; // default value
     assignNode8.Label = "Close editor";
     
-    var assignment12 = assignNode8.CreateAssignment("ShowDayEditor", "False");
+    var assignment15 = assignNode8.CreateAssignment("ShowDayEditor", "False");
     
     var refreshDataNode2 = finishDaySave.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(assignNode8, 1371);
     refreshDataNode2.DataSource = getCalendar;
@@ -453,7 +486,7 @@
     assignNode9.IsDisabled = false; // default value
     assignNode9.Label = "Reset total";
     
-    var assignment13 = assignNode9.CreateAssignment("EditorTotal", "0");
+    var assignment16 = assignNode9.CreateAssignment("EditorTotal", "0");
     
     var forEachNode = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode9, 1371);
     forEachNode.IsDisabled = false; // default value
@@ -467,7 +500,7 @@
     assignNode10.Label = "Add line minutes";
     assignNode10.Target = forEachNode;
     
-    var assignment14 = assignNode10.CreateAssignment("EditorTotal", "EditorTotal + EditorLines.Current.Hours * 60 + EditorLines.Current.Mins");
+    var assignment17 = assignNode10.CreateAssignment("EditorTotal", "EditorTotal + EditorLines.Current.Hours * 60 + EditorLines.Current.Mins");
     
     var endNode6 = recalcEditorTotal2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode, 1371);
     endNode6.IsDisabled = false; // default value
@@ -488,7 +521,7 @@
     assignNode11.IsDisabled = false; // default value
     assignNode11.Label = "Close editor";
     
-    var assignment15 = assignNode11.CreateAssignment("ShowDayEditor", "False");
+    var assignment18 = assignNode11.CreateAssignment("ShowDayEditor", "False");
     
     var endNode8 = onClick_CancelButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode11, 1371);
     endNode8.IsDisabled = false; // default value
@@ -503,7 +536,7 @@
     assignNode12.IsDisabled = false; // default value
     assignNode12.Label = "Close popup";
     
-    var assignment16 = assignNode12.CreateAssignment("ShowFillPopup", "False");
+    var assignment19 = assignNode12.CreateAssignment("ShowFillPopup", "False");
     
     var endNode9 = onClick_CancelFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode12, 1371);
     endNode9.IsDisabled = false; // default value
@@ -545,7 +578,7 @@
     assignNode13.IsDisabled = false; // default value
     assignNode13.Label = "Keep error";
     
-    var assignment17 = assignNode13.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
+    var assignment20 = assignNode13.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
     var endNode11 = onClick_ClearDayButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode13, 1371);
     endNode11.IsDisabled = false; // default value
@@ -569,12 +602,12 @@
     daySheet_FillPending.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
     daySheet_FillPending.IsDisabled = false; // default value
     daySheet_FillPending.ServerRequestTimeout = null; // default value
-    var year5 = daySheet_FillPending2.InputParameters.Named("Year");
-    daySheet_FillPending.SetArgumentValue(year5, "Year");
+    var year6 = daySheet_FillPending2.InputParameters.Named("Year");
+    daySheet_FillPending.SetArgumentValue(year6, "Year");
     var minutesPerDay = daySheet_FillPending2.InputParameters.Named("MinutesPerDay");
     daySheet_FillPending.SetArgumentValue(minutesPerDay, "FillHours * 60 + FillMins");
-    var month5 = daySheet_FillPending2.InputParameters.Named("Month");
-    daySheet_FillPending.SetArgumentValue(month5, "Month");
+    var month6 = daySheet_FillPending2.InputParameters.Named("Month");
+    daySheet_FillPending.SetArgumentValue(month6, "Month");
     var projectId = daySheet_FillPending2.InputParameters.Named("ProjectId");
     daySheet_FillPending.SetArgumentValue(projectId, "FillProjectId");
     ifNode4.FalseTarget = daySheet_FillPending;
@@ -583,14 +616,14 @@
     assignNode14.IsDisabled = false; // default value
     assignNode14.Label = "No project error";
     
-    var assignment18 = assignNode14.CreateAssignment("FillError", "\"Choose a project.\"");
+    var assignment21 = assignNode14.CreateAssignment("FillError", "\"Choose a project.\"");
     ifNode4.TrueTarget = assignNode14;
     
     var assignNode15 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IAssignNode>().ConnectedBelow(daySheet_FillPending, 1371);
     assignNode15.IsDisabled = false; // default value
     assignNode15.Label = "Close popup";
     
-    var assignment19 = assignNode15.CreateAssignment("ShowFillPopup", "False");
+    var assignment22 = assignNode15.CreateAssignment("ShowFillPopup", "False");
     
     var endNode12 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode14, 1371);
     endNode12.IsDisabled = false; // default value
@@ -628,7 +661,7 @@
     assignNode16.IsDisabled = false; // default value
     assignNode16.Label = "Keep error";
     
-    var assignment20 = assignNode16.CreateAssignment("FillError", "AllExceptions.ExceptionMessage");
+    var assignment23 = assignNode16.CreateAssignment("FillError", "AllExceptions.ExceptionMessage");
     
     var endNode14 = onClick_ConfirmFillButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode16, 1371);
     endNode14.IsDisabled = false; // default value
@@ -695,19 +728,19 @@
     assignNode17.IsDisabled = false; // default value
     assignNode17.Label = "Set day state";
     
-    var assignment21 = assignNode17.CreateAssignment("EditDate", "Day.Date");
+    var assignment24 = assignNode17.CreateAssignment("EditDate", "Day.Date");
     
-    var assignment22 = assignNode17.CreateAssignment("IsFutureDay", "Day.Date > CurrDate()");
+    var assignment25 = assignNode17.CreateAssignment("IsFutureDay", "Day.Date > CurrDate()");
     
-    var assignment23 = assignNode17.CreateAssignment("HasDaySheet", "DaySheet_GetDetail.Detail.DaySheetId <> NullIdentifier()");
+    var assignment26 = assignNode17.CreateAssignment("HasDaySheet", "DaySheet_GetDetail.Detail.DaySheetId <> NullIdentifier()");
     
-    var assignment24 = assignNode17.CreateAssignment("IsDayOff", "DaySheet_GetDetail.Detail.DayStatusId = Entities.DayStatus.DayOff or Day.Date > CurrDate()");
+    var assignment27 = assignNode17.CreateAssignment("IsDayOff", "DaySheet_GetDetail.Detail.DayStatusId = Entities.DayStatus.DayOff or Day.Date > CurrDate()");
     
-    var assignment25 = assignNode17.CreateAssignment("EditorNotes", "DaySheet_GetDetail.Detail.Notes");
+    var assignment28 = assignNode17.CreateAssignment("EditorNotes", "DaySheet_GetDetail.Detail.Notes");
     
-    var assignment26 = assignNode17.CreateAssignment("SavedMinutes", "DaySheet_GetDetail.Detail.TotalMinutes");
+    var assignment29 = assignNode17.CreateAssignment("SavedMinutes", "DaySheet_GetDetail.Detail.TotalMinutes");
     
-    var assignment27 = assignNode17.CreateAssignment("EditorError", "\"\"");
+    var assignment30 = assignNode17.CreateAssignment("EditorError", "\"\"");
     
     var listClear = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("ListClear").ConnectedBelow(assignNode17, 1371);
     var listClear2 = _System_.ClientActions.Named("ListClear");
@@ -727,19 +760,19 @@
     assignNode18.IsDisabled = false; // default value
     assignNode18.Label = "Build editor line";
     
-    var assignment28 = assignNode18.CreateAssignment("Line.ProjectId", "DaySheet_GetDetail.Detail.Lines.Current.ProjectId");
+    var assignment31 = assignNode18.CreateAssignment("Line.ProjectId", "DaySheet_GetDetail.Detail.Lines.Current.ProjectId");
     
-    var assignment29 = assignNode18.CreateAssignment("Line.ClientName", "DaySheet_GetDetail.Detail.Lines.Current.ClientName");
+    var assignment32 = assignNode18.CreateAssignment("Line.ClientName", "DaySheet_GetDetail.Detail.Lines.Current.ClientName");
     
-    var assignment30 = assignNode18.CreateAssignment("Line.ProjectName", "DaySheet_GetDetail.Detail.Lines.Current.ProjectName");
+    var assignment33 = assignNode18.CreateAssignment("Line.ProjectName", "DaySheet_GetDetail.Detail.Lines.Current.ProjectName");
     
-    var assignment31 = assignNode18.CreateAssignment("Line.ProjectCode", "DaySheet_GetDetail.Detail.Lines.Current.ProjectCode");
+    var assignment34 = assignNode18.CreateAssignment("Line.ProjectCode", "DaySheet_GetDetail.Detail.Lines.Current.ProjectCode");
     
-    var assignment32 = assignNode18.CreateAssignment("Line.Hours", "DecimalToInteger(Trunc(DaySheet_GetDetail.Detail.Lines.Current.Minutes / 60))");
+    var assignment35 = assignNode18.CreateAssignment("Line.Hours", "DecimalToInteger(Trunc(DaySheet_GetDetail.Detail.Lines.Current.Minutes / 60))");
     
-    var assignment33 = assignNode18.CreateAssignment("Line.Mins", "DecimalToInteger(Mod(DaySheet_GetDetail.Detail.Lines.Current.Minutes, 60))");
+    var assignment36 = assignNode18.CreateAssignment("Line.Mins", "DecimalToInteger(Mod(DaySheet_GetDetail.Detail.Lines.Current.Minutes, 60))");
     
-    var assignment34 = assignNode18.CreateAssignment("Line.Description", "DaySheet_GetDetail.Detail.Lines.Current.Description");
+    var assignment37 = assignNode18.CreateAssignment("Line.Description", "DaySheet_GetDetail.Detail.Lines.Current.Description");
     
     var recalcEditorTotal3 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteClientActionNode>("RecalcEditorTotal").Below(forEachNode2, 1371);
     recalcEditorTotal3.Action = recalcEditorTotal2;
@@ -756,7 +789,7 @@
     assignNode19.IsDisabled = false; // default value
     assignNode19.Label = "Open editor";
     
-    var assignment35 = assignNode19.CreateAssignment("ShowDayEditor", "True");
+    var assignment38 = assignNode19.CreateAssignment("ShowDayEditor", "True");
     
     var endNode16 = openDayEditor2.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode19, 1371);
     endNode16.IsDisabled = false; // default value
@@ -791,17 +824,17 @@
     assignNode20.IsDisabled = false; // default value
     assignNode20.Label = "Init fill popup";
     
-    var assignment36 = assignNode20.CreateAssignment("FillProjects", "Project_GetAssignedInPeriod.Projects");
+    var assignment39 = assignNode20.CreateAssignment("FillProjects", "Project_GetAssignedInPeriod.Projects");
     
-    var assignment37 = assignNode20.CreateAssignment("FillProjectId", "Project_GetAssignedInPeriod.Projects.Current.ProjectId");
+    var assignment40 = assignNode20.CreateAssignment("FillProjectId", "Project_GetAssignedInPeriod.Projects.Current.ProjectId");
     
-    var assignment38 = assignNode20.CreateAssignment("FillHours", "DecimalToInteger(Trunc(GetCalendar.DailyExpectedMinutes / 60))");
+    var assignment41 = assignNode20.CreateAssignment("FillHours", "DecimalToInteger(Trunc(GetCalendar.DailyExpectedMinutes / 60))");
     
-    var assignment39 = assignNode20.CreateAssignment("FillMins", "DecimalToInteger(Mod(GetCalendar.DailyExpectedMinutes, 60))");
+    var assignment42 = assignNode20.CreateAssignment("FillMins", "DecimalToInteger(Mod(GetCalendar.DailyExpectedMinutes, 60))");
     
-    var assignment40 = assignNode20.CreateAssignment("FillError", "\"\"");
+    var assignment43 = assignNode20.CreateAssignment("FillError", "\"\"");
     
-    var assignment41 = assignNode20.CreateAssignment("ShowFillPopup", "True");
+    var assignment44 = assignNode20.CreateAssignment("ShowFillPopup", "True");
     
     var endNode18 = onClick_FillPendingButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode20, 1371);
     endNode18.IsDisabled = false; // default value
@@ -818,8 +851,8 @@
     onMonthChanged2.Description = null; // default value
     onMonthChanged2.Event = onMonthChanged;
     onMonthChanged2.IsDisabled = false; // default value
-    onMonthChanged2.SetArgumentValue(year3, "If(Month = 12, Year + 1, Year)");
-    onMonthChanged2.SetArgumentValue(month3, "If(Month = 12, 1, Month + 1)");
+    onMonthChanged2.SetArgumentValue(year4, "If(Month = 12, Year + 1, Year)");
+    onMonthChanged2.SetArgumentValue(month4, "If(Month = 12, 1, Month + 1)");
     
     var endNode19 = onClick_NextMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged2, 1371);
     endNode19.IsDisabled = false; // default value
@@ -836,8 +869,8 @@
     onMonthChanged3.Description = null; // default value
     onMonthChanged3.Event = onMonthChanged;
     onMonthChanged3.IsDisabled = false; // default value
-    onMonthChanged3.SetArgumentValue(month3, "If(Month = 1, 12, Month - 1)");
-    onMonthChanged3.SetArgumentValue(year3, "If(Month = 1, Year - 1, Year)");
+    onMonthChanged3.SetArgumentValue(month4, "If(Month = 1, 12, Month - 1)");
+    onMonthChanged3.SetArgumentValue(year4, "If(Month = 1, Year - 1, Year)");
     
     var endNode20 = onClick_PreviousMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(onMonthChanged3, 1371);
     endNode20.IsDisabled = false; // default value
@@ -868,7 +901,7 @@
     assignNode21.IsDisabled = false; // default value
     assignNode21.Label = "Clear error";
     
-    var assignment42 = assignNode21.CreateAssignment("EditorError", "\"\"");
+    var assignment45 = assignNode21.CreateAssignment("EditorError", "\"\"");
     
     var forEachNode3 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(assignNode21, 1371);
     forEachNode3.IsDisabled = false; // default value
@@ -881,11 +914,11 @@
     assignNode22.IsDisabled = false; // default value
     assignNode22.Label = "Build entry";
     
-    var assignment43 = assignNode22.CreateAssignment("Entry.ProjectId", "EditorLines.Current.ProjectId");
+    var assignment46 = assignNode22.CreateAssignment("Entry.ProjectId", "EditorLines.Current.ProjectId");
     
-    var assignment44 = assignNode22.CreateAssignment("Entry.Minutes", "If(IsDayOff, 0, EditorLines.Current.Hours * 60 + EditorLines.Current.Mins)");
+    var assignment47 = assignNode22.CreateAssignment("Entry.Minutes", "If(IsDayOff, 0, EditorLines.Current.Hours * 60 + EditorLines.Current.Mins)");
     
-    var assignment45 = assignNode22.CreateAssignment("Entry.Description", "EditorLines.Current.Description");
+    var assignment48 = assignNode22.CreateAssignment("Entry.Description", "EditorLines.Current.Description");
     forEachNode3.CycleTarget = assignNode22;
     
     var daySheet_Save = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("DaySheet_Save").Below(forEachNode3, 1371);
@@ -933,10 +966,61 @@
     assignNode23.IsDisabled = false; // default value
     assignNode23.Label = "Keep error";
     
-    var assignment46 = assignNode23.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
+    var assignment49 = assignNode23.CreateAssignment("EditorError", "AllExceptions.ExceptionMessage");
     
     var endNode22 = onClick_SaveDay.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(assignNode23, 1371);
     endNode22.IsDisabled = false; // default value
+    
+    var onClick_SubmitMonthButton = hoursCalendar.CreateScreenAction("OnClick_SubmitMonthButton");
+    onClick_SubmitMonthButton.Description = "Submits the shown month for approval (MonthSheet_Submit) and refreshes the calendar. Refusals (pending days, month not ended) are shown as an error message.";
+    
+    var startNode18 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IStartNode>();
+    startNode18.HorizontalPosition = 3200;
+    startNode18.IsDisabled = false; // default value
+    startNode18.VerticalPosition = 800;
+    
+    var monthSheet_Submit = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IExecuteServerActionNode>("MonthSheet_Submit").ConnectedBelow(startNode18, 1371);
+    var monthSheet_Submit2 = claudeSheet_CS.ServerActions.Named("MonthSheet_Submit");
+    monthSheet_Submit.Action = monthSheet_Submit2;
+    monthSheet_Submit.AnimationEffect = OutSystems.Model.Enumerations.ExecuteActionAnimationEffectType.None; // default value
+    monthSheet_Submit.IsDisabled = false; // default value
+    monthSheet_Submit.ServerRequestTimeout = null; // default value
+    var year7 = monthSheet_Submit2.InputParameters.Named("Year");
+    monthSheet_Submit.SetArgumentValue(year7, "Year");
+    var month7 = monthSheet_Submit2.InputParameters.Named("Month");
+    monthSheet_Submit.SetArgumentValue(month7, "Month");
+    
+    var refreshDataNode4 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IRefreshDataNode>().ConnectedBelow(monthSheet_Submit, 1371);
+    refreshDataNode4.DataSource = getCalendar;
+    refreshDataNode4.IsDisabled = false; // default value
+    refreshDataNode4.SetMaxRecords(null); // default value
+    refreshDataNode4.SetStartIndex(null); // default value
+    
+    var messageNode3 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(refreshDataNode4, 1371);
+    messageNode3.IsDisabled = false; // default value
+    messageNode3.Label = "Show submitted";
+    messageNode3.SetMessage("\"Month submitted for approval.\"");
+    messageNode3.Type = OutSystems.Model.Enumerations.MessageType.Success;
+    
+    var endNode23 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(messageNode3, 1371);
+    endNode23.IsDisabled = false; // default value
+    
+    var allExceptions4 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IExceptionHandlerNode>("AllExceptions");
+    allExceptions4.AbortTransaction = false;
+    allExceptions4.Exception = eSpace.AllExceptions;
+    allExceptions4.HorizontalPosition = 6856;
+    allExceptions4.IsDisabled = false; // default value
+    allExceptions4.LogError = false;
+    allExceptions4.VerticalPosition = 800;
+    
+    var messageNode4 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IMessageNode>().ConnectedBelow(allExceptions4, 1371);
+    messageNode4.IsDisabled = false; // default value
+    messageNode4.Label = "Show error";
+    messageNode4.SetMessage("AllExceptions.ExceptionMessage");
+    messageNode4.Type = OutSystems.Model.Enumerations.MessageType.Error;
+    
+    var endNode24 = onClick_SubmitMonthButton.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().ConnectedBelow(messageNode4, 1371);
+    endNode24.IsDisabled = false; // default value
     
     var calendar = hoursCalendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("Calendar");
     calendar.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1115,6 +1199,108 @@
     var extendedProperty2 = nextMonth.CreateExtendedProperty();
     extendedProperty2.Property = "aria-label";
     extendedProperty2.SetValue("\"Next month\"");
+    
+    var monthStatus = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("MonthStatus");
+    monthStatus.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
+    monthStatus.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    monthStatus.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    monthStatus.Animate = true;
+    monthStatus.ColumnGap = null; // default value
+    monthStatus.ColumnSpan = null; // default value
+    monthStatus.CustomStyle = null; // default value
+    monthStatus.FlexBasis = null; // default value
+    monthStatus.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    monthStatus.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    monthStatus.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    monthStatus.Gap = null;
+    monthStatus.GridColumns = null; // default value
+    monthStatus.GridRows = null; // default value
+    monthStatus.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    monthStatus.RowGap = null; // default value
+    monthStatus.RowSpan = null; // default value
+    monthStatus.SetStyle("\"sheet-cal__status-row\"");
+    monthStatus.SetVisible("GetCalendar.IsDataFetched");
+    monthStatus.VisibleWasExpression = true;
+    monthStatus.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    monthStatus.Width = "(fill parent)"; // default value
+    
+    var monthStatusBadge = monthStatus.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("MonthStatusBadge");
+    monthStatusBadge.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
+    monthStatusBadge.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    monthStatusBadge.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    monthStatusBadge.Animate = false; // default value
+    monthStatusBadge.ColumnGap = null; // default value
+    monthStatusBadge.ColumnSpan = null; // default value
+    monthStatusBadge.CustomStyle = null; // default value
+    monthStatusBadge.FlexBasis = null; // default value
+    monthStatusBadge.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    monthStatusBadge.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    monthStatusBadge.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    monthStatusBadge.Gap = null;
+    monthStatusBadge.GridColumns = null; // default value
+    monthStatusBadge.GridRows = null; // default value
+    monthStatusBadge.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    monthStatusBadge.RowGap = null; // default value
+    monthStatusBadge.RowSpan = null; // default value
+    monthStatusBadge.SetStyle("\"sheet-cal__status sheet-cal__status--\" + ToLower(If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Submitted, \"Submitted\", If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Approved, \"Approved\", If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Rejected, \"Rejected\", \"Open\"))))");
+    monthStatusBadge.SetVisible("True"); // default value
+    monthStatusBadge.VisibleWasExpression = false; // default value
+    monthStatusBadge.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    monthStatusBadge.Width = "(fill parent)"; // default value
+    
+    var expression2 = monthStatusBadge.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression2.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression2.ColumnSpan = null; // default value
+    expression2.CustomStyle = null; // default value
+    expression2.Example = null; // default value
+    expression2.FlexBasis = null; // default value
+    expression2.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression2.RowSpan = null; // default value
+    expression2.SetStyle(null); // default value
+    expression2.SetValue("\"Month: \" + If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Submitted, \"Submitted\", If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Approved, \"Approved\", If(GetCalendar.PeriodStatusId = Entities.PeriodStatus.Rejected, \"Rejected\", \"Open\")))");
+    expression2.Width = ""; // default value
+    
+    var hasRejectComment = monthStatus.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasRejectComment");
+    hasRejectComment.Animate = false; // default value
+    hasRejectComment.SetCondition("GetCalendar.PeriodStatusId = Entities.PeriodStatus.Rejected and GetCalendar.MonthComment <> \"\"");
+    hasRejectComment.CustomStyle = null; // default value
+    hasRejectComment.DesignMode = OutSystems.Model.Enumerations.DesignMode.ShowAll; // default value
+    
+    var rejectComment = hasRejectComment.TrueBranch.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("RejectComment");
+    rejectComment.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
+    rejectComment.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    rejectComment.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    rejectComment.Animate = false; // default value
+    rejectComment.ColumnGap = null; // default value
+    rejectComment.ColumnSpan = null; // default value
+    rejectComment.CustomStyle = null; // default value
+    rejectComment.FlexBasis = null; // default value
+    rejectComment.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    rejectComment.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    rejectComment.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    rejectComment.Gap = null;
+    rejectComment.GridColumns = null; // default value
+    rejectComment.GridRows = null; // default value
+    rejectComment.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    rejectComment.RowGap = null; // default value
+    rejectComment.RowSpan = null; // default value
+    rejectComment.SetStyle("\"sheet-cal__comment\"");
+    rejectComment.SetVisible("True"); // default value
+    rejectComment.VisibleWasExpression = false; // default value
+    rejectComment.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    rejectComment.Width = "(fill parent)"; // default value
+    
+    var expression3 = rejectComment.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression3.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression3.ColumnSpan = null; // default value
+    expression3.CustomStyle = null; // default value
+    expression3.Example = null; // default value
+    expression3.FlexBasis = null; // default value
+    expression3.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression3.RowSpan = null; // default value
+    expression3.SetStyle(null); // default value
+    expression3.SetValue("\"Rejected by your manager: \" + GetCalendar.MonthComment");
+    expression3.Width = ""; // default value
     
     var weekdayHeader = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("WeekdayHeader");
     weekdayHeader.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1472,17 +1658,17 @@
     container10.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container10.Width = "(fill parent)"; // default value
     
-    var expression2 = container10.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression2.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression2.ColumnSpan = null; // default value
-    expression2.CustomStyle = null; // default value
-    expression2.Example = null; // default value
-    expression2.FlexBasis = null; // default value
-    expression2.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression2.RowSpan = null; // default value
-    expression2.SetStyle(null); // default value
-    expression2.SetValue("GetCalendar.Cells.Current.DayNumber");
-    expression2.Width = ""; // default value
+    var expression4 = container10.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression4.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression4.ColumnSpan = null; // default value
+    expression4.CustomStyle = null; // default value
+    expression4.Example = null; // default value
+    expression4.FlexBasis = null; // default value
+    expression4.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression4.RowSpan = null; // default value
+    expression4.SetStyle(null); // default value
+    expression4.SetValue("GetCalendar.Cells.Current.DayNumber");
+    expression4.Width = ""; // default value
     
     var container11 = dayCell.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container11.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1569,7 +1755,7 @@
     fillPendingButton.RowGap = null; // default value
     fillPendingButton.RowSpan = null; // default value
     fillPendingButton.SetStyle("\"btn btn-primary sheet-cal__fill\"");
-    fillPendingButton.SetVisible("True"); // default value
+    fillPendingButton.SetVisible("not GetCalendar.IsLocked");
     fillPendingButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     fillPendingButton.Width = ""; // default value
     
@@ -1582,6 +1768,40 @@
     builtinEvent5.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
     builtinEvent5.Destination = onClick_FillPendingButton;
     builtinEvent5.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
+    
+    var submitMonthButton = calendarFooter.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("SubmitMonthButton");
+    submitMonthButton.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    submitMonthButton.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    submitMonthButton.ColumnGap = null; // default value
+    submitMonthButton.ColumnSpan = null; // default value
+    submitMonthButton.SetConfirmationMessage(null); // default value
+    submitMonthButton.CustomStyle = null; // default value
+    submitMonthButton.SetEnabled("GetCalendar.IsDataFetched");
+    submitMonthButton.FlexBasis = null; // default value
+    submitMonthButton.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    submitMonthButton.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    submitMonthButton.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    submitMonthButton.Gap = null;
+    submitMonthButton.GridColumns = null; // default value
+    submitMonthButton.GridRows = null; // default value
+    submitMonthButton.IsDefault = false; // default value
+    submitMonthButton.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    submitMonthButton.RowGap = null; // default value
+    submitMonthButton.RowSpan = null; // default value
+    submitMonthButton.SetStyle("\"btn sheet-cal__submit\"");
+    submitMonthButton.SetVisible("not GetCalendar.IsLocked");
+    submitMonthButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    submitMonthButton.Width = ""; // default value
+    
+    var textWidget9 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)submitMonthButton.Widgets.First();
+    textWidget9.CustomStyle = null; // default value
+    textWidget9.Name = null; // default value
+    textWidget9.SetStyleClasses(null); // default value
+    textWidget9.Text = "Submit month";
+    var builtinEvent6 = submitMonthButton.OnClick;
+    builtinEvent6.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent6.Destination = onClick_SubmitMonthButton;
+    builtinEvent6.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Inherited; // default value
     
     var dayEditorPopup = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IPopup>("DayEditorPopup");
     dayEditorPopup.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
@@ -1628,17 +1848,17 @@
     dayEditorTitle.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     dayEditorTitle.Width = "(fill parent)"; // default value
     
-    var expression3 = dayEditorTitle.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression3.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression3.ColumnSpan = null; // default value
-    expression3.CustomStyle = null; // default value
-    expression3.Example = null; // default value
-    expression3.FlexBasis = null; // default value
-    expression3.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression3.RowSpan = null; // default value
-    expression3.SetStyle(null); // default value
-    expression3.SetValue("FormatDateTime(EditDate, \"dddd, d MMMM yyyy\")");
-    expression3.Width = ""; // default value
+    var expression5 = dayEditorTitle.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression5.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression5.ColumnSpan = null; // default value
+    expression5.CustomStyle = null; // default value
+    expression5.Example = null; // default value
+    expression5.FlexBasis = null; // default value
+    expression5.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression5.RowSpan = null; // default value
+    expression5.SetStyle(null); // default value
+    expression5.SetValue("FormatDateTime(EditDate, \"dddd, d MMMM yyyy\")");
+    expression5.Width = ""; // default value
     
     var dayKind = dayEditorPopup.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButtonGroup>("DayKind");
     /*** Deleting Widgets that are created by default when instantiating an IButtonGroup ***/
@@ -1648,7 +1868,7 @@
     dayKind.ColumnGap = null; // default value
     dayKind.ColumnSpan = null; // default value
     dayKind.CustomStyle = null; // default value
-    dayKind.SetEnabled("True");
+    dayKind.SetEnabled("not GetCalendar.IsLocked");
     dayKind.FlexBasis = null; // default value
     dayKind.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
     dayKind.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
@@ -1689,10 +1909,10 @@
     workDayOption.SetVisible("not IsFutureDay");
     workDayOption.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     
-    var textWidget9 = workDayOption.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget9.CustomStyle = null; // default value
-    textWidget9.SetStyleClasses(null); // default value
-    textWidget9.Text = "Work day";
+    var textWidget10 = workDayOption.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget10.CustomStyle = null; // default value
+    textWidget10.SetStyleClasses(null); // default value
+    textWidget10.Text = "Work day";
     
     var dayOffOption = dayKind.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButtonGroupItem>("DayOffOption");
     /*** Deleting Widgets that are created by default when instantiating an IButtonGroupItem ***/
@@ -1718,14 +1938,49 @@
     dayOffOption.SetVisible("True"); // default value
     dayOffOption.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     
-    var textWidget10 = dayOffOption.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget10.CustomStyle = null; // default value
-    textWidget10.SetStyleClasses(null); // default value
-    textWidget10.Text = "Day off";
-    var builtinEvent6 = dayKind.OnChange;
-    builtinEvent6.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent6.Destination = null; // default value
-    builtinEvent6.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var textWidget11 = dayOffOption.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget11.CustomStyle = null; // default value
+    textWidget11.SetStyleClasses(null); // default value
+    textWidget11.Text = "Day off";
+    var builtinEvent7 = dayKind.OnChange;
+    builtinEvent7.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent7.Destination = null; // default value
+    builtinEvent7.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    
+    var isLockedHint = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("IsLockedHint");
+    isLockedHint.Animate = false; // default value
+    isLockedHint.SetCondition("GetCalendar.IsLocked");
+    isLockedHint.CustomStyle = null; // default value
+    isLockedHint.DesignMode = OutSystems.Model.Enumerations.DesignMode.ShowAll; // default value
+    
+    var lockedMessage = isLockedHint.TrueBranch.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("LockedMessage");
+    lockedMessage.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
+    lockedMessage.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
+    lockedMessage.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    lockedMessage.Animate = false; // default value
+    lockedMessage.ColumnGap = null; // default value
+    lockedMessage.ColumnSpan = null; // default value
+    lockedMessage.CustomStyle = null; // default value
+    lockedMessage.FlexBasis = null; // default value
+    lockedMessage.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
+    lockedMessage.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    lockedMessage.FlexWrap = OutSystems.Model.Enumerations.FlexWrap.NoWrap; // default value
+    lockedMessage.Gap = null;
+    lockedMessage.GridColumns = null; // default value
+    lockedMessage.GridRows = null; // default value
+    lockedMessage.JustifyContent = OutSystems.Model.Enumerations.JustifyContent.Start; // default value
+    lockedMessage.RowGap = null; // default value
+    lockedMessage.RowSpan = null; // default value
+    lockedMessage.SetStyle("\"sheet-popup__hint\"");
+    lockedMessage.SetVisible("True"); // default value
+    lockedMessage.VisibleWasExpression = false; // default value
+    lockedMessage.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
+    lockedMessage.Width = "(fill parent)"; // default value
+    
+    var textWidget12 = lockedMessage.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget12.CustomStyle = null; // default value
+    textWidget12.SetStyleClasses(null); // default value
+    textWidget12.Text = "This month is submitted or approved, so its days are read-only.";
     
     var isFutureHint = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("IsFutureHint");
     isFutureHint.Animate = false; // default value
@@ -1757,10 +2012,10 @@
     container12.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container12.Width = "(fill parent)"; // default value
     
-    var textWidget11 = container12.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget11.CustomStyle = null; // default value
-    textWidget11.SetStyleClasses(null); // default value
-    textWidget11.Text = "Hours cannot be logged in the future. You can only set or remove a day off.";
+    var textWidget13 = container12.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget13.CustomStyle = null; // default value
+    textWidget13.SetStyleClasses(null); // default value
+    textWidget13.Text = "Hours cannot be logged in the future. You can only set or remove a day off.";
     
     var isWorkDay = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("IsWorkDay");
     isWorkDay.Animate = false; // default value
@@ -1895,17 +2150,17 @@
     container16.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container16.Width = "(fill parent)"; // default value
     
-    var expression4 = container16.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression4.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression4.ColumnSpan = null; // default value
-    expression4.CustomStyle = null; // default value
-    expression4.Example = null; // default value
-    expression4.FlexBasis = null; // default value
-    expression4.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression4.RowSpan = null; // default value
-    expression4.SetStyle(null); // default value
-    expression4.SetValue("EditorLines.Current.ClientName");
-    expression4.Width = ""; // default value
+    var expression6 = container16.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression6.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression6.ColumnSpan = null; // default value
+    expression6.CustomStyle = null; // default value
+    expression6.Example = null; // default value
+    expression6.FlexBasis = null; // default value
+    expression6.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression6.RowSpan = null; // default value
+    expression6.SetStyle(null); // default value
+    expression6.SetValue("EditorLines.Current.ClientName");
+    expression6.Width = ""; // default value
     
     var container17 = container15.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container17.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1931,17 +2186,17 @@
     container17.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container17.Width = "(fill parent)"; // default value
     
-    var expression5 = container17.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression5.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression5.ColumnSpan = null; // default value
-    expression5.CustomStyle = null; // default value
-    expression5.Example = null; // default value
-    expression5.FlexBasis = null; // default value
-    expression5.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression5.RowSpan = null; // default value
-    expression5.SetStyle(null); // default value
-    expression5.SetValue("EditorLines.Current.ProjectName + \" | \" + EditorLines.Current.ProjectCode");
-    expression5.Width = ""; // default value
+    var expression7 = container17.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression7.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression7.ColumnSpan = null; // default value
+    expression7.CustomStyle = null; // default value
+    expression7.Example = null; // default value
+    expression7.FlexBasis = null; // default value
+    expression7.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression7.RowSpan = null; // default value
+    expression7.SetStyle(null); // default value
+    expression7.SetValue("EditorLines.Current.ProjectName + \" | \" + EditorLines.Current.ProjectCode");
+    expression7.Width = ""; // default value
     
     var container18 = container14.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container18.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -1975,7 +2230,7 @@
     hoursDropdown.CustomStyle = null; // default value
     hoursDropdown.DropdownMode = ServiceStudio.Plugin.NRWidgets.Enumerations.DropdownMode.Text;
     hoursDropdown.SetEmptyValue(null); // default value
-    hoursDropdown.SetEnabled("True");
+    hoursDropdown.SetEnabled("not GetCalendar.IsLocked");
     hoursDropdown.FlexBasis = null; // default value
     hoursDropdown.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
     hoursDropdown.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
@@ -1994,19 +2249,19 @@
     hoursDropdown.SetVariable("EditorLines.Current.Hours");
     hoursDropdown.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     hoursDropdown.Width = ""; // default value
-    var builtinEvent7 = hoursDropdown.OnChange;
-    builtinEvent7.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent7.Destination = onChange_EditorTime;
-    builtinEvent7.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent8 = hoursDropdown.OnChange;
+    builtinEvent8.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent8.Destination = onChange_EditorTime;
+    builtinEvent8.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty5 = hoursDropdown.CreateExtendedProperty();
     extendedProperty5.Property = "aria-label";
     extendedProperty5.SetValue("\"Hours for \" + EditorLines.Current.ProjectName");
     
-    var textWidget12 = container18.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget12.CustomStyle = null; // default value
-    textWidget12.SetStyleClasses(null); // default value
-    textWidget12.Text = "h";
+    var textWidget14 = container18.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget14.CustomStyle = null; // default value
+    textWidget14.SetStyleClasses(null); // default value
+    textWidget14.Text = "h";
     
     var minutesDropdown = container18.CreateWidget<ServiceStudio.Plugin.NRWidgets.IDropdown>("MinutesDropdown");
     minutesDropdown.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
@@ -2016,7 +2271,7 @@
     minutesDropdown.CustomStyle = null; // default value
     minutesDropdown.DropdownMode = ServiceStudio.Plugin.NRWidgets.Enumerations.DropdownMode.Text;
     minutesDropdown.SetEmptyValue(null); // default value
-    minutesDropdown.SetEnabled("True");
+    minutesDropdown.SetEnabled("not GetCalendar.IsLocked");
     minutesDropdown.FlexBasis = null; // default value
     minutesDropdown.FlexDirection = OutSystems.Model.Enumerations.FlexDirection.Row; // default value
     minutesDropdown.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
@@ -2035,10 +2290,10 @@
     minutesDropdown.SetVariable("EditorLines.Current.Mins");
     minutesDropdown.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     minutesDropdown.Width = ""; // default value
-    var builtinEvent8 = minutesDropdown.OnChange;
-    builtinEvent8.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent8.Destination = onChange_EditorTime;
-    builtinEvent8.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent9 = minutesDropdown.OnChange;
+    builtinEvent9.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent9.Destination = onChange_EditorTime;
+    builtinEvent9.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty6 = minutesDropdown.CreateExtendedProperty();
     extendedProperty6.Property = "aria-label";
@@ -2048,7 +2303,7 @@
     descriptionInput.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
     descriptionInput.ColumnSpan = null; // default value
     descriptionInput.CustomStyle = null; // default value
-    descriptionInput.SetEnabled("True");
+    descriptionInput.SetEnabled("not GetCalendar.IsLocked");
     descriptionInput.FlexBasis = null; // default value
     descriptionInput.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
     descriptionInput.InputType = ServiceStudio.Plugin.NRWidgets.Enumerations.InputType.Text; // default value
@@ -2059,18 +2314,18 @@
     descriptionInput.SetStyle("\"form-control sheet-editor__desc\"");
     descriptionInput.SetVariable("EditorLines.Current.Description");
     descriptionInput.Width = "(fill parent)"; // default value
-    var builtinEvent9 = descriptionInput.OnChange;
-    builtinEvent9.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent9.Destination = null; // default value
-    builtinEvent9.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent10 = descriptionInput.OnChange;
+    builtinEvent10.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent10.Destination = null; // default value
+    builtinEvent10.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty7 = descriptionInput.CreateExtendedProperty();
     extendedProperty7.Property = "placeholder";
     extendedProperty7.SetValue("\"Description (optional)\"");
-    var builtinEvent10 = projectLines.OnScrollEnding;
-    builtinEvent10.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent10.Destination = null; // default value
-    builtinEvent10.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent11 = projectLines.OnScrollEnding;
+    builtinEvent11.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent11.Destination = null; // default value
+    builtinEvent11.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var dayTotal = hasProjectLines.TrueBranch.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("DayTotal");
     dayTotal.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2096,17 +2351,17 @@
     dayTotal.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     dayTotal.Width = "(fill parent)"; // default value
     
-    var expression6 = dayTotal.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression6.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression6.ColumnSpan = null; // default value
-    expression6.CustomStyle = null; // default value
-    expression6.Example = null; // default value
-    expression6.FlexBasis = null; // default value
-    expression6.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression6.RowSpan = null; // default value
-    expression6.SetStyle(null); // default value
-    expression6.SetValue("\"Total of the day: \" + Minutes_Format(EditorTotal, \":\")");
-    expression6.Width = ""; // default value
+    var expression8 = dayTotal.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression8.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression8.ColumnSpan = null; // default value
+    expression8.CustomStyle = null; // default value
+    expression8.Example = null; // default value
+    expression8.FlexBasis = null; // default value
+    expression8.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression8.RowSpan = null; // default value
+    expression8.SetStyle(null); // default value
+    expression8.SetValue("\"Total of the day: \" + Minutes_Format(EditorTotal, \":\")");
+    expression8.Width = ""; // default value
     
     var noProjectsMessage = hasProjectLines.FalseBranch.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("NoProjectsMessage");
     noProjectsMessage.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2132,10 +2387,10 @@
     noProjectsMessage.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     noProjectsMessage.Width = "(fill parent)"; // default value
     
-    var textWidget13 = noProjectsMessage.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget13.CustomStyle = null; // default value
-    textWidget13.SetStyleClasses(null); // default value
-    textWidget13.Text = "No projects are assigned to you on this day. Ask your administrator.";
+    var textWidget15 = noProjectsMessage.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget15.CustomStyle = null; // default value
+    textWidget15.SetStyleClasses(null); // default value
+    textWidget15.Text = "No projects are assigned to you on this day. Ask your administrator.";
     
     var notesField = dayEditorPopup.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>("NotesField");
     notesField.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2181,17 +2436,17 @@
     notesLabel.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     notesLabel.Width = "(fill parent)"; // default value
     
-    var textWidget14 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)notesLabel.Widgets.First();
-    textWidget14.CustomStyle = null; // default value
-    textWidget14.Name = null; // default value
-    textWidget14.SetStyleClasses(null); // default value
-    textWidget14.Text = "Notes";
+    var textWidget16 = (OutSystems.Model.UI.Mobile.Widgets.ITextWidget)notesLabel.Widgets.First();
+    textWidget16.CustomStyle = null; // default value
+    textWidget16.Name = null; // default value
+    textWidget16.SetStyleClasses(null); // default value
+    textWidget16.Text = "Notes";
     
     var notesInput = notesField.CreateWidget<ServiceStudio.Plugin.NRWidgets.ITextArea>("NotesInput");
     notesInput.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
     notesInput.ColumnSpan = null; // default value
     notesInput.CustomStyle = null; // default value
-    notesInput.SetEnabled("True");
+    notesInput.SetEnabled("not GetCalendar.IsLocked");
     notesInput.FlexBasis = null; // default value
     notesInput.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
     notesInput.SetMandatory("False");
@@ -2202,10 +2457,10 @@
     notesInput.TextLines = 3; // default value
     notesInput.SetVariable("EditorNotes");
     notesInput.Width = "(fill parent)"; // default value
-    var builtinEvent11 = notesInput.OnChange;
-    builtinEvent11.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent11.Destination = null; // default value
-    builtinEvent11.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent12 = notesInput.OnChange;
+    builtinEvent12.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent12.Destination = null; // default value
+    builtinEvent12.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     notesLabel.TargetWidget = notesInput;
     
     var hasHoursWarning = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasHoursWarning");
@@ -2238,17 +2493,17 @@
     container19.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container19.Width = "(fill parent)"; // default value
     
-    var expression7 = container19.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression7.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression7.ColumnSpan = null; // default value
-    expression7.CustomStyle = null; // default value
-    expression7.Example = null; // default value
-    expression7.FlexBasis = null; // default value
-    expression7.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression7.RowSpan = null; // default value
-    expression7.SetStyle(null); // default value
-    expression7.SetValue("\"This day has \" + Minutes_Format(SavedMinutes, \":\") + \" logged. Setting it as a day off deletes those hours.\"");
-    expression7.Width = ""; // default value
+    var expression9 = container19.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression9.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression9.ColumnSpan = null; // default value
+    expression9.CustomStyle = null; // default value
+    expression9.Example = null; // default value
+    expression9.FlexBasis = null; // default value
+    expression9.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression9.RowSpan = null; // default value
+    expression9.SetStyle(null); // default value
+    expression9.SetValue("\"This day has \" + Minutes_Format(SavedMinutes, \":\") + \" logged. Setting it as a day off deletes those hours.\"");
+    expression9.Width = ""; // default value
     
     var hasEditorError = dayEditorPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasEditorError");
     hasEditorError.Animate = false; // default value
@@ -2280,17 +2535,17 @@
     editorErrorMessage.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     editorErrorMessage.Width = "(fill parent)"; // default value
     
-    var expression8 = editorErrorMessage.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression8.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression8.ColumnSpan = null; // default value
-    expression8.CustomStyle = null; // default value
-    expression8.Example = null; // default value
-    expression8.FlexBasis = null; // default value
-    expression8.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression8.RowSpan = null; // default value
-    expression8.SetStyle(null); // default value
-    expression8.SetValue("EditorError");
-    expression8.Width = ""; // default value
+    var expression10 = editorErrorMessage.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression10.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression10.ColumnSpan = null; // default value
+    expression10.CustomStyle = null; // default value
+    expression10.Example = null; // default value
+    expression10.FlexBasis = null; // default value
+    expression10.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression10.RowSpan = null; // default value
+    expression10.SetStyle(null); // default value
+    expression10.SetValue("EditorError");
+    expression10.Width = ""; // default value
     
     var extendedProperty8 = editorErrorMessage.CreateExtendedProperty();
     extendedProperty8.Property = "role";
@@ -2342,26 +2597,26 @@
     saveDraftButton.RowGap = null; // default value
     saveDraftButton.RowSpan = null; // default value
     saveDraftButton.SetStyle("\"btn\""); // default value
-    saveDraftButton.SetVisible("not IsDayOff and EditorLines.Length > 0");
+    saveDraftButton.SetVisible("(not IsDayOff and EditorLines.Length > 0) and not GetCalendar.IsLocked");
     saveDraftButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     saveDraftButton.Width = ""; // default value
     
-    var expression9 = saveDraftButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression9.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression9.ColumnSpan = null; // default value
-    expression9.CustomStyle = null; // default value
-    expression9.Example = null; // default value
-    expression9.FlexBasis = null; // default value
-    expression9.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression9.RowSpan = null; // default value
-    expression9.SetStyle(null); // default value
-    expression9.SetValue("\"Save as draft\"");
-    expression9.Width = ""; // default value
-    var builtinEvent12 = saveDraftButton.OnClick;
-    builtinEvent12.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent12.Destination = onClick_SaveDay;
-    builtinEvent12.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
-    builtinEvent12.SetArgumentValue(confirm, "False");
+    var expression11 = saveDraftButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression11.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression11.ColumnSpan = null; // default value
+    expression11.CustomStyle = null; // default value
+    expression11.Example = null; // default value
+    expression11.FlexBasis = null; // default value
+    expression11.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression11.RowSpan = null; // default value
+    expression11.SetStyle(null); // default value
+    expression11.SetValue("\"Save as draft\"");
+    expression11.Width = ""; // default value
+    var builtinEvent13 = saveDraftButton.OnClick;
+    builtinEvent13.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent13.Destination = onClick_SaveDay;
+    builtinEvent13.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    builtinEvent13.SetArgumentValue(confirm, "False");
     
     var confirmDayButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("ConfirmDayButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -2385,26 +2640,26 @@
     confirmDayButton.RowGap = null; // default value
     confirmDayButton.RowSpan = null; // default value
     confirmDayButton.SetStyle("\"btn btn-primary\"");
-    confirmDayButton.SetVisible("not IsDayOff and EditorLines.Length > 0");
+    confirmDayButton.SetVisible("(not IsDayOff and EditorLines.Length > 0) and not GetCalendar.IsLocked");
     confirmDayButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     confirmDayButton.Width = ""; // default value
     
-    var expression10 = confirmDayButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression10.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression10.ColumnSpan = null; // default value
-    expression10.CustomStyle = null; // default value
-    expression10.Example = null; // default value
-    expression10.FlexBasis = null; // default value
-    expression10.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression10.RowSpan = null; // default value
-    expression10.SetStyle(null); // default value
-    expression10.SetValue("\"Confirm day\"");
-    expression10.Width = ""; // default value
-    var builtinEvent13 = confirmDayButton.OnClick;
-    builtinEvent13.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent13.Destination = onClick_SaveDay;
-    builtinEvent13.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
-    builtinEvent13.SetArgumentValue(confirm, "True");
+    var expression12 = confirmDayButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression12.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression12.ColumnSpan = null; // default value
+    expression12.CustomStyle = null; // default value
+    expression12.Example = null; // default value
+    expression12.FlexBasis = null; // default value
+    expression12.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression12.RowSpan = null; // default value
+    expression12.SetStyle(null); // default value
+    expression12.SetValue("\"Confirm day\"");
+    expression12.Width = ""; // default value
+    var builtinEvent14 = confirmDayButton.OnClick;
+    builtinEvent14.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent14.Destination = onClick_SaveDay;
+    builtinEvent14.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    builtinEvent14.SetArgumentValue(confirm, "True");
     
     var saveDayOffButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("SaveDayOffButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -2428,26 +2683,26 @@
     saveDayOffButton.RowGap = null; // default value
     saveDayOffButton.RowSpan = null; // default value
     saveDayOffButton.SetStyle("\"btn btn-primary\"");
-    saveDayOffButton.SetVisible("IsDayOff and SavedMinutes = 0");
+    saveDayOffButton.SetVisible("(IsDayOff and SavedMinutes = 0) and not GetCalendar.IsLocked");
     saveDayOffButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     saveDayOffButton.Width = ""; // default value
     
-    var expression11 = saveDayOffButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression11.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression11.ColumnSpan = null; // default value
-    expression11.CustomStyle = null; // default value
-    expression11.Example = null; // default value
-    expression11.FlexBasis = null; // default value
-    expression11.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression11.RowSpan = null; // default value
-    expression11.SetStyle(null); // default value
-    expression11.SetValue("\"Save day off\"");
-    expression11.Width = ""; // default value
-    var builtinEvent14 = saveDayOffButton.OnClick;
-    builtinEvent14.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent14.Destination = onClick_SaveDay;
-    builtinEvent14.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
-    builtinEvent14.SetArgumentValue(confirm, "False");
+    var expression13 = saveDayOffButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression13.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression13.ColumnSpan = null; // default value
+    expression13.CustomStyle = null; // default value
+    expression13.Example = null; // default value
+    expression13.FlexBasis = null; // default value
+    expression13.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression13.RowSpan = null; // default value
+    expression13.SetStyle(null); // default value
+    expression13.SetValue("\"Save day off\"");
+    expression13.Width = ""; // default value
+    var builtinEvent15 = saveDayOffButton.OnClick;
+    builtinEvent15.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent15.Destination = onClick_SaveDay;
+    builtinEvent15.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    builtinEvent15.SetArgumentValue(confirm, "False");
     
     var dayOffDeleteHoursButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("DayOffDeleteHoursButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -2471,26 +2726,26 @@
     dayOffDeleteHoursButton.RowGap = null; // default value
     dayOffDeleteHoursButton.RowSpan = null; // default value
     dayOffDeleteHoursButton.SetStyle("\"btn btn-primary\"");
-    dayOffDeleteHoursButton.SetVisible("IsDayOff and SavedMinutes > 0");
+    dayOffDeleteHoursButton.SetVisible("(IsDayOff and SavedMinutes > 0) and not GetCalendar.IsLocked");
     dayOffDeleteHoursButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     dayOffDeleteHoursButton.Width = ""; // default value
     
-    var expression12 = dayOffDeleteHoursButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression12.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression12.ColumnSpan = null; // default value
-    expression12.CustomStyle = null; // default value
-    expression12.Example = null; // default value
-    expression12.FlexBasis = null; // default value
-    expression12.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression12.RowSpan = null; // default value
-    expression12.SetStyle(null); // default value
-    expression12.SetValue("\"Set day off and delete hours\"");
-    expression12.Width = ""; // default value
-    var builtinEvent15 = dayOffDeleteHoursButton.OnClick;
-    builtinEvent15.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent15.Destination = onClick_SaveDay;
-    builtinEvent15.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
-    builtinEvent15.SetArgumentValue(confirm, "False");
+    var expression14 = dayOffDeleteHoursButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression14.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression14.ColumnSpan = null; // default value
+    expression14.CustomStyle = null; // default value
+    expression14.Example = null; // default value
+    expression14.FlexBasis = null; // default value
+    expression14.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression14.RowSpan = null; // default value
+    expression14.SetStyle(null); // default value
+    expression14.SetValue("\"Set day off and delete hours\"");
+    expression14.Width = ""; // default value
+    var builtinEvent16 = dayOffDeleteHoursButton.OnClick;
+    builtinEvent16.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent16.Destination = onClick_SaveDay;
+    builtinEvent16.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    builtinEvent16.SetArgumentValue(confirm, "False");
     
     var clearDayButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("ClearDayButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -2514,25 +2769,25 @@
     clearDayButton.RowGap = null; // default value
     clearDayButton.RowSpan = null; // default value
     clearDayButton.SetStyle("\"btn btn-error\"");
-    clearDayButton.SetVisible("HasDaySheet");
+    clearDayButton.SetVisible("(HasDaySheet) and not GetCalendar.IsLocked");
     clearDayButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     clearDayButton.Width = ""; // default value
     
-    var expression13 = clearDayButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression13.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression13.ColumnSpan = null; // default value
-    expression13.CustomStyle = null; // default value
-    expression13.Example = null; // default value
-    expression13.FlexBasis = null; // default value
-    expression13.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression13.RowSpan = null; // default value
-    expression13.SetStyle(null); // default value
-    expression13.SetValue("If(IsFutureDay, \"Remove day off\", \"Clear day\")");
-    expression13.Width = ""; // default value
-    var builtinEvent16 = clearDayButton.OnClick;
-    builtinEvent16.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent16.Destination = onClick_ClearDayButton;
-    builtinEvent16.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var expression15 = clearDayButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression15.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression15.ColumnSpan = null; // default value
+    expression15.CustomStyle = null; // default value
+    expression15.Example = null; // default value
+    expression15.FlexBasis = null; // default value
+    expression15.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression15.RowSpan = null; // default value
+    expression15.SetStyle(null); // default value
+    expression15.SetValue("If(IsFutureDay, \"Remove day off\", \"Clear day\")");
+    expression15.Width = ""; // default value
+    var builtinEvent17 = clearDayButton.OnClick;
+    builtinEvent17.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent17.Destination = onClick_ClearDayButton;
+    builtinEvent17.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var cancelButton = dayEditorActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("CancelButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -2560,21 +2815,21 @@
     cancelButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     cancelButton.Width = ""; // default value
     
-    var expression14 = cancelButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression14.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression14.ColumnSpan = null; // default value
-    expression14.CustomStyle = null; // default value
-    expression14.Example = null; // default value
-    expression14.FlexBasis = null; // default value
-    expression14.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression14.RowSpan = null; // default value
-    expression14.SetStyle(null); // default value
-    expression14.SetValue("\"Cancel\"");
-    expression14.Width = ""; // default value
-    var builtinEvent17 = cancelButton.OnClick;
-    builtinEvent17.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent17.Destination = onClick_CancelButton;
-    builtinEvent17.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var expression16 = cancelButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression16.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression16.ColumnSpan = null; // default value
+    expression16.CustomStyle = null; // default value
+    expression16.Example = null; // default value
+    expression16.FlexBasis = null; // default value
+    expression16.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression16.RowSpan = null; // default value
+    expression16.SetStyle(null); // default value
+    expression16.SetValue("\"Cancel\"");
+    expression16.Width = ""; // default value
+    var builtinEvent18 = cancelButton.OnClick;
+    builtinEvent18.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent18.Destination = onClick_CancelButton;
+    builtinEvent18.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var fillPendingPopup = calendar.CreateWidget<ServiceStudio.Plugin.NRWidgets.IPopup>("FillPendingPopup");
     fillPendingPopup.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
@@ -2621,10 +2876,10 @@
     container20.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container20.Width = "(fill parent)"; // default value
     
-    var textWidget15 = container20.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget15.CustomStyle = null; // default value
-    textWidget15.SetStyleClasses(null); // default value
-    textWidget15.Text = "Fill all pending days";
+    var textWidget17 = container20.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget17.CustomStyle = null; // default value
+    textWidget17.SetStyleClasses(null); // default value
+    textWidget17.Text = "Fill all pending days";
     
     var container21 = fillPendingPopup.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container21.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2674,10 +2929,10 @@
     container22.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container22.Width = "(fill parent)"; // default value
     
-    var textWidget16 = container22.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget16.CustomStyle = null; // default value
-    textWidget16.SetStyleClasses(null); // default value
-    textWidget16.Text = "Project";
+    var textWidget18 = container22.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget18.CustomStyle = null; // default value
+    textWidget18.SetStyleClasses(null); // default value
+    textWidget18.Text = "Project";
     
     var hasFillProjects = container21.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasFillProjects");
     hasFillProjects.Animate = false; // default value
@@ -2712,10 +2967,10 @@
     fillProjectDropdown.SetVariable("FillProjectId");
     fillProjectDropdown.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     fillProjectDropdown.Width = ""; // default value
-    var builtinEvent18 = fillProjectDropdown.OnChange;
-    builtinEvent18.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent18.Destination = null; // default value
-    builtinEvent18.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent19 = fillProjectDropdown.OnChange;
+    builtinEvent19.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent19.Destination = null; // default value
+    builtinEvent19.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty9 = fillProjectDropdown.CreateExtendedProperty();
     extendedProperty9.Property = "aria-label";
@@ -2745,10 +3000,10 @@
     noFillProjectsMessage.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     noFillProjectsMessage.Width = "(fill parent)"; // default value
     
-    var textWidget17 = noFillProjectsMessage.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget17.CustomStyle = null; // default value
-    textWidget17.SetStyleClasses(null); // default value
-    textWidget17.Text = "No projects assigned this month";
+    var textWidget19 = noFillProjectsMessage.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget19.CustomStyle = null; // default value
+    textWidget19.SetStyleClasses(null); // default value
+    textWidget19.Text = "No projects assigned this month";
     
     var container23 = fillPendingPopup.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container23.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2798,10 +3053,10 @@
     container24.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container24.Width = "(fill parent)"; // default value
     
-    var textWidget18 = container24.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget18.CustomStyle = null; // default value
-    textWidget18.SetStyleClasses(null); // default value
-    textWidget18.Text = "Hours per day";
+    var textWidget20 = container24.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget20.CustomStyle = null; // default value
+    textWidget20.SetStyleClasses(null); // default value
+    textWidget20.Text = "Hours per day";
     
     var container25 = container23.CreateWidget<ServiceStudio.Plugin.NRWidgets.IContainer>();
     container25.Align = ServiceStudio.Plugin.NRWidgets.Enumerations.Align.Default; // default value
@@ -2854,19 +3109,19 @@
     fillHoursDropdown.SetVariable("FillHours");
     fillHoursDropdown.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     fillHoursDropdown.Width = ""; // default value
-    var builtinEvent19 = fillHoursDropdown.OnChange;
-    builtinEvent19.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent19.Destination = null; // default value
-    builtinEvent19.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent20 = fillHoursDropdown.OnChange;
+    builtinEvent20.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent20.Destination = null; // default value
+    builtinEvent20.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty10 = fillHoursDropdown.CreateExtendedProperty();
     extendedProperty10.Property = "aria-label";
     extendedProperty10.SetValue("\"Hours per day\"");
     
-    var textWidget19 = container25.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
-    textWidget19.CustomStyle = null; // default value
-    textWidget19.SetStyleClasses(null); // default value
-    textWidget19.Text = "h";
+    var textWidget21 = container25.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.ITextWidget>();
+    textWidget21.CustomStyle = null; // default value
+    textWidget21.SetStyleClasses(null); // default value
+    textWidget21.Text = "h";
     
     var fillMinutesDropdown = container25.CreateWidget<ServiceStudio.Plugin.NRWidgets.IDropdown>("FillMinutesDropdown");
     fillMinutesDropdown.AlignItems = OutSystems.Model.Enumerations.AlignItems.Stretch; // default value
@@ -2895,10 +3150,10 @@
     fillMinutesDropdown.SetVariable("FillMins");
     fillMinutesDropdown.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     fillMinutesDropdown.Width = ""; // default value
-    var builtinEvent20 = fillMinutesDropdown.OnChange;
-    builtinEvent20.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent20.Destination = null; // default value
-    builtinEvent20.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var builtinEvent21 = fillMinutesDropdown.OnChange;
+    builtinEvent21.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent21.Destination = null; // default value
+    builtinEvent21.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty11 = fillMinutesDropdown.CreateExtendedProperty();
     extendedProperty11.Property = "aria-label";
@@ -2928,17 +3183,17 @@
     fillSummary.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     fillSummary.Width = "(fill parent)"; // default value
     
-    var expression15 = fillSummary.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression15.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression15.ColumnSpan = null; // default value
-    expression15.CustomStyle = null; // default value
-    expression15.Example = null; // default value
-    expression15.FlexBasis = null; // default value
-    expression15.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression15.RowSpan = null; // default value
-    expression15.SetStyle(null); // default value
-    expression15.SetValue("GetCalendar.Summary.PendingCount + \" pending days will be filled and confirmed\"");
-    expression15.Width = ""; // default value
+    var expression17 = fillSummary.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression17.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression17.ColumnSpan = null; // default value
+    expression17.CustomStyle = null; // default value
+    expression17.Example = null; // default value
+    expression17.FlexBasis = null; // default value
+    expression17.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression17.RowSpan = null; // default value
+    expression17.SetStyle(null); // default value
+    expression17.SetValue("GetCalendar.Summary.PendingCount + \" pending days will be filled and confirmed\"");
+    expression17.Width = ""; // default value
     
     var hasFillError = fillPendingPopup.CreateWidget<OutSystems.Model.UI.Mobile.Widgets.IIfWidget>("HasFillError");
     hasFillError.Animate = false; // default value
@@ -2970,17 +3225,17 @@
     container26.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     container26.Width = "(fill parent)"; // default value
     
-    var expression16 = container26.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression16.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression16.ColumnSpan = null; // default value
-    expression16.CustomStyle = null; // default value
-    expression16.Example = null; // default value
-    expression16.FlexBasis = null; // default value
-    expression16.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression16.RowSpan = null; // default value
-    expression16.SetStyle(null); // default value
-    expression16.SetValue("FillError");
-    expression16.Width = ""; // default value
+    var expression18 = container26.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression18.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression18.ColumnSpan = null; // default value
+    expression18.CustomStyle = null; // default value
+    expression18.Example = null; // default value
+    expression18.FlexBasis = null; // default value
+    expression18.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression18.RowSpan = null; // default value
+    expression18.SetStyle(null); // default value
+    expression18.SetValue("FillError");
+    expression18.Width = ""; // default value
     
     var extendedProperty12 = container26.CreateExtendedProperty();
     extendedProperty12.Property = "role";
@@ -3036,21 +3291,21 @@
     confirmFillButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     confirmFillButton.Width = ""; // default value
     
-    var expression17 = confirmFillButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression17.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression17.ColumnSpan = null; // default value
-    expression17.CustomStyle = null; // default value
-    expression17.Example = null; // default value
-    expression17.FlexBasis = null; // default value
-    expression17.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression17.RowSpan = null; // default value
-    expression17.SetStyle(null); // default value
-    expression17.SetValue("\"Fill and confirm\"");
-    expression17.Width = ""; // default value
-    var builtinEvent21 = confirmFillButton.OnClick;
-    builtinEvent21.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent21.Destination = onClick_ConfirmFillButton;
-    builtinEvent21.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var expression19 = confirmFillButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression19.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression19.ColumnSpan = null; // default value
+    expression19.CustomStyle = null; // default value
+    expression19.Example = null; // default value
+    expression19.FlexBasis = null; // default value
+    expression19.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression19.RowSpan = null; // default value
+    expression19.SetStyle(null); // default value
+    expression19.SetValue("\"Fill and confirm\"");
+    expression19.Width = ""; // default value
+    var builtinEvent22 = confirmFillButton.OnClick;
+    builtinEvent22.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent22.Destination = onClick_ConfirmFillButton;
+    builtinEvent22.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var cancelFillButton = fillActions.CreateWidget<ServiceStudio.Plugin.NRWidgets.IButton>("CancelFillButton");
     /*** Deleting Widgets that are created by default when instantiating an IButton ***/
@@ -3078,21 +3333,21 @@
     cancelFillButton.WidgetGridType = OutSystems.Model.Enumerations.WidgetGridType.None; // default value
     cancelFillButton.Width = ""; // default value
     
-    var expression18 = cancelFillButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
-    expression18.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
-    expression18.ColumnSpan = null; // default value
-    expression18.CustomStyle = null; // default value
-    expression18.Example = null; // default value
-    expression18.FlexBasis = null; // default value
-    expression18.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
-    expression18.RowSpan = null; // default value
-    expression18.SetStyle(null); // default value
-    expression18.SetValue("\"Cancel\"");
-    expression18.Width = ""; // default value
-    var builtinEvent22 = cancelFillButton.OnClick;
-    builtinEvent22.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
-    builtinEvent22.Destination = onClick_CancelFillButton;
-    builtinEvent22.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
+    var expression20 = cancelFillButton.CreateWidget<ServiceStudio.Plugin.NRWidgets.IExpression>();
+    expression20.AlignSelf = OutSystems.Model.Enumerations.AlignSelf.Auto; // default value
+    expression20.ColumnSpan = null; // default value
+    expression20.CustomStyle = null; // default value
+    expression20.Example = null; // default value
+    expression20.FlexBasis = null; // default value
+    expression20.Flexible = OutSystems.Model.Enumerations.Flexible.Shrink; // default value
+    expression20.RowSpan = null; // default value
+    expression20.SetStyle(null); // default value
+    expression20.SetValue("\"Cancel\"");
+    expression20.Width = ""; // default value
+    var builtinEvent23 = cancelFillButton.OnClick;
+    builtinEvent23.BuiltInValidations = OutSystems.Model.Enumerations.ValidationBehavior.None; // default value
+    builtinEvent23.Destination = onClick_CancelFillButton;
+    builtinEvent23.Transition = OutSystems.Model.Enumerations.TransitionTypeWithInheritance.Fade;
     
     var extendedProperty13 = calendar.CreateExtendedProperty();
     extendedProperty13.Property = "data-refresh-key";

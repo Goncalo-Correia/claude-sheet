@@ -466,6 +466,212 @@
     isFixedDate.Label = "Is Fixed Date";
     isFixedDate.OriginalName = null; // default value
     isFixedDate.OriginalType = null; // default value
+    
+    /*** creating IServerEntity 'MonthSheet' ***/
+    var monthSheet = eSpace.CreateServerEntity("MonthSheet");
+    monthSheet.Description = "One user\'s month: its submission and the manager\'s decision. No record = Open. Unique per user, year and month.";
+    monthSheet.ExposeProcessEvents = false; // default value
+    monthSheet.ExposeReadOnly = true; // default value
+    monthSheet.Folder = null; // default value
+    monthSheet.IsActiveAttribute = null; // default value
+    monthSheet.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
+    monthSheet.IsRestrictedInQueries = false; // default value
+    monthSheet.Label = "Month Sheet";
+    monthSheet.LabelAttribute = null; // default value
+    monthSheet.LabelPlural = "Month Sheets";
+    monthSheet.OrderByAttribute = null; // default value
+    monthSheet.Public = true;
+    monthSheet.Shareable = true;
+    monthSheet.TableNameOverride = null; // default value
+    monthSheet.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Optimized;
+    monthSheet.UseTranslations = false; // default value
+    monthSheet.ViewNameOverride = null; // default value
+    
+    var id6 = monthSheet.CreateAttribute("Id");
+    id6.DataType = eSpace.LongIntegerType;
+    id6.SetDefaultValue(null); // default value
+    id6.Description = null; // default value
+    id6.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id6.IsSearchable = false; // default value
+    id6.Label = "Id";
+    id6.OriginalName = null; // default value
+    id6.OriginalType = null; // default value
+    monthSheet.IdentifierAttribute = id6;
+    
+    var userId2 = monthSheet.CreateAttribute("UserId");
+    userId2.DataType = user.IdentifierType;
+    userId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    userId2.Description = null; // default value
+    userId2.IsMandatory = true;
+    userId2.IsSearchable = false; // default value
+    userId2.Label = "User";
+    userId2.OriginalName = null; // default value
+    userId2.OriginalType = null; // default value
+    
+    var year = monthSheet.CreateAttribute("Year");
+    year.DataType = eSpace.IntegerType;
+    year.SetDefaultValue(null); // default value
+    year.Description = null; // default value
+    year.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    year.IsMandatory = true;
+    year.IsSearchable = false; // default value
+    year.Label = "Year";
+    year.OriginalName = null; // default value
+    year.OriginalType = null; // default value
+    
+    var month = monthSheet.CreateAttribute("Month");
+    month.DataType = eSpace.IntegerType;
+    month.SetDefaultValue(null); // default value
+    month.Description = null; // default value
+    month.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    month.IsMandatory = true;
+    month.IsSearchable = false; // default value
+    month.Label = "Month";
+    month.OriginalName = null; // default value
+    month.OriginalType = null; // default value
+    
+    var periodStatusId = monthSheet.CreateAttribute("PeriodStatusId");
+    periodStatusId.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    periodStatusId.Description = null; // default value
+    periodStatusId.IsMandatory = true;
+    periodStatusId.IsSearchable = false; // default value
+    periodStatusId.Label = "Period Status";
+    periodStatusId.OriginalName = null; // default value
+    periodStatusId.OriginalType = null; // default value
+    
+    /*** creating IStaticEntity 'PeriodStatus' ***/
+    var periodStatus = eSpace.CreateStaticEntity("PeriodStatus");
+    periodStatus.Description = "Status of a user\'s month (MonthSheet). Submitted and Approved lock the month\'s days; Open and Rejected leave them editable.";
+    periodStatus.ExposeProcessEvents = false; // default value
+    periodStatus.ExposeReadOnly = true;
+    periodStatus.Folder = null; // default value
+    periodStatus.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.No; // default value
+    periodStatus.IsRestrictedInQueries = false; // default value
+    periodStatus.Label = "Period Status";
+    periodStatus.LabelPlural = "Period Statuses";
+    periodStatus.Public = true;
+    periodStatus.Shareable = true;
+    periodStatus.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Optimized;
+    periodStatus.UseTranslations = true;
+    
+    var id7 = periodStatus.CreateAttribute("Id");
+    id7.DataType = eSpace.IntegerType;
+    id7.SetDefaultValue(null); // default value
+    id7.Description = null; // default value
+    id7.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    id7.IsSearchable = false; // default value
+    id7.Label = "Id";
+    id7.OriginalName = null; // default value
+    id7.OriginalType = null; // default value
+    
+    var label3 = periodStatus.CreateAttribute("Label");
+    label3.DataType = eSpace.TextType;
+    label3.SetDefaultValue(null); // default value
+    label3.Description = null; // default value
+    label3.IsMandatory = true;
+    label3.IsSearchable = false; // default value
+    label3.Label = "Label";
+    label3.Length = 50;
+    label3.OriginalName = null; // default value
+    label3.OriginalType = null; // default value
+    
+    var order3 = periodStatus.CreateAttribute("Order");
+    order3.DataType = eSpace.IntegerType;
+    order3.SetDefaultValue(null); // default value
+    order3.Description = null; // default value
+    order3.IsMandatory = true;
+    order3.IsSearchable = false; // default value
+    order3.Label = "Order";
+    order3.OriginalName = null; // default value
+    order3.OriginalType = null; // default value
+    
+    var is_Active3 = periodStatus.CreateAttribute("Is_Active");
+    is_Active3.DataType = eSpace.BooleanType;
+    is_Active3.SetDefaultValue(null); // default value
+    is_Active3.Description = null; // default value
+    is_Active3.IsMandatory = true;
+    is_Active3.IsSearchable = false; // default value
+    is_Active3.Label = "Is Active";
+    is_Active3.OriginalName = null; // default value
+    is_Active3.OriginalType = null; // default value
+    
+    var staticEntityRecord10 = periodStatus.CreateRecord();
+    staticEntityRecord10.Icon = null; // default value
+    staticEntityRecord10.Identifier = "Rejected";
+    staticEntityRecord10.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord10.SetAttributeValue(id7, "4");
+    staticEntityRecord10.SetAttributeValue(order3, "4");
+    staticEntityRecord10.SetAttributeValue(label3, "\"Rejected\"");
+    
+    var staticEntityRecord11 = periodStatus.CreateRecord();
+    staticEntityRecord11.Icon = null; // default value
+    staticEntityRecord11.Identifier = "Submitted";
+    staticEntityRecord11.SetAttributeValue(label3, "\"Submitted\"");
+    staticEntityRecord11.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord11.SetAttributeValue(id7, "2");
+    staticEntityRecord11.SetAttributeValue(order3, "2");
+    
+    var staticEntityRecord12 = periodStatus.CreateRecord();
+    staticEntityRecord12.Icon = null; // default value
+    staticEntityRecord12.Identifier = "Open";
+    staticEntityRecord12.SetAttributeValue(label3, "\"Open\"");
+    staticEntityRecord12.SetAttributeValue(id7, "1");
+    staticEntityRecord12.SetAttributeValue(order3, "1");
+    staticEntityRecord12.SetAttributeValue(is_Active3, "True");
+    
+    var staticEntityRecord13 = periodStatus.CreateRecord();
+    staticEntityRecord13.Icon = null; // default value
+    staticEntityRecord13.Identifier = "Approved";
+    staticEntityRecord13.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord13.SetAttributeValue(label3, "\"Approved\"");
+    staticEntityRecord13.SetAttributeValue(order3, "3");
+    staticEntityRecord13.SetAttributeValue(id7, "3");
+    periodStatus.IdentifierAttribute = id7;
+    periodStatus.IsActiveAttribute = is_Active3;
+    periodStatus.LabelAttribute = label3;
+    periodStatus.OrderByAttribute = order3;
+    
+    var submittedOn = monthSheet.CreateAttribute("SubmittedOn");
+    submittedOn.DataType = eSpace.DateTimeType;
+    submittedOn.SetDefaultValue(null); // default value
+    submittedOn.Description = null; // default value
+    submittedOn.IsMandatory = false; // default value
+    submittedOn.IsSearchable = false; // default value
+    submittedOn.Label = "Submitted On";
+    submittedOn.OriginalName = null; // default value
+    submittedOn.OriginalType = null; // default value
+    periodStatusId.DataType = periodStatus.IdentifierType;
+    
+    var decidedBy = monthSheet.CreateAttribute("DecidedBy");
+    decidedBy.DataType = user.IdentifierType;
+    decidedBy.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    decidedBy.Description = null; // default value
+    decidedBy.IsMandatory = false; // default value
+    decidedBy.IsSearchable = false; // default value
+    decidedBy.Label = "Decided By";
+    decidedBy.OriginalName = null; // default value
+    decidedBy.OriginalType = null; // default value
+    
+    var decidedOn = monthSheet.CreateAttribute("DecidedOn");
+    decidedOn.DataType = eSpace.DateTimeType;
+    decidedOn.SetDefaultValue(null); // default value
+    decidedOn.Description = null; // default value
+    decidedOn.IsMandatory = false; // default value
+    decidedOn.IsSearchable = false; // default value
+    decidedOn.Label = "Decided On";
+    decidedOn.OriginalName = null; // default value
+    decidedOn.OriginalType = null; // default value
+    
+    var comment = monthSheet.CreateAttribute("Comment");
+    comment.DataType = eSpace.TextType;
+    comment.SetDefaultValue(null); // default value
+    comment.Description = null; // default value
+    comment.IsMandatory = false; // default value
+    comment.IsSearchable = false; // default value
+    comment.Label = "Comment";
+    comment.Length = 500;
+    comment.OriginalName = null; // default value
+    comment.OriginalType = null; // default value
     // IServerEntitySignature (System)/Process
     var process = (OutSystems.Model.Data.IServerEntitySignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("uXCIR2Atc0+es3zYuZSnNw*rk1aJNDvckKT91HxgCaO6w"));
     
@@ -488,16 +694,16 @@
     project.UseTranslations = false; // default value
     project.ViewNameOverride = null; // default value
     
-    var id6 = project.CreateAttribute("Id");
-    id6.DataType = eSpace.LongIntegerType;
-    id6.SetDefaultValue(null); // default value
-    id6.Description = null; // default value
-    id6.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id6.IsSearchable = false; // default value
-    id6.Label = "Id";
-    id6.OriginalName = null; // default value
-    id6.OriginalType = null; // default value
-    project.IdentifierAttribute = id6;
+    var id8 = project.CreateAttribute("Id");
+    id8.DataType = eSpace.LongIntegerType;
+    id8.SetDefaultValue(null); // default value
+    id8.Description = null; // default value
+    id8.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id8.IsSearchable = false; // default value
+    id8.Label = "Id";
+    id8.OriginalName = null; // default value
+    id8.OriginalType = null; // default value
+    project.IdentifierAttribute = id8;
     
     var name3 = project.CreateAttribute("Name");
     name3.DataType = eSpace.TextType;
@@ -562,26 +768,26 @@
     projectAssignment.UseTranslations = false; // default value
     projectAssignment.ViewNameOverride = null; // default value
     
-    var id7 = projectAssignment.CreateAttribute("Id");
-    id7.DataType = eSpace.LongIntegerType;
-    id7.SetDefaultValue(null); // default value
-    id7.Description = null; // default value
-    id7.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id7.IsSearchable = false; // default value
-    id7.Label = "Id";
-    id7.OriginalName = null; // default value
-    id7.OriginalType = null; // default value
-    projectAssignment.IdentifierAttribute = id7;
+    var id9 = projectAssignment.CreateAttribute("Id");
+    id9.DataType = eSpace.LongIntegerType;
+    id9.SetDefaultValue(null); // default value
+    id9.Description = null; // default value
+    id9.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id9.IsSearchable = false; // default value
+    id9.Label = "Id";
+    id9.OriginalName = null; // default value
+    id9.OriginalType = null; // default value
+    projectAssignment.IdentifierAttribute = id9;
     
-    var userId2 = projectAssignment.CreateAttribute("UserId");
-    userId2.DataType = user.IdentifierType;
-    userId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
-    userId2.Description = null; // default value
-    userId2.IsMandatory = true;
-    userId2.IsSearchable = false; // default value
-    userId2.Label = "User";
-    userId2.OriginalName = null; // default value
-    userId2.OriginalType = null; // default value
+    var userId3 = projectAssignment.CreateAttribute("UserId");
+    userId3.DataType = user.IdentifierType;
+    userId3.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    userId3.Description = null; // default value
+    userId3.IsMandatory = true;
+    userId3.IsSearchable = false; // default value
+    userId3.Label = "User";
+    userId3.OriginalName = null; // default value
+    userId3.OriginalType = null; // default value
     
     var projectId = projectAssignment.CreateAttribute("ProjectId");
     projectId.DataType = project.IdentifierType;
@@ -651,16 +857,16 @@
     timeEntry.UseTranslations = false; // default value
     timeEntry.ViewNameOverride = null; // default value
     
-    var id8 = timeEntry.CreateAttribute("Id");
-    id8.DataType = eSpace.LongIntegerType;
-    id8.SetDefaultValue(null); // default value
-    id8.Description = null; // default value
-    id8.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id8.IsSearchable = false; // default value
-    id8.Label = "Id";
-    id8.OriginalName = null; // default value
-    id8.OriginalType = null; // default value
-    timeEntry.IdentifierAttribute = id8;
+    var id10 = timeEntry.CreateAttribute("Id");
+    id10.DataType = eSpace.LongIntegerType;
+    id10.SetDefaultValue(null); // default value
+    id10.Description = null; // default value
+    id10.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id10.IsSearchable = false; // default value
+    id10.Label = "Id";
+    id10.OriginalName = null; // default value
+    id10.OriginalType = null; // default value
+    timeEntry.IdentifierAttribute = id10;
     
     var daySheetId = timeEntry.CreateAttribute("DaySheetId");
     daySheetId.DataType = daySheet.IdentifierType;

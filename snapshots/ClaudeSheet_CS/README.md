@@ -2,23 +2,27 @@
 
 - **Module:** ClaudeSheet_CS (Reactive, Core): the backend of ClaudeSheet (ADR 0004)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-23, targeted mode, after the manual publish of US10's ClaudeSheet_CS part
+- **Last refresh:** 2026-10-23, targeted mode, after the publish of US11's ClaudeSheet_CS part
 
 ## Own elements (references excluded)
 
 | Kind | Count | Elements |
 |---|---|---|
-| Entities | 6 | Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry (Public, Read Only) |
-| Static entities | 2 | DayStatus, CalendarDayType (Public) |
-| Structures | 17 | UserAccess (US9), ProjectSummary, ProjectAssignmentSummary, UserOption (US7), ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
-| Server actions | 32 | Public: Project_GetAssignedInPeriod (US10), User_GetList, User_SetRoles (US9), Holiday_GetList, Holiday_CreateOrUpdate, Holiday_SetActive, Holiday_CopyYear (US8), Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
+| Entities | 7 | MonthSheet (US11), Client, Project, ProjectAssignment, Holiday, DaySheet, TimeEntry (Public, Read Only) |
+| Static entities | 3 | PeriodStatus (US11), DayStatus, CalendarDayType (Public) |
+| Structures | 18 | MonthSheetSummary (US11), UserAccess (US9), ProjectSummary, ProjectAssignmentSummary, UserOption (US7), ClientSummary (US6), CalendarDay, MonthSummary, TimeEntryInput, DaySheetProjectLine, DaySheetDetail, WeekDayHeader, WeeklyCell, WeeklyProjectRow, WeeklyHours, NumberOption, DayEditorLine, DayStatusKPI (Public) |
+| Server actions | 40 | Public: MonthSheet_GetForUser, MonthSheet_Submit, MonthSheet_GetSubmitted, MonthSheet_Approve, MonthSheet_Reject, MonthSheet_Reopen (US11), Project_GetAssignedInPeriod (US10), User_GetList, User_SetRoles (US9), Holiday_GetList, Holiday_CreateOrUpdate, Holiday_SetActive, Holiday_CopyYear (US8), Project_GetList, Project_GetById, Project_CreateOrUpdate, Project_SetActive, ProjectAssignment_GetList, ProjectAssignment_CreateOrUpdate, ProjectAssignment_End, ProjectAssignment_Delete, User_GetActive (US7), Client_GetList, Client_GetById, Client_CreateOrUpdate, Client_SetActive (US6), Calendar_GetMonth, Calendar_GetMonthSummary, DaySheet_Clear, DaySheet_FillPending, DaySheet_GetDetail, DaySheet_Save, Project_GetAssignedToUser, ProjectHours_GetWeekly, Settings_GetDailyExpectedMinutes. Private: MonthSheet_IsLocked (function), MonthSheet_GetTotals (US11), Bootstrap, Holiday_CreateIfMissing, Date_GetWeekStart |
 | Roles | 3 own (+ Anonymous, Registered) | SheetUser, SheetAdmin, SheetManager (Public) |
-| User exceptions | 5 | DaySheetValidation, ClientValidation, ProjectValidation, AssignmentValidation, HolidayValidation (all Public, set by hand: the Model API can't read or set that flag) |
+| User exceptions | 6 | PeriodValidation (US11, not Public), DaySheetValidation, ClientValidation, ProjectValidation, AssignmentValidation, HolidayValidation (Public, set by hand: the Model API can't read or set that flag) |
 | Site properties | 3 own (+ TenantName, TenantId) | DailyExpectedMinutes (480), SeedTestUsernames, SeedAdminUsernames |
 | Timers | 1 | Timer_Bootstrap (Bootstrap, WhenPublished) |
 | References | | (System) only |
 
 ## Notes on this refresh
+
+- US11 (2026-10-23), targeted mode: `data-model.cs` (MonthSheet, PeriodStatus), `structures.cs` (MonthSheetSummary; its diff also renumbers variables of existing structures), `user-exceptions.cs`, `names/server-actions.json`, the 8 new `server-actions/MonthSheet_*.cs` and the changed `DaySheet_Save`, `DaySheet_Clear`, `DaySheet_FillPending`, `Calendar_GetMonth`. The other module-wide files were not re-read (unchanged by US11). The read-back omits aggregate sort directions: MonthSheet_GetSubmitted's GetMonths sorts Year and Month **descending** (checked with a probe), although `MonthSheet_GetSubmitted.cs` doesn't show it. `getDataModel` doesn't output indexes: MonthSheet has the unique index UQ_MonthSheet_UserYearMonth (UserId, Year, Month).
+
+### US10 refresh (2026-10-23)
 
 - US10 (2026-10-23), targeted mode: light reads plus `server-actions/Project_GetAssignedInPeriod.cs` (new) and `server-actions/DaySheet_FillPending.cs` (SkippedCount output, GetAssignmentOnDay + Count skipped, loop body re-laid out). The diff also shows both in `names/server-actions.json`; every other module-wide file is unchanged. Counts above now include US9's UserAccess, User_GetList and User_SetRoles.
 

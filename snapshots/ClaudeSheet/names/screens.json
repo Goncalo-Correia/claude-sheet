@@ -1,5 +1,11 @@
 [
   {
+    "Name": "Approvals",
+    "Description": "Manager approval of monthly timesheets (SheetManager): submitted months with logged vs expected hours; Approve, Reject with a comment, and Reopen approved months (Show approved).",
+    "UIFlow": "MainFlow",
+    "IsReferenced": false
+  },
+  {
     "Name": "ClientDetail",
     "Description": "Create or edit one client (SheetAdmin): name, activate/deactivate, read-only list of its projects. ClientId empty = new client.",
     "UIFlow": "Admin",

@@ -12,6 +12,9 @@
     /*** creating IUserException 'HolidayValidation' ***/
     var holidayValidation = eSpace.CreateUserException("HolidayValidation");
     
+    /*** creating IUserException 'PeriodValidation' ***/
+    var periodValidation = eSpace.CreateUserException("PeriodValidation");
+    
     /*** creating IUserException 'ProjectValidation' ***/
     var projectValidation = eSpace.CreateUserException("ProjectValidation");
 }

@@ -954,6 +954,309 @@
     count.Label = "Count";
     count.NameInJSON = null; // default value
     
+    /*** creating IStructure 'MonthSheetSummary' ***/
+    var monthSheetSummary = eSpace.CreateStructure("MonthSheetSummary");
+    monthSheetSummary.Description = "One month of a user for the Approvals screen: status, decision and hours (total vs expected).";
+    monthSheetSummary.Folder = null; // default value
+    monthSheetSummary.Public = true;
+    monthSheetSummary.Shareable = true;
+    
+    var monthSheetId = monthSheetSummary.CreateAttribute("MonthSheetId");
+    monthSheetId.SetDefaultValue(null); // default value
+    monthSheetId.Description = null; // default value
+    monthSheetId.IsMandatory = false; // default value
+    monthSheetId.Label = "Month Sheet";
+    monthSheetId.NameInJSON = null; // default value
+    
+    /*** creating IServerEntity 'MonthSheet' ***/
+    var monthSheet = eSpace.CreateServerEntity("MonthSheet");
+    monthSheet.Description = "One user\'s month: its submission and the manager\'s decision. No record = Open. Unique per user, year and month.";
+    monthSheet.ExposeProcessEvents = false; // default value
+    monthSheet.ExposeReadOnly = true; // default value
+    monthSheet.Folder = null; // default value
+    monthSheet.IsActiveAttribute = null; // default value
+    monthSheet.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.Inherited; // default value
+    monthSheet.IsRestrictedInQueries = false; // default value
+    monthSheet.Label = "Month Sheet";
+    monthSheet.LabelAttribute = null; // default value
+    monthSheet.LabelPlural = "Month Sheets";
+    monthSheet.OrderByAttribute = null; // default value
+    monthSheet.Public = true;
+    monthSheet.Shareable = true;
+    monthSheet.TableNameOverride = null; // default value
+    monthSheet.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Optimized;
+    monthSheet.UseTranslations = false; // default value
+    monthSheet.ViewNameOverride = null; // default value
+    
+    var id8 = monthSheet.CreateAttribute("Id");
+    id8.DataType = eSpace.LongIntegerType;
+    id8.SetDefaultValue(null); // default value
+    id8.Description = null; // default value
+    id8.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id8.IsSearchable = false; // default value
+    id8.Label = "Id";
+    id8.OriginalName = null; // default value
+    id8.OriginalType = null; // default value
+    
+    var userId2 = monthSheet.CreateAttribute("UserId");
+    userId2.DataType = user.IdentifierType;
+    userId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    userId2.Description = null; // default value
+    userId2.IsMandatory = true;
+    userId2.IsSearchable = false; // default value
+    userId2.Label = "User";
+    userId2.OriginalName = null; // default value
+    userId2.OriginalType = null; // default value
+    
+    var year = monthSheet.CreateAttribute("Year");
+    year.DataType = eSpace.IntegerType;
+    year.SetDefaultValue(null); // default value
+    year.Description = null; // default value
+    year.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    year.IsMandatory = true;
+    year.IsSearchable = false; // default value
+    year.Label = "Year";
+    year.OriginalName = null; // default value
+    year.OriginalType = null; // default value
+    
+    var month = monthSheet.CreateAttribute("Month");
+    month.DataType = eSpace.IntegerType;
+    month.SetDefaultValue(null); // default value
+    month.Description = null; // default value
+    month.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    month.IsMandatory = true;
+    month.IsSearchable = false; // default value
+    month.Label = "Month";
+    month.OriginalName = null; // default value
+    month.OriginalType = null; // default value
+    
+    var periodStatusId = monthSheet.CreateAttribute("PeriodStatusId");
+    periodStatusId.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    periodStatusId.Description = null; // default value
+    periodStatusId.IsMandatory = true;
+    periodStatusId.IsSearchable = false; // default value
+    periodStatusId.Label = "Period Status";
+    periodStatusId.OriginalName = null; // default value
+    periodStatusId.OriginalType = null; // default value
+    
+    var submittedOn = monthSheet.CreateAttribute("SubmittedOn");
+    submittedOn.DataType = eSpace.DateTimeType;
+    submittedOn.SetDefaultValue(null); // default value
+    submittedOn.Description = null; // default value
+    submittedOn.IsMandatory = false; // default value
+    submittedOn.IsSearchable = false; // default value
+    submittedOn.Label = "Submitted On";
+    submittedOn.OriginalName = null; // default value
+    submittedOn.OriginalType = null; // default value
+    
+    var decidedBy = monthSheet.CreateAttribute("DecidedBy");
+    decidedBy.DataType = user.IdentifierType;
+    decidedBy.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Protect; // default value
+    decidedBy.Description = null; // default value
+    decidedBy.IsMandatory = false; // default value
+    decidedBy.IsSearchable = false; // default value
+    decidedBy.Label = "Decided By";
+    decidedBy.OriginalName = null; // default value
+    decidedBy.OriginalType = null; // default value
+    
+    var decidedOn = monthSheet.CreateAttribute("DecidedOn");
+    decidedOn.DataType = eSpace.DateTimeType;
+    decidedOn.SetDefaultValue(null); // default value
+    decidedOn.Description = null; // default value
+    decidedOn.IsMandatory = false; // default value
+    decidedOn.IsSearchable = false; // default value
+    decidedOn.Label = "Decided On";
+    decidedOn.OriginalName = null; // default value
+    decidedOn.OriginalType = null; // default value
+    
+    var comment = monthSheet.CreateAttribute("Comment");
+    comment.DataType = eSpace.TextType;
+    comment.SetDefaultValue(null); // default value
+    comment.Description = null; // default value
+    comment.IsMandatory = false; // default value
+    comment.IsSearchable = false; // default value
+    comment.Label = "Comment";
+    comment.Length = 500;
+    comment.OriginalName = null; // default value
+    comment.OriginalType = null; // default value
+    monthSheet.IdentifierAttribute = id8;
+    
+    /*** creating IStaticEntity 'PeriodStatus' ***/
+    var periodStatus = eSpace.CreateStaticEntity("PeriodStatus");
+    periodStatus.Description = "Status of a user\'s month (MonthSheet). Submitted and Approved lock the month\'s days; Open and Rejected leave them editable.";
+    periodStatus.ExposeProcessEvents = false; // default value
+    periodStatus.ExposeReadOnly = true;
+    periodStatus.Folder = null; // default value
+    periodStatus.IsMultiTenant = OutSystems.Model.Enumerations.BooleanWithInheritance.No; // default value
+    periodStatus.IsRestrictedInQueries = false; // default value
+    periodStatus.Label = "Period Status";
+    periodStatus.LabelPlural = "Period Statuses";
+    periodStatus.Public = true;
+    periodStatus.Shareable = true;
+    periodStatus.UpdateBehavior = OutSystems.Model.Enumerations.UpdateEntityBehaviorType.Optimized;
+    periodStatus.UseTranslations = true;
+    
+    var id9 = periodStatus.CreateAttribute("Id");
+    id9.DataType = eSpace.IntegerType;
+    id9.SetDefaultValue(null); // default value
+    id9.Description = null; // default value
+    id9.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.No; // default value
+    id9.IsSearchable = false; // default value
+    id9.Label = "Id";
+    id9.OriginalName = null; // default value
+    id9.OriginalType = null; // default value
+    
+    var label4 = periodStatus.CreateAttribute("Label");
+    label4.DataType = eSpace.TextType;
+    label4.SetDefaultValue(null); // default value
+    label4.Description = null; // default value
+    label4.IsMandatory = true;
+    label4.IsSearchable = false; // default value
+    label4.Label = "Label";
+    label4.Length = 50;
+    label4.OriginalName = null; // default value
+    label4.OriginalType = null; // default value
+    
+    var order3 = periodStatus.CreateAttribute("Order");
+    order3.DataType = eSpace.IntegerType;
+    order3.SetDefaultValue(null); // default value
+    order3.Description = null; // default value
+    order3.IsMandatory = true;
+    order3.IsSearchable = false; // default value
+    order3.Label = "Order";
+    order3.OriginalName = null; // default value
+    order3.OriginalType = null; // default value
+    
+    var is_Active3 = periodStatus.CreateAttribute("Is_Active");
+    is_Active3.DataType = eSpace.BooleanType;
+    is_Active3.SetDefaultValue(null); // default value
+    is_Active3.Description = null; // default value
+    is_Active3.IsMandatory = true;
+    is_Active3.IsSearchable = false; // default value
+    is_Active3.Label = "Is Active";
+    is_Active3.OriginalName = null; // default value
+    is_Active3.OriginalType = null; // default value
+    
+    var staticEntityRecord10 = periodStatus.CreateRecord();
+    staticEntityRecord10.Icon = null; // default value
+    staticEntityRecord10.Identifier = "Rejected";
+    staticEntityRecord10.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord10.SetAttributeValue(id9, "4");
+    staticEntityRecord10.SetAttributeValue(order3, "4");
+    staticEntityRecord10.SetAttributeValue(label4, "\"Rejected\"");
+    
+    var staticEntityRecord11 = periodStatus.CreateRecord();
+    staticEntityRecord11.Icon = null; // default value
+    staticEntityRecord11.Identifier = "Submitted";
+    staticEntityRecord11.SetAttributeValue(label4, "\"Submitted\"");
+    staticEntityRecord11.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord11.SetAttributeValue(id9, "2");
+    staticEntityRecord11.SetAttributeValue(order3, "2");
+    
+    var staticEntityRecord12 = periodStatus.CreateRecord();
+    staticEntityRecord12.Icon = null; // default value
+    staticEntityRecord12.Identifier = "Open";
+    staticEntityRecord12.SetAttributeValue(label4, "\"Open\"");
+    staticEntityRecord12.SetAttributeValue(id9, "1");
+    staticEntityRecord12.SetAttributeValue(order3, "1");
+    staticEntityRecord12.SetAttributeValue(is_Active3, "True");
+    
+    var staticEntityRecord13 = periodStatus.CreateRecord();
+    staticEntityRecord13.Icon = null; // default value
+    staticEntityRecord13.Identifier = "Approved";
+    staticEntityRecord13.SetAttributeValue(is_Active3, "True");
+    staticEntityRecord13.SetAttributeValue(label4, "\"Approved\"");
+    staticEntityRecord13.SetAttributeValue(order3, "3");
+    staticEntityRecord13.SetAttributeValue(id9, "3");
+    periodStatus.IdentifierAttribute = id9;
+    periodStatus.IsActiveAttribute = is_Active3;
+    periodStatus.LabelAttribute = label4;
+    periodStatus.OrderByAttribute = order3;
+    
+    var userId3 = monthSheetSummary.CreateAttribute("UserId");
+    userId3.DataType = user.IdentifierType;
+    userId3.SetDefaultValue(null); // default value
+    userId3.Description = null; // default value
+    userId3.IsMandatory = false; // default value
+    userId3.Label = "User";
+    userId3.NameInJSON = null; // default value
+    monthSheetId.DataType = monthSheet.IdentifierType;
+    periodStatusId.DataType = periodStatus.IdentifierType;
+    
+    var userName = monthSheetSummary.CreateAttribute("UserName");
+    userName.DataType = eSpace.TextType;
+    userName.SetDefaultValue(null); // default value
+    userName.Description = null; // default value
+    userName.IsMandatory = false; // default value
+    userName.Label = "User Name";
+    userName.Length = 250;
+    userName.NameInJSON = null; // default value
+    
+    var year2 = monthSheetSummary.CreateAttribute("Year");
+    year2.DataType = eSpace.IntegerType;
+    year2.SetDefaultValue(null); // default value
+    year2.Description = null; // default value
+    year2.IsMandatory = false; // default value
+    year2.Label = "Year";
+    year2.NameInJSON = null; // default value
+    
+    var month2 = monthSheetSummary.CreateAttribute("Month");
+    month2.DataType = eSpace.IntegerType;
+    month2.SetDefaultValue(null); // default value
+    month2.Description = null; // default value
+    month2.IsMandatory = false; // default value
+    month2.Label = "Month";
+    month2.NameInJSON = null; // default value
+    
+    var periodStatusId2 = monthSheetSummary.CreateAttribute("PeriodStatusId");
+    periodStatusId2.DataType = periodStatus.IdentifierType;
+    periodStatusId2.SetDefaultValue(null); // default value
+    periodStatusId2.Description = null; // default value
+    periodStatusId2.IsMandatory = false; // default value
+    periodStatusId2.Label = "Period Status";
+    periodStatusId2.NameInJSON = null; // default value
+    
+    var submittedOn2 = monthSheetSummary.CreateAttribute("SubmittedOn");
+    submittedOn2.DataType = eSpace.DateTimeType;
+    submittedOn2.SetDefaultValue(null); // default value
+    submittedOn2.Description = null; // default value
+    submittedOn2.IsMandatory = false; // default value
+    submittedOn2.Label = "Submitted On";
+    submittedOn2.NameInJSON = null; // default value
+    
+    var decidedOn2 = monthSheetSummary.CreateAttribute("DecidedOn");
+    decidedOn2.DataType = eSpace.DateTimeType;
+    decidedOn2.SetDefaultValue(null); // default value
+    decidedOn2.Description = null; // default value
+    decidedOn2.IsMandatory = false; // default value
+    decidedOn2.Label = "Decided On";
+    decidedOn2.NameInJSON = null; // default value
+    
+    var comment2 = monthSheetSummary.CreateAttribute("Comment");
+    comment2.DataType = eSpace.TextType;
+    comment2.SetDefaultValue(null); // default value
+    comment2.Description = null; // default value
+    comment2.IsMandatory = false; // default value
+    comment2.Label = "Comment";
+    comment2.Length = 500;
+    comment2.NameInJSON = null; // default value
+    
+    var totalMinutes3 = monthSheetSummary.CreateAttribute("TotalMinutes");
+    totalMinutes3.DataType = eSpace.IntegerType;
+    totalMinutes3.SetDefaultValue(null); // default value
+    totalMinutes3.Description = null; // default value
+    totalMinutes3.IsMandatory = false; // default value
+    totalMinutes3.Label = "Total Minutes";
+    totalMinutes3.NameInJSON = null; // default value
+    
+    var expectedMinutes = monthSheetSummary.CreateAttribute("ExpectedMinutes");
+    expectedMinutes.DataType = eSpace.IntegerType;
+    expectedMinutes.SetDefaultValue(null); // default value
+    expectedMinutes.Description = null; // default value
+    expectedMinutes.IsMandatory = false; // default value
+    expectedMinutes.Label = "Expected Minutes";
+    expectedMinutes.NameInJSON = null; // default value
+    
     /*** creating IStructure 'MonthSummary' ***/
     var monthSummary = eSpace.CreateStructure("MonthSummary");
     monthSummary.Description = "Totals and KPI counts for one month of the current user.";
@@ -961,29 +1264,29 @@
     monthSummary.Public = true;
     monthSummary.Shareable = true;
     
-    var year = monthSummary.CreateAttribute("Year");
-    year.DataType = eSpace.IntegerType;
-    year.SetDefaultValue(null); // default value
-    year.Description = null; // default value
-    year.IsMandatory = false; // default value
-    year.Label = "Year";
-    year.NameInJSON = null; // default value
+    var year3 = monthSummary.CreateAttribute("Year");
+    year3.DataType = eSpace.IntegerType;
+    year3.SetDefaultValue(null); // default value
+    year3.Description = null; // default value
+    year3.IsMandatory = false; // default value
+    year3.Label = "Year";
+    year3.NameInJSON = null; // default value
     
-    var month = monthSummary.CreateAttribute("Month");
-    month.DataType = eSpace.IntegerType;
-    month.SetDefaultValue(null); // default value
-    month.Description = null; // default value
-    month.IsMandatory = false; // default value
-    month.Label = "Month";
-    month.NameInJSON = null; // default value
+    var month3 = monthSummary.CreateAttribute("Month");
+    month3.DataType = eSpace.IntegerType;
+    month3.SetDefaultValue(null); // default value
+    month3.Description = null; // default value
+    month3.IsMandatory = false; // default value
+    month3.Label = "Month";
+    month3.NameInJSON = null; // default value
     
-    var totalMinutes3 = monthSummary.CreateAttribute("TotalMinutes");
-    totalMinutes3.DataType = eSpace.IntegerType;
-    totalMinutes3.SetDefaultValue(null); // default value
-    totalMinutes3.Description = null; // default value
-    totalMinutes3.IsMandatory = false; // default value
-    totalMinutes3.Label = "Total Minutes";
-    totalMinutes3.NameInJSON = null; // default value
+    var totalMinutes4 = monthSummary.CreateAttribute("TotalMinutes");
+    totalMinutes4.DataType = eSpace.IntegerType;
+    totalMinutes4.SetDefaultValue(null); // default value
+    totalMinutes4.Description = null; // default value
+    totalMinutes4.IsMandatory = false; // default value
+    totalMinutes4.Label = "Total Minutes";
+    totalMinutes4.NameInJSON = null; // default value
     
     var elapsedDays = monthSummary.CreateAttribute("ElapsedDays");
     elapsedDays.DataType = eSpace.IntegerType;
@@ -993,13 +1296,13 @@
     elapsedDays.Label = "Elapsed Days";
     elapsedDays.NameInJSON = null; // default value
     
-    var expectedMinutes = monthSummary.CreateAttribute("ExpectedMinutes");
-    expectedMinutes.DataType = eSpace.IntegerType;
-    expectedMinutes.SetDefaultValue(null); // default value
-    expectedMinutes.Description = null; // default value
-    expectedMinutes.IsMandatory = false; // default value
-    expectedMinutes.Label = "Expected Minutes";
-    expectedMinutes.NameInJSON = null; // default value
+    var expectedMinutes2 = monthSummary.CreateAttribute("ExpectedMinutes");
+    expectedMinutes2.DataType = eSpace.IntegerType;
+    expectedMinutes2.SetDefaultValue(null); // default value
+    expectedMinutes2.Description = null; // default value
+    expectedMinutes2.IsMandatory = false; // default value
+    expectedMinutes2.Label = "Expected Minutes";
+    expectedMinutes2.NameInJSON = null; // default value
     
     var progressPercent = monthSummary.CreateAttribute("ProgressPercent");
     progressPercent.DataType = eSpace.DecimalType;
@@ -1058,14 +1361,14 @@
     value.Label = "Value";
     value.NameInJSON = null; // default value
     
-    var label4 = numberOption.CreateAttribute("Label");
-    label4.DataType = eSpace.TextType;
-    label4.SetDefaultValue(null); // default value
-    label4.Description = null; // default value
-    label4.IsMandatory = false; // default value
-    label4.Label = "Label";
-    label4.Length = null; // default value
-    label4.NameInJSON = null; // default value
+    var label5 = numberOption.CreateAttribute("Label");
+    label5.DataType = eSpace.TextType;
+    label5.SetDefaultValue(null); // default value
+    label5.Description = null; // default value
+    label5.IsMandatory = false; // default value
+    label5.Label = "Label";
+    label5.Length = null; // default value
+    label5.NameInJSON = null; // default value
     
     /*** creating IStructure 'ProjectAssignmentSummary' ***/
     var projectAssignmentSummary = eSpace.CreateStructure("ProjectAssignmentSummary");
@@ -1074,12 +1377,12 @@
     projectAssignmentSummary.Public = true;
     projectAssignmentSummary.Shareable = true;
     
-    var id8 = projectAssignmentSummary.CreateAttribute("Id");
-    id8.SetDefaultValue(null); // default value
-    id8.Description = null; // default value
-    id8.IsMandatory = false; // default value
-    id8.Label = "Id";
-    id8.NameInJSON = null; // default value
+    var id10 = projectAssignmentSummary.CreateAttribute("Id");
+    id10.SetDefaultValue(null); // default value
+    id10.Description = null; // default value
+    id10.IsMandatory = false; // default value
+    id10.Label = "Id";
+    id10.NameInJSON = null; // default value
     
     /*** creating IServerEntity 'ProjectAssignment' ***/
     var projectAssignment = eSpace.CreateServerEntity("ProjectAssignment");
@@ -1101,25 +1404,25 @@
     projectAssignment.UseTranslations = false; // default value
     projectAssignment.ViewNameOverride = null; // default value
     
-    var id9 = projectAssignment.CreateAttribute("Id");
-    id9.DataType = eSpace.LongIntegerType;
-    id9.SetDefaultValue(null); // default value
-    id9.Description = null; // default value
-    id9.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
-    id9.IsSearchable = false; // default value
-    id9.Label = "Id";
-    id9.OriginalName = null; // default value
-    id9.OriginalType = null; // default value
+    var id11 = projectAssignment.CreateAttribute("Id");
+    id11.DataType = eSpace.LongIntegerType;
+    id11.SetDefaultValue(null); // default value
+    id11.Description = null; // default value
+    id11.IsAutoNumber = OutSystems.Model.Enumerations.AutoNumber.Yes;
+    id11.IsSearchable = false; // default value
+    id11.Label = "Id";
+    id11.OriginalName = null; // default value
+    id11.OriginalType = null; // default value
     
-    var userId2 = projectAssignment.CreateAttribute("UserId");
-    userId2.DataType = user.IdentifierType;
-    userId2.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
-    userId2.Description = null; // default value
-    userId2.IsMandatory = true;
-    userId2.IsSearchable = false; // default value
-    userId2.Label = "User";
-    userId2.OriginalName = null; // default value
-    userId2.OriginalType = null; // default value
+    var userId4 = projectAssignment.CreateAttribute("UserId");
+    userId4.DataType = user.IdentifierType;
+    userId4.DeleteRule = OutSystems.Model.Enumerations.DeleteRule.Delete;
+    userId4.Description = null; // default value
+    userId4.IsMandatory = true;
+    userId4.IsSearchable = false; // default value
+    userId4.Label = "User";
+    userId4.OriginalName = null; // default value
+    userId4.OriginalType = null; // default value
     
     var projectId4 = projectAssignment.CreateAttribute("ProjectId");
     projectId4.DataType = project.IdentifierType;
@@ -1160,7 +1463,7 @@
     isActive4.Label = "Is Active";
     isActive4.OriginalName = null; // default value
     isActive4.OriginalType = null; // default value
-    projectAssignment.IdentifierAttribute = id9;
+    projectAssignment.IdentifierAttribute = id11;
     
     var projectId5 = projectAssignmentSummary.CreateAttribute("ProjectId");
     projectId5.DataType = project.IdentifierType;
@@ -1169,7 +1472,7 @@
     projectId5.IsMandatory = false; // default value
     projectId5.Label = "Project";
     projectId5.NameInJSON = null; // default value
-    id8.DataType = projectAssignment.IdentifierType;
+    id10.DataType = projectAssignment.IdentifierType;
     
     var projectCode3 = projectAssignmentSummary.CreateAttribute("ProjectCode");
     projectCode3.DataType = eSpace.TextType;
@@ -1198,22 +1501,22 @@
     clientName3.Length = 100;
     clientName3.NameInJSON = null; // default value
     
-    var userId3 = projectAssignmentSummary.CreateAttribute("UserId");
-    userId3.DataType = user.IdentifierType;
-    userId3.SetDefaultValue(null); // default value
-    userId3.Description = null; // default value
-    userId3.IsMandatory = false; // default value
-    userId3.Label = "User";
-    userId3.NameInJSON = null; // default value
+    var userId5 = projectAssignmentSummary.CreateAttribute("UserId");
+    userId5.DataType = user.IdentifierType;
+    userId5.SetDefaultValue(null); // default value
+    userId5.Description = null; // default value
+    userId5.IsMandatory = false; // default value
+    userId5.Label = "User";
+    userId5.NameInJSON = null; // default value
     
-    var userName = projectAssignmentSummary.CreateAttribute("UserName");
-    userName.DataType = eSpace.TextType;
-    userName.SetDefaultValue(null); // default value
-    userName.Description = null; // default value
-    userName.IsMandatory = false; // default value
-    userName.Label = "User Name";
-    userName.Length = 250;
-    userName.NameInJSON = null; // default value
+    var userName2 = projectAssignmentSummary.CreateAttribute("UserName");
+    userName2.DataType = eSpace.TextType;
+    userName2.SetDefaultValue(null); // default value
+    userName2.Description = null; // default value
+    userName2.IsMandatory = false; // default value
+    userName2.Label = "User Name";
+    userName2.Length = 250;
+    userName2.NameInJSON = null; // default value
     
     var startDate2 = projectAssignmentSummary.CreateAttribute("StartDate");
     startDate2.DataType = eSpace.DateType;
@@ -1255,13 +1558,13 @@
     projectSummary.Public = true;
     projectSummary.Shareable = true;
     
-    var id10 = projectSummary.CreateAttribute("Id");
-    id10.DataType = project.IdentifierType;
-    id10.SetDefaultValue(null); // default value
-    id10.Description = null; // default value
-    id10.IsMandatory = false; // default value
-    id10.Label = "Id";
-    id10.NameInJSON = null; // default value
+    var id12 = projectSummary.CreateAttribute("Id");
+    id12.DataType = project.IdentifierType;
+    id12.SetDefaultValue(null); // default value
+    id12.Description = null; // default value
+    id12.IsMandatory = false; // default value
+    id12.Label = "Id";
+    id12.NameInJSON = null; // default value
     
     var clientId2 = projectSummary.CreateAttribute("ClientId");
     clientId2.DataType = client.IdentifierType;
@@ -1353,13 +1656,13 @@
     userAccess.Public = true;
     userAccess.Shareable = true;
     
-    var userId4 = userAccess.CreateAttribute("UserId");
-    userId4.DataType = user.IdentifierType;
-    userId4.SetDefaultValue(null); // default value
-    userId4.Description = null; // default value
-    userId4.IsMandatory = false; // default value
-    userId4.Label = "User";
-    userId4.NameInJSON = null; // default value
+    var userId6 = userAccess.CreateAttribute("UserId");
+    userId6.DataType = user.IdentifierType;
+    userId6.SetDefaultValue(null); // default value
+    userId6.Description = null; // default value
+    userId6.IsMandatory = false; // default value
+    userId6.Label = "User";
+    userId6.NameInJSON = null; // default value
     
     var name5 = userAccess.CreateAttribute("Name");
     name5.DataType = eSpace.TextType;
@@ -1435,13 +1738,13 @@
     userOption.Public = true;
     userOption.Shareable = true;
     
-    var userId5 = userOption.CreateAttribute("UserId");
-    userId5.DataType = user.IdentifierType;
-    userId5.SetDefaultValue(null); // default value
-    userId5.Description = null; // default value
-    userId5.IsMandatory = false; // default value
-    userId5.Label = "User";
-    userId5.NameInJSON = null; // default value
+    var userId7 = userOption.CreateAttribute("UserId");
+    userId7.DataType = user.IdentifierType;
+    userId7.SetDefaultValue(null); // default value
+    userId7.Description = null; // default value
+    userId7.IsMandatory = false; // default value
+    userId7.Label = "User";
+    userId7.NameInJSON = null; // default value
     
     var name6 = userOption.CreateAttribute("Name");
     name6.DataType = eSpace.TextType;
@@ -1526,13 +1829,13 @@
     isEditable3.Label = "Is Editable";
     isEditable3.NameInJSON = null; // default value
     
-    var totalMinutes4 = weekDayHeader.CreateAttribute("TotalMinutes");
-    totalMinutes4.DataType = eSpace.IntegerType;
-    totalMinutes4.SetDefaultValue(null); // default value
-    totalMinutes4.Description = null; // default value
-    totalMinutes4.IsMandatory = false; // default value
-    totalMinutes4.Label = "Total Minutes";
-    totalMinutes4.NameInJSON = null; // default value
+    var totalMinutes5 = weekDayHeader.CreateAttribute("TotalMinutes");
+    totalMinutes5.DataType = eSpace.IntegerType;
+    totalMinutes5.SetDefaultValue(null); // default value
+    totalMinutes5.Description = null; // default value
+    totalMinutes5.IsMandatory = false; // default value
+    totalMinutes5.Label = "Total Minutes";
+    totalMinutes5.NameInJSON = null; // default value
     
     var dateLabel = weekDayHeader.CreateAttribute("DateLabel");
     dateLabel.DataType = eSpace.TextType;
@@ -1691,11 +1994,11 @@
     cells.Label = "Cells";
     cells.NameInJSON = null; // default value
     
-    var totalMinutes5 = weeklyProjectRow.CreateAttribute("TotalMinutes");
-    totalMinutes5.DataType = eSpace.IntegerType;
-    totalMinutes5.SetDefaultValue(null); // default value
-    totalMinutes5.Description = null; // default value
-    totalMinutes5.IsMandatory = false; // default value
-    totalMinutes5.Label = "Total Minutes";
-    totalMinutes5.NameInJSON = null; // default value
+    var totalMinutes6 = weeklyProjectRow.CreateAttribute("TotalMinutes");
+    totalMinutes6.DataType = eSpace.IntegerType;
+    totalMinutes6.SetDefaultValue(null); // default value
+    totalMinutes6.Description = null; // default value
+    totalMinutes6.IsMandatory = false; // default value
+    totalMinutes6.Label = "Total Minutes";
+    totalMinutes6.NameInJSON = null; // default value
 }

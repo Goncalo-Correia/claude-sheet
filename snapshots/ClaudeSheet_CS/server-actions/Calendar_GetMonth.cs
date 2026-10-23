@@ -3,7 +3,7 @@
     /*** creating IServerAction 'Calendar_GetMonth' ***/
     var calendar_GetMonth = eSpace.CreateServerAction("Calendar_GetMonth");
     calendar_GetMonth.CacheInMinutes = null; // default value
-    calendar_GetMonth.Description = "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday.";
+    calendar_GetMonth.Description = "One CalendarDay per day of the month for the current user, classified (first match wins) as Holiday, DayOff, Confirmed, Weekend, Future (after today, server date) or Pending. IsEditable = weekday that is not a holiday. IsLocked = the month is Submitted or Approved.";
     var calendar = eSpace.Folders.Named("Calendar");
     calendar_GetMonth.Folder = calendar;
     calendar_GetMonth.Function = false; // default value
@@ -74,6 +74,8 @@
     var assignment3 = assignNode.CreateAssignment("Today", "CurrDate()");
     
     var assignment4 = assignNode.CreateAssignment("DayIndex", "1");
+    
+    var assignment5 = assignNode.CreateAssignment("IsLocked", "MonthSheet_IsLocked(GetUserId(), Year, Month)");
     ifNode.TrueTarget = assignNode;
     
     var ifNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IIfNode>().ConnectedBelow(assignNode, 1371);
@@ -99,15 +101,15 @@
     assignNode2.IsDisabled = false; // default value
     assignNode2.Label = "Build day";
     
-    var assignment5 = assignNode2.CreateAssignment("CalDay.Date", "DateTimeToDate(AddDays(FirstDay, DayIndex - 1))");
+    var assignment6 = assignNode2.CreateAssignment("CalDay.Date", "DateTimeToDate(AddDays(FirstDay, DayIndex - 1))");
     
-    var assignment6 = assignNode2.CreateAssignment("CalDay.DayNumber", "DayIndex");
+    var assignment7 = assignNode2.CreateAssignment("CalDay.DayNumber", "DayIndex");
     
-    var assignment7 = assignNode2.CreateAssignment("CalDay.WeekDay", "DecimalToInteger(Mod(DayOfWeek(CalDay.Date) + 6, 7)) + 1");
+    var assignment8 = assignNode2.CreateAssignment("CalDay.WeekDay", "DecimalToInteger(Mod(DayOfWeek(CalDay.Date) + 6, 7)) + 1");
     
-    var assignment8 = assignNode2.CreateAssignment("CalDay.IsWeekend", "CalDay.WeekDay >= 6");
+    var assignment9 = assignNode2.CreateAssignment("CalDay.IsWeekend", "CalDay.WeekDay >= 6");
     
-    var assignment9 = assignNode2.CreateAssignment("CalDay.IsToday", "CalDay.Date = Today");
+    var assignment10 = assignNode2.CreateAssignment("CalDay.IsToday", "CalDay.Date = Today");
     ifNode2.TrueTarget = assignNode2;
     
     var forEachNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthHolidays, 1371);
@@ -134,7 +136,7 @@
     assignNode3.Label = "Mark holiday";
     assignNode3.Target = forEachNode;
     
-    var assignment10 = assignNode3.CreateAssignment("Days[Day(GetMonthHolidays.List.Current.Holiday.HolidayDate) - 1].HolidayName", "GetMonthHolidays.List.Current.Holiday.Name");
+    var assignment11 = assignNode3.CreateAssignment("Days[Day(GetMonthHolidays.List.Current.Holiday.HolidayDate) - 1].HolidayName", "GetMonthHolidays.List.Current.Holiday.Name");
     forEachNode.CycleTarget = assignNode3;
     
     var getMonthDaySheets = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthDaySheets").Below(forEachNode, 1371);
@@ -156,7 +158,7 @@
     assignNode4.Label = "Next day";
     assignNode4.Target = ifNode2;
     
-    var assignment11 = assignNode4.CreateAssignment("DayIndex", "DayIndex + 1");
+    var assignment12 = assignNode4.CreateAssignment("DayIndex", "DayIndex + 1");
     
     var forEachNode2 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().ConnectedBelow(getMonthDaySheets, 1371);
     forEachNode2.IsDisabled = false; // default value
@@ -170,9 +172,9 @@
     assignNode5.Label = "Copy day sheet";
     assignNode5.Target = forEachNode2;
     
-    var assignment12 = assignNode5.CreateAssignment("Days[Day(GetMonthDaySheets.List.Current.DaySheet.SheetDate) - 1].DaySheetId", "GetMonthDaySheets.List.Current.DaySheet.Id");
+    var assignment13 = assignNode5.CreateAssignment("Days[Day(GetMonthDaySheets.List.Current.DaySheet.SheetDate) - 1].DaySheetId", "GetMonthDaySheets.List.Current.DaySheet.Id");
     
-    var assignment13 = assignNode5.CreateAssignment("Days[Day(GetMonthDaySheets.List.Current.DaySheet.SheetDate) - 1].DayStatusId", "GetMonthDaySheets.List.Current.DaySheet.DayStatusId");
+    var assignment14 = assignNode5.CreateAssignment("Days[Day(GetMonthDaySheets.List.Current.DaySheet.SheetDate) - 1].DayStatusId", "GetMonthDaySheets.List.Current.DaySheet.DayStatusId");
     forEachNode2.CycleTarget = assignNode5;
     
     var getMonthMinutes = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IAggregateNode>("GetMonthMinutes").Below(forEachNode2, 1371);
@@ -211,7 +213,7 @@
     assignNode6.Label = "Set day minutes";
     assignNode6.Target = forEachNode3;
     
-    var assignment14 = assignNode6.CreateAssignment("Days[Day(GetMonthMinutes.List.Current.SheetDate) - 1].TotalMinutes", "LongIntegerToInteger(GetMonthMinutes.List.Current.TotalMinutes)");
+    var assignment15 = assignNode6.CreateAssignment("Days[Day(GetMonthMinutes.List.Current.SheetDate) - 1].TotalMinutes", "LongIntegerToInteger(GetMonthMinutes.List.Current.TotalMinutes)");
     forEachNode3.CycleTarget = assignNode6;
     
     var forEachNode4 = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IForEachNode>().Below(forEachNode3, 1371);
@@ -227,11 +229,11 @@
     assignNode7.Label = "Classify day";
     assignNode7.Target = forEachNode4;
     
-    var assignment15 = assignNode7.CreateAssignment("Days.Current.DayTypeId", "If(Days.Current.HolidayName <> \"\", Entities.CalendarDayType.Holiday, If(Days.Current.DayStatusId = Entities.DayStatus.DayOff, Entities.CalendarDayType.DayOff, If(Days.Current.DayStatusId = Entities.DayStatus.Confirmed, Entities.CalendarDayType.Confirmed, If(Days.Current.IsWeekend, Entities.CalendarDayType.Weekend, If(Days.Current.Date > Today, Entities.CalendarDayType.Future, Entities.CalendarDayType.Pending)))))");
+    var assignment16 = assignNode7.CreateAssignment("Days.Current.DayTypeId", "If(Days.Current.HolidayName <> \"\", Entities.CalendarDayType.Holiday, If(Days.Current.DayStatusId = Entities.DayStatus.DayOff, Entities.CalendarDayType.DayOff, If(Days.Current.DayStatusId = Entities.DayStatus.Confirmed, Entities.CalendarDayType.Confirmed, If(Days.Current.IsWeekend, Entities.CalendarDayType.Weekend, If(Days.Current.Date > Today, Entities.CalendarDayType.Future, Entities.CalendarDayType.Pending)))))");
     
-    var assignment16 = assignNode7.CreateAssignment("Days.Current.CssClass", "If(Days.Current.DayTypeId = Entities.CalendarDayType.Holiday, \"day-holiday\", If(Days.Current.DayTypeId = Entities.CalendarDayType.DayOff, \"day-off\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Confirmed, \"day-confirmed\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Weekend, \"day-weekend\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Future, \"day-future\", \"day-pending\")))))");
+    var assignment17 = assignNode7.CreateAssignment("Days.Current.CssClass", "If(Days.Current.DayTypeId = Entities.CalendarDayType.Holiday, \"day-holiday\", If(Days.Current.DayTypeId = Entities.CalendarDayType.DayOff, \"day-off\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Confirmed, \"day-confirmed\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Weekend, \"day-weekend\", If(Days.Current.DayTypeId = Entities.CalendarDayType.Future, \"day-future\", \"day-pending\")))))");
     
-    var assignment17 = assignNode7.CreateAssignment("Days.Current.IsEditable", "not Days.Current.IsWeekend and Days.Current.HolidayName = \"\"");
+    var assignment18 = assignNode7.CreateAssignment("Days.Current.IsEditable", "not Days.Current.IsWeekend and Days.Current.HolidayName = \"\"");
     forEachNode4.CycleTarget = assignNode7;
     
     var endNode = calendar_GetMonth.CreateNode<OutSystems.Model.Logic.Nodes.IEndNode>().Below(forEachNode4, 1371);
@@ -241,4 +243,9 @@
     var days = calendar_GetMonth.CreateOutputParameter("Days");
     days.DataType = eSpace.GetOrCreateListType(calendarDay);
     days.Description = null; // default value
+    
+    var isLocked = calendar_GetMonth.CreateOutputParameter("IsLocked");
+    isLocked.DataType = eSpace.BooleanType;
+    isLocked.SetDefaultValue(null); // default value
+    isLocked.Description = "True when the month is Submitted or Approved (MonthSheet_IsLocked): its days open read-only.";
 }

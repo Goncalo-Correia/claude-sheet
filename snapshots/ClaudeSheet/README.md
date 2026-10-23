@@ -2,7 +2,7 @@
 
 - **Module:** ClaudeSheet (Reactive, End-user): the front end; the backend lives in ClaudeSheet_CS (see `../ClaudeSheet_CS/`)
 - **Version:** 0 (from `listApps`)
-- **Last refresh:** 2026-10-23, targeted mode, after the manual publish of US10's ClaudeSheet part
+- **Last refresh:** 2026-10-23, targeted mode, after the publish of US11's ClaudeSheet part
 
 ## Own elements (references excluded)
 
@@ -11,7 +11,7 @@
 | Entities, static entities, structures | 0 | In ClaudeSheet_CS |
 | Server actions | 2 | DoLogin, DoLogout (login template) |
 | Client actions | 1 | Minutes_Format |
-| Screens | 10 | Admin/Users, Admin/UserDetail (US9), Admin/Holidays (US8), Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
+| Screens | 11 | MainFlow/Approvals (US11), Admin/Users, Admin/UserDetail (US9), Admin/Holidays (US8), Admin/Projects, Admin/ProjectDetail (US7), Admin/Clients, Admin/ClientDetail, Common/InvalidPermissions, Common/Login, MainFlow/MySheet (default screen) |
 | Blocks | 14 | Admin/AssignmentEditor (US9), ApplicationTitle, LayoutBase, LayoutBaseSection, LayoutBlank, LayoutSideMenu, LayoutTopMenu, Menu, MenuIcon, UserInfo, SheetBlocks/TotalHoursMonth, SheetBlocks/HoursCalendar, SheetBlocks/DayStatusKPIs, SheetBlocks/WeeklyProjectHours |
 | Roles | 2 | Anonymous, Registered. Referenced from ClaudeSheet_CS: SheetUser, SheetAdmin, SheetManager |
 | Timers, user exceptions | 0 | In ClaudeSheet_CS |
@@ -22,6 +22,10 @@
 | References | | ClaudeSheet_CS, OutSystemsUI, OutSystemsCharts, OutSystemsMaps, (System) |
 
 ## Notes on this refresh
+
+- US11 (2026-10-23), targeted mode: `data-model.cs` and `structures.cs` (referenced MonthSheet, PeriodStatus, MonthSheetSummary), `names/screens.json`, `names/server-actions.json`, the new `screens/Approvals.cs`, `web-blocks/HoursCalendar.cs` (month status badge, rejection comment, Submit month, read-only when locked), `web-blocks/Menu.cs` (IsSheetManager, ApprovalsLink) and `themes/ClaudeSheet.cs` (status badge and Approvals table CSS). HoursCalendar and Approvals were written from the saved tool output (too large for the transcript). Other files are unchanged.
+
+### US10 refresh (2026-10-23)
 
 - US10 (2026-10-23), targeted mode: light reads plus `web-blocks/HoursCalendar.cs` (HasProjectLines + NoProjectsMessage, Save/Confirm visibility, NotesField with NotesInput, HasFillProjects + NoFillProjectsMessage, OnClick_FillPendingButton calling Project_GetAssignedInPeriod, the filled/skipped message). Written by `extract-snapshot.mjs` from the saved tool output (too large for the transcript). `names/server-actions.json` gained the referenced Project_GetAssignedInPeriod and the new FillPending description; every other module-wide file is unchanged. Counts above now include US9's screens and block.
 

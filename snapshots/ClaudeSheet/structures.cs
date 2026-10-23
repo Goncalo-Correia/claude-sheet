@@ -68,6 +68,8 @@
     var markerClusterer = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("0TG7lXnw1k+rLlyDJoVaqg*8G2shutUB0Oe7ahWNAesaw"));
     // IStructureSignature OutSystemsUI/MonthOrderYear
     var monthOrderYear = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Kn_hixxDWEm4lMd7mIpycQ*IEKMqKLYpkqqO+CGuDduBw"));
+    // IStructureSignature ClaudeSheet_CS/MonthSheetSummary
+    var monthSheetSummary = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*TziLilEJBkiOWvu6Rlsrqw"));
     // IStructureSignature ClaudeSheet_CS/MonthSummary
     var monthSummary = (OutSystems.Model.Data.IStructureSignature)eSpace.AddDependency(Services.ModelServices.ParseGlobalKey("Hff6YxyWCUWs0l+vxIrNNw*tqdA8FbWj0OCnrcNNnfLGA"));
     // IStructureSignature OutSystemsUI/MonthYear
