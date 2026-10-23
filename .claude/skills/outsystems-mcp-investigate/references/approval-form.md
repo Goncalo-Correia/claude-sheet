@@ -17,18 +17,18 @@ How it works:
 <form class="elicit">
   <div class="elicit-header">
     <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11.586 2a1.5 1.5 0 0 1 1.06.44l2.914 2.914a1.5 1.5 0 0 1 .44 1.06V16.5a1.5 1.5 0 0 1-1.5 1.5h-9a1.5 1.5 0 0 1-1.492-1.347L4 16.5v-13A1.5 1.5 0 0 1 5.5 2zM5.5 3a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h-2.5A1.5 1.5 0 0 1 11 5.5V3zm7.04 10.304a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696m0-4a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696M12 5.5a.5.5 0 0 0 .5.5h2.293L12 3.207z"/></svg>
-    <span>HoursCalendar · investigation stories</span>
+    <span>OrderCard · investigation stories</span>
   </div>
   <div class="elicit-body">
 
     <div class="elicit-group" style="padding:12px 14px; border:0.5px solid var(--border); border-radius:12px;">
       <label class="elicit-question">
         <span style="font-size:12px; padding:2px 8px; border-radius:var(--radius); background:var(--bg-danger); color:var(--text-danger);">High</span>
-        <span style="font-family:var(--font-mono); font-size:13px;">US6 · [Block] HoursCalendar: show save errors in the day editor</span>
+        <span style="font-family:var(--font-mono); font-size:13px;">US6 · [Block] OrderCard: show save errors in the order editor</span>
       </label>
       <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:4px 0 8px;">
-        Story · M · ClaudeSheet_CS, ClaudeSheet<br>
-        As a consultant I want to see why a day couldn't be saved, so that I can fix it without guessing.<br>
+        Story · M · Sales_CS, Sales<br>
+        As a sales rep I want to see why an order couldn't be saved, so that I can fix it without guessing.<br>
         <span style="color:var(--text-muted);">Covers: F01, F04</span>
       </div>
       <div class="elicit-pills" data-name="US6" data-multi="false">
@@ -41,10 +41,10 @@ How it works:
     <div class="elicit-group" style="padding:12px 14px; border:0.5px solid var(--border); border-radius:12px;">
       <label class="elicit-question">
         <span style="font-size:12px; padding:2px 8px; border-radius:var(--radius); background:var(--bg-accent); color:var(--text-accent);">Low</span>
-        <span style="font-family:var(--font-mono); font-size:13px;">TT5 · [Tech] ClaudeSheet_CS: add missing action descriptions</span>
+        <span style="font-family:var(--font-mono); font-size:13px;">TT5 · [Tech] Sales_CS: add missing action descriptions</span>
       </label>
       <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:4px 0 8px;">
-        Tech task · S · ClaudeSheet_CS<br>
+        Tech task · S · Sales_CS<br>
         Six public server actions have no description, so the consumer sees nothing in Service Studio's tooltips.<br>
         <span style="color:var(--text-muted);">Covers: F09</span>
       </div>

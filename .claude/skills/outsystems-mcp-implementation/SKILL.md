@@ -112,14 +112,14 @@ Write what was actually done to the story's `## Implementation notes`: the numbe
 
 When the plan has steps in more than one module (the story's `## Implementation plan` is grouped per module, or its steps name different modules):
 
-1. **Order the modules producer first** (Foundation, then Core, then End-user; e.g. `ClaudeSheet_CS` before `ClaudeSheet`). A consumer can only use what its producer has **published**.
+1. **Order the modules producer first** (Foundation, then Core, then End-user; e.g. `Sales_CS` before `Sales`). A consumer can only use what its producer has **published**.
 2. **One module at a time, in this session.** Don't start subagents. For each module, in order: step 5 for that module's plan steps only (pass its `eSpaceName` on every call, run the conventions gate for it), then steps 6 and 7 (plan check form for that module's steps + `omlMerge` of its `mutatedOmlPath`) and step 8. Finish one module's chain before starting the next.
 3. **Hand-off to the consumer module.** The producer is published at the end of its own chain (step 9). The review comes later, once every module is published. The Model API can't add a dependency, so the user ticks them, guided by a checklist:
    1. **Build the checklist** from the consumer's plan steps: every producer element they use, grouped by type (Entities, Static Entities, Structures, Server Actions, Service Actions, Roles, Exceptions, Blocks). Write it into the story's plan under the consumer (`Dependencies to add`).
    2. **Ask** with AskUserQuestion, as the only call in the message: *"In **<Consumer>** → Manage Dependencies → **<Producer>**, tick: Server Actions: …; Structures: …; …"*, with the options **Done** and **Not yet** (Done first). Keep the list in the question text so the user can work from it.
    3. **On Done**, run `omlRefreshReferences` on the consumer (before its first `applyModelApiCode`: it drops the consumer's session pointer). Then verify with a throw-probe on the consumer: for each listed element, look it up in `eSpace.References.Named("<Producer>")` (`ServerActions`, `Structures`, `Entities`, `Roles`, …) and report the ones not found. If any are missing, ask again with only the missing ones. If all are found, start the consumer's chain (step 2).
    4. **On Not yet** (or any other answer), stop and wait. Never start the consumer before the check passes.
-   5. The first time you do this in a repository, also confirm that the reference lists **only** the ticked elements; if it lists every public element of the producer, say so: the probe then only proves the reference was refreshed, and you rely on the user's Done for the rest. (Observed 2026-10-15: the reference lists the ticked elements plus the elements they depend on, e.g. entities behind a structure's identifier attributes. A ticked element whose name clashes with an element still in the consumer appears with a numeric suffix, e.g. `DaySheet_Save2`; look elements up by base name with an optional numeric suffix, and tell the user about the clash.)
+   5. The first time you do this in a repository, also confirm that the reference lists **only** the ticked elements; if it lists every public element of the producer, say so: the probe then only proves the reference was refreshed, and you rely on the user's Done for the rest. (Observed 2026-10-15: the reference lists the ticked elements plus the elements they depend on, e.g. entities behind a structure's identifier attributes. A ticked element whose name clashes with an element still in the consumer appears with a numeric suffix, e.g. `Order_Save2`; look elements up by base name with an optional numeric suffix, and tell the user about the clash.)
 4. Each module has its own session pointer: never interleave `applyModelApiCode` calls on two modules in one chain.
 
 Write the implementation notes per module (`### <Module>` subsections).
@@ -201,7 +201,7 @@ When every step has a Yes:
    - Failure: report the messages verbatim, fix the cause and go back to step 6 with round N+1.
 4. **Multi-module stories:** after publishing the producer, continue with the hand-off in step 5b. Only the last module's publish ends the skill.
 5. Update the story: Status `In review`, implementation notes complete.
-6. Tell the user the story is implemented and published to Development, with the app URL (the Development environment in `CLAUDE.md`, plus the module's path, for example `https://<env>/ClaudeSheet/`), and that the next step is `outsystems-mcp-code-review`: they test the acceptance criteria in the browser and check the changes in Service Studio.
+6. Tell the user the story is implemented and published to Development, with the app URL (the Development environment in `CLAUDE.md`, plus the module's path, for example `https://<env>/<App>/`), and that the next step is `outsystems-mcp-code-review`: they test the acceptance criteria in the browser and check the changes in Service Studio.
 
 Don't start the review on your own.
 

@@ -15,7 +15,7 @@ These are common OutSystems 11 defaults. Adjust them to the team's standard; Cla
 | Server action | Verb + noun | `Customer_Create`, `Order_GetTotals` |
 | Client action | Verb + noun | `ValidateForm`, `RefreshList` |
 | Screen | Noun, or Noun + `Detail` / `List` | `Customers`, `CustomerDetail` |
-| Block | Noun describing the widget | `CustomerCard`, `HoursCalendar` |
+| Block | Noun describing the widget | `CustomerCard`, `OrderSummary` |
 | Role | PascalCase noun | `SalesManager` |
 | Site property | PascalCase | `MaxUploadSizeMB` |
 | Timer | `Timer_` + purpose | `Timer_SendReminders` |

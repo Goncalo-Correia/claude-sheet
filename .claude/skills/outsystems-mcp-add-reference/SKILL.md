@@ -23,7 +23,7 @@ accepted and the module has 0 errors. Also verified for elements that use a type
 
 - Producer and consumer are both **open in Service Studio** (`listApps` shows them with
   `isOpen: true`). If the producer, or a third module whose types you need, is not open,
-  **open it yourself** with the `outsystems-open-module` skill (see "Opening and closing
+  **open it yourself** with the `outsystems-open-close-module` skill (see "Opening and closing
   modules" below). Don't ask the user to do it.
 - The elements you want are **Public** in the producer.
 - You have a session token (`createSessionToken`) — see `servicestudio-mcp-oml`.
@@ -50,7 +50,7 @@ The producer and any third module only have to be open long enough to copy their
 (Step 1).
 
 1. Note which modules `listApps` shows as open **before** you start.
-2. Open each missing one with `outsystems-open-module`, **on the consumer's server**
+2. Open each missing one with `outsystems-open-close-module`, **on the consumer's server**
    (`-SameServerAs <Consumer>`). Service Studio can have several environments
    registered, and opening the producer on another one gets the wrong module or none.
    Follow that skill's steps, including the one-line warning to the user about unsaved
@@ -59,7 +59,7 @@ The producer and any third module only have to be open long enough to copy their
    structures and entities) come in automatically.
 3. Do Step 1 for each of them (edit session → copy `-in.oml` → `endOmlEditSession`).
 4. **Close the modules you opened** (only those; never one that was open before) with
-   `outsystems-open-module`'s close script, then check with `listApps`. It refuses a tab
+   `outsystems-open-close-module`'s close script, then check with `listApps`. It refuses a tab
    with unsaved changes (`* ` in its header). The copied OMLs are all the next steps need.
 
 Then continue with Step 2 in the consumer.
@@ -155,7 +155,7 @@ clone route below instead.
 
 ## System modules that open as a clone (e.g. `Users`)
 
-Opening `Users` with `outsystems-open-module` (by its eSpaceKey, `-SameServerAs <Consumer>`)
+Opening `Users` with `outsystems-open-close-module` (by its eSpaceKey, `-SameServerAs <Consumer>`)
 makes Service Studio create an **unsaved clone, `CloneOfUsers`**, from the published
 version. `listApps` then shows `CloneOfUsers` open, and `Users` with `isReference: true`.
 The clone has a **new module key**, but the **same element keys** as the original. Its

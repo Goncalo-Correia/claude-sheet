@@ -4,16 +4,16 @@
 
 ```jsonc
 {
-  "projectName": "ClaudeSheet",                  // required
-  "description": "Timesheet app for the team",   // one line; default "TODO: describe the project"
+  "projectName": "Sales",                        // required
+  "description": "Order management for the team", // one line; default "TODO: describe the project"
   "platform": "OutSystems 11",                   // default
   "environments": [                              // default: one Development row with url "TODO"
     { "name": "Development", "url": "https://dev.example.com" },
     { "name": "Production",  "url": "TODO" }
   ],
   "modules": [                                   // default: []
-    { "name": "ClaudeSheet",    "app": "ClaudeSheet", "type": "Reactive", "layer": "End-user", "version": "" },
-    { "name": "ClaudeSheet_CS", "app": "ClaudeSheet", "type": "Service",  "layer": "Core" }
+    { "name": "Sales",    "app": "Sales", "type": "Reactive", "layer": "End-user", "version": "" },
+    { "name": "Sales_CS", "app": "Sales", "type": "Service",  "layer": "Core" }
   ],
   "references": ["OutSystemsUI", "Users"],       // platform/external modules the project depends on; default []
   "mcpUrl": "http://127.0.0.1:41820/mcp",        // default

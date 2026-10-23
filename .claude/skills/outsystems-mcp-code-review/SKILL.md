@@ -64,7 +64,7 @@ Don't treat other sections as acceptance criteria. "Functional rules", "Story", 
 
 Stop and ask for it **before** merging, building lists or showing a form. Say exactly what is missing, for example:
 
-> US1 has no `## Acceptance criteria` section. Please add one to `stories/US1-total-hours-month.md` (or paste the list here and I'll add it), then I'll run the review.
+> US1 has no `## Acceptance criteria` section. Please add one to `stories/US1-order-total-month.md` (or paste the list here and I'll add it), then I'll run the review.
 
 Ask for both in one message when both are missing. Don't invent a plan or criteria to fill the gap, and don't run a partial review without them. If the user pastes the list in chat and a story file exists, offer to write it into the story's section.
 
@@ -124,15 +124,15 @@ One row per **model element** that was created, modified or deleted:
 
 | Element kind | Path format (as it appears in Service Studio) |
 |---|---|
-| Entity / static entity | `Data › Database › DaySheet` |
-| Structure | `Data › Structures › CalendarDay` |
-| Site property / client variable / session variable | `Data › Site Properties › DailyExpectedMinutes` |
-| Server / client / service action | `Logic › Server Actions › SaveDaySheet` |
-| Role | `Logic › Roles › SheetUser` |
+| Entity / static entity | `Data › Database › Order` |
+| Structure | `Data › Structures › OrderSummary` |
+| Site property / client variable / session variable | `Data › Site Properties › MaxOrderAmount` |
+| Server / client / service action | `Logic › Server Actions › SaveOrder` |
+| Role | `Logic › Roles › OrderManager` |
 | Timer | `Processes › Timers › Bootstrap` |
-| Screen | `Interface › UI Flows › MainFlow › MySheet` |
-| Block | `Interface › UI Flows › SheetBlocks › HoursCalendar` |
-| Theme / CSS | `Interface › Themes › ClaudeSheet` (one row per stylesheet touched) |
+| Screen | `Interface › UI Flows › MainFlow › OrderList` |
+| Block | `Interface › UI Flows › OrderBlocks › OrderCard` |
+| Theme / CSS | `Interface › Themes › Sales` (one row per stylesheet touched) |
 | Image / resource / script | `Interface › Images › logo` |
 | Module properties | `Module properties` |
 
@@ -179,7 +179,7 @@ Each row: ID, the step text (shortened if long, keeping the element names), the 
 ### Stories that touch more than one module
 
 - The review runs once **every** module of the story is published (`outsystems-mcp-implementation` publishes each one, producer first).
-- **One form per module, producer first** (e.g. `ClaudeSheet_CS`, then `ClaudeSheet`), header `"<Module> · <story> · round N review"`, each with its own change ledger, conventions rows and log (`reviews/<Module>/<story-id>.md`).
+- **One form per module, producer first** (e.g. `Sales_CS`, then `Sales`), header `"<Module> · <story> · round N review"`, each with its own change ledger, conventions rows and log (`reviews/<Module>/<story-id>.md`).
 - **Acceptance criteria go in the end-user module's form** (the app the user tests in the browser), checked end to end. The producer's form holds its changes, conventions and, when needed, plan steps.
 - **Module placement** is a conventions check (when `docs/conventions.md` or `docs/architecture.md` defines it): one Rejected row per element created in the wrong module.
 - A fix in the producer is published before the consumer is retested; run `omlRefreshReferences` on the consumer before its next `applyModelApiCode` chain.
@@ -195,7 +195,7 @@ Missing rows defeat the purpose of the review.
 
 ## 3. Show the review form
 
-Send a short text intro first: the app URL to test (the Development environment in `CLAUDE.md` plus the module's path, for example `https://<env>/ClaudeSheet/`), when it was last published, module, story, round number, whether the plan check was already approved, number of rows per list, how many rows Claude tagged Rejected, and the number of fixed rows. Below the form, give a compact markdown summary table per list (ID, tag or type, text or path) so the lists stay readable in the transcript.
+Send a short text intro first: the app URL to test (the Development environment in `CLAUDE.md` plus the module's path, for example `https://<env>/<App>/`), when it was last published, module, story, round number, whether the plan check was already approved, number of rows per list, how many rows Claude tagged Rejected, and the number of fixed rows. Below the form, give a compact markdown summary table per list (ID, tag or type, text or path) so the lists stay readable in the transcript.
 
 Render the form **in the conversation** with `mcp__visualize__show_widget` (call `mcp__visualize__read_me` with modules `["elicitation"]` once beforehand if it hasn't been read in this conversation). Use the markup in `references/review-form.md`. It relies on the elicitation shell: Yes/No pills per row, "No" reveals a reason box, and a footer with "Yes to all" and "No to all" next to the Submit button. The bulk buttons need the short `<script>` at the end of the markup; copy it as is.
 

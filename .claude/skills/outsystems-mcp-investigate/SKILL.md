@@ -1,6 +1,6 @@
 ---
 name: outsystems-mcp-investigate
-description: Investigates OutSystems 11 code, modules or features through the Service Studio MCP, read-only. It starts one subagent per module to analyse it (data model, logic, screens and blocks, roles, CSS, validation messages, conventions, flow layout, performance, security, dead code), compiles every finding into one numbered checklist, then turns the checklist into proposed user stories and technical tasks with a description, an implementation plan and acceptance criteria. The user approves or rejects each story in a form in the conversation; once the form is submitted it generates a new prompt containing only the approved stories, ready to run with outsystems-mcp-implementation. Use whenever the user asks to investigate, analyse, analyze, audit, inspect, assess, look into, check the health of, or find problems or improvements in any OutSystems code, module, screen, block, action or feature, for example "investigate the calendar", "analyse ClaudeSheet_CS", "what can we improve in MySheet", "audit the modules", or names outsystems-mcp-investigate. It never changes a module.
+description: Investigates OutSystems 11 code, modules or features through the Service Studio MCP, read-only. It starts one subagent per module to analyse it (data model, logic, screens and blocks, roles, CSS, validation messages, conventions, flow layout, performance, security, dead code), compiles every finding into one numbered checklist, then turns the checklist into proposed user stories and technical tasks with a description, an implementation plan and acceptance criteria. The user approves or rejects each story in a form in the conversation; once the form is submitted it generates a new prompt containing only the approved stories, ready to run with outsystems-mcp-implementation. Use whenever the user asks to investigate, analyse, analyze, audit, inspect, assess, look into, check the health of, or find problems or improvements in any OutSystems code, module, screen, block, action or feature, for example "investigate the checkout", "analyse Sales_CS", "what can we improve in OrderList", "audit the modules", or names outsystems-mcp-investigate. It never changes a module.
 ---
 
 # OutSystems MCP investigation
@@ -31,13 +31,13 @@ Service Studio MCP tools are named `mcp__servicestudio__*`. If their schemas are
 
 Work out from the request and the repository, and ask only for what can't be inferred:
 
-- **Modules.** The ones the user named; otherwise every module `listApps` shows with `isOpen: true` and `isReference: false`. If the request names a feature ("the calendar"), find which modules hold it (`CLAUDE.md`, `docs/architecture.md`, `snapshots/*/names/*.json`) and include only those, plus the producer modules its logic lives in.
-- **Focus.** A feature or element list ("HoursCalendar and the actions it calls"), or the whole module.
+- **Modules.** The ones the user named; otherwise every module `listApps` shows with `isOpen: true` and `isReference: false`. If the request names a feature ("the checkout"), find which modules hold it (`CLAUDE.md`, `docs/architecture.md`, `snapshots/*/names/*.json`) and include only those, plus the producer modules its logic lives in.
+- **Focus.** A feature or element list ("OrderCard and the actions it calls"), or the whole module.
 - **Lenses.** By default all of them (below). If the user asked for one angle ("performance", "security", "is it following our conventions"), use only that one.
 
 Every module in scope must be open in Service Studio. If one isn't, ask the user to open it and stop.
 
-State the scope in one line before starting ("Investigating HoursCalendar in ClaudeSheet and the CS actions it calls, all lenses, 2 subagents").
+State the scope in one line before starting ("Investigating OrderCard in Sales and the CS actions it calls, all lenses, 2 subagents").
 
 ### Lenses
 
@@ -71,7 +71,7 @@ FINDING
   title: <one line, the problem or opportunity, not the fix>
   lens: <Correctness | Validation | Conventions | Security | Performance | Maintainability | UX | Gaps>
   severity: <High | Medium | Low>
-  element: <path as in Service Studio, e.g. Interface › UI Flows › SheetBlocks › HoursCalendar › OnClick_SaveDay>
+  element: <path as in Service Studio, e.g. Interface › UI Flows › OrderBlocks › OrderCard › OnClick_SaveOrder>
   evidence: <what the live module shows: node names, expressions, message text>
   suggestion: <the change that would fix it, with element names>
   depends_on_module: <other module that must change too, or ->
@@ -108,7 +108,7 @@ IDs: the next free numbers after the highest `US<n>` / `TT<n>` in `stories/` (ma
 
 Each proposed story has:
 
-- **ID and title**: `US6 · [Screen] MySheet: empty state when no projects are assigned` (type in brackets: Screen, Block, Logic, Data, Tech, …).
+- **ID and title**: `US6 · [Screen] OrderList: empty state when the customer has no orders` (type in brackets: Screen, Block, Logic, Data, Tech, …).
 - **Description**: for a US, *As a … I want … so that …* plus context; for a TT, the problem and why it matters. End with the findings it covers (`Covers: F03, F08`).
 - **Implementation plan**: numbered steps grouped per module (producer first), each naming the element to create or change and following `docs/conventions.md` (names, placement).
 - **Acceptance criteria**: numbered `AC<n>.<m>`, each checkable (Given / When / Then, or a validation or naming check).
@@ -135,11 +135,11 @@ Implement the following approved stories one at a time with outsystems-mcp-imple
 Each story's description, implementation plan and acceptance criteria are below: use them as the story definition instead of asking for them.
 Source: investigation <yyyy-mm-dd>-<slug> (cite the finding IDs in each story's Source line)
 
-## US6 · [Screen] MySheet: empty state when no projects are assigned
+## US6 · [Screen] OrderList: empty state when the customer has no orders
 ### Description
 …
 ### Implementation plan
-#### ClaudeSheet
+#### Sales
 1. …
 ### Acceptance criteria
 - AC6.1 …

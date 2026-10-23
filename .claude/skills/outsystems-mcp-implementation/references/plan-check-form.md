@@ -18,7 +18,7 @@ How it works:
 <form class="elicit">
   <div class="elicit-header">
     <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11.586 2a1.5 1.5 0 0 1 1.06.44l2.914 2.914a1.5 1.5 0 0 1 .44 1.06V16.5a1.5 1.5 0 0 1-1.5 1.5h-9a1.5 1.5 0 0 1-1.492-1.347L4 16.5v-13A1.5 1.5 0 0 1 5.5 2zM5.5 3a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h-2.5A1.5 1.5 0 0 1 11 5.5V3zm7.04 10.304a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696m0-4a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696M12 5.5a.5.5 0 0 0 .5.5h2.293L12 3.207z"/></svg>
-    <span>ClaudeSheet · US2 · implementation plan check · round 2</span>
+    <span>Sales · US2 · implementation plan check · round 2</span>
   </div>
   <div class="elicit-body">
 
@@ -45,8 +45,8 @@ How it works:
         <span style="font-family:var(--font-mono); font-size:13px;">P02 · Step 2</span>
       </label>
       <div style="font-size:13px; color:var(--text-warning); line-height:1.6; margin:4px 0 8px;">
-        Fixed in round 2. Your reason: "RefreshKey must default to 0". Done: TotalHoursMonth input RefreshKey default set to 0.<br>
-        <span style="color:var(--text-secondary);">Block TotalHoursMonth with inputs Year, Month, RefreshKey. Evidence: Interface › UI Flows › SheetBlocks › TotalHoursMonth, inputs Year (Integer, mandatory), Month (Integer, mandatory), RefreshKey (Integer, default 0).</span>
+        Fixed in round 2. Your reason: "RefreshKey must default to 0". Done: OrderTotalMonth input RefreshKey default set to 0.<br>
+        <span style="color:var(--text-secondary);">Block OrderTotalMonth with inputs Year, Month, RefreshKey. Evidence: Interface › UI Flows › OrderBlocks › OrderTotalMonth, inputs Year (Integer, mandatory), Month (Integer, mandatory), RefreshKey (Integer, default 0).</span>
       </div>
       <div class="elicit-pills" data-name="P02" data-multi="false">
         <button type="button" class="elicit-pill" data-value="Yes">Yes</button>

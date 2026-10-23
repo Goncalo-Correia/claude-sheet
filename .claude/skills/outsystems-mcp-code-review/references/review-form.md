@@ -21,7 +21,7 @@ The conventions section and the plan section, when included, use the same row ma
 <form class="elicit">
   <div class="elicit-header">
     <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11.586 2a1.5 1.5 0 0 1 1.06.44l2.914 2.914a1.5 1.5 0 0 1 .44 1.06V16.5a1.5 1.5 0 0 1-1.5 1.5h-9a1.5 1.5 0 0 1-1.492-1.347L4 16.5v-13A1.5 1.5 0 0 1 5.5 2zM5.5 3a.5.5 0 0 0-.5.5v13a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h-2.5A1.5 1.5 0 0 1 11 5.5V3zm7.04 10.304a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696m0-4a.5.5 0 0 1 .92.392c-.295.69-.871 1.304-1.66 1.304-.487 0-.892-.234-1.2-.574-.309.34-.713.574-1.2.574-.486 0-.892-.233-1.2-.574-.31.34-.714.574-1.2.574a.5.5 0 0 1 0-1c.212 0 .52-.18.74-.696l.034-.067a.5.5 0 0 1 .886.067c.221.516.528.696.74.696.213 0 .52-.18.74-.696l.035-.067a.5.5 0 0 1 .885.067c.22.516.527.696.74.696s.519-.18.74-.696M12 5.5a.5.5 0 0 0 .5.5h2.293L12 3.207z"/></svg>
-    <span>ClaudeSheet · US2 · round 2 review</span>
+    <span>Sales · US2 · round 2 review</span>
   </div>
   <div class="elicit-body">
 
@@ -33,8 +33,8 @@ The conventions section and the plan section, when included, use the same row ma
         <span style="font-family:var(--font-mono); font-size:13px;">A01 · AC2.1</span>
       </label>
       <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:4px 0 8px;">
-        The progress circle is 160px on desktop and 120px on phone.<br>
-        <span>Evidence: .sheet-total__circle sets 160px, with a phone media query setting 120px. Test in the browser: MySheet at phone width.</span><br>
+        The order summary card is 360px wide on desktop and full width on phone.<br>
+        <span>Evidence: .order-summary sets 360px, with a phone media query setting 100%. Test in the browser: OrderList at phone width.</span><br>
         <span style="color:var(--text-muted);">Unchanged</span>
       </div>
       <div class="elicit-pills" data-name="A01" data-multi="false">
@@ -50,8 +50,8 @@ The conventions section and the plan section, when included, use the same row ma
         <span style="font-family:var(--font-mono); font-size:13px;">A02 · AC2.2</span>
       </label>
       <div style="font-size:13px; color:var(--text-warning); line-height:1.6; margin:4px 0 8px;">
-        Fixed in round 2. Your reason: "total must exclude DayOff days". Done: GetMonthSummary aggregate filters out DayStatus DayOff. Tag changed Rejected → Approved.<br>
-        <span style="color:var(--text-secondary);">The total sums TimeEntry.Minutes of the user's DaySheets in the month. Evidence: GetMonthSummary › GetTimeEntries aggregate, filters on UserId and SheetDate in month.</span>
+        Fixed in round 2. Your reason: "total must exclude cancelled orders". Done: GetMonthTotal aggregate filters out OrderStatus Cancelled. Tag changed Rejected → Approved.<br>
+        <span style="color:var(--text-secondary);">The total sums Order.Amount of the customer's orders in the month. Evidence: GetMonthTotal › GetOrders aggregate, filters on CustomerId and OrderDate in month.</span>
       </div>
       <div class="elicit-pills" data-name="A02" data-multi="false">
         <button type="button" class="elicit-pill" data-value="Yes">Yes</button>
@@ -65,10 +65,10 @@ The conventions section and the plan section, when included, use the same row ma
     <div class="elicit-group" style="padding:12px 14px; border:0.5px solid var(--border); border-radius:12px;">
       <label class="elicit-question">
         <span style="font-size:12px; padding:2px 8px; border-radius:var(--radius); background:var(--bg-success); color:var(--text-success);">Created</span>
-        <span style="font-family:var(--font-mono); font-size:13px;">C01 · Data › Database › DaySheet</span>
+        <span style="font-family:var(--font-mono); font-size:13px;">C01 · Data › Database › Order</span>
       </label>
       <div style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:4px 0 8px;">
-        Attributes: Id (LongInteger, auto), UserId (User Id, mandatory, Delete), SheetDate (Date, mandatory), DayStatusId (DayStatus Id, mandatory), Notes (Text 500), CreatedOn, UpdatedOn (DateTime, mandatory). Index: unique (UserId, SheetDate).<br>
+        Attributes: Id (LongInteger, auto), CustomerId (Customer Id, mandatory, Delete), OrderDate (Date, mandatory), OrderStatusId (OrderStatus Id, mandatory), Amount (Currency, mandatory), Notes (Text 500), CreatedOn, UpdatedOn (DateTime, mandatory). Index: (CustomerId, OrderDate).<br>
         <span style="color:var(--text-muted);">Covers: P02, A02 · Unchanged</span>
       </div>
       <div class="elicit-pills" data-name="C01" data-multi="false">
